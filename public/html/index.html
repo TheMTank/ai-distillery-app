@@ -1,201 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Word embeddings trained on Arxiv</title>
+  <title>AI Distillery</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <style>
+    /* Remove the navbar's default margin-bottom and rounded borders */
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+
+    /* Add a gray background color and some padding to the footer */
+    footer {
+      background-color: #f2f2f2;
+      padding: 25px;
+    }
 
 
-</head>
-<style>
-    table.blueTable {
-  border: 1px solid #1C6EA4;
-  background-color: #EEEEEE;
-  width: 100%;
-  text-align: left;
-  border-collapse: collapse;
-
-    /* extra */
-    margin-left: auto;
-    margin-right: auto;
+.container {
+    position: relative;
     width: 50%;
 }
-table.blueTable td, table.blueTable th {
-  border: 1px solid #AAAAAA;
-  padding: 3px 2px;
-}
-table.blueTable tbody td {
-  font-size: 13px;
-}
-table.blueTable tr:nth-child(even) {
-  background: #D0E4F5;
-}
-table.blueTable thead {
-  background: #1C6EA4;
-  background: -moz-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
-  background: -webkit-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
-  background: linear-gradient(to bottom, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
-  border-bottom: 2px solid #444444;
-}
-table.blueTable thead th {
-  font-size: 15px;
-  font-weight: bold;
-  color: #FFFFFF;
-  border-left: 2px solid #D0E4F5;
-}
-table.blueTable thead th:first-child {
-  border-left: none;
+
+.image {
+  opacity: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: .5s ease;
+  backface-visibility: hidden;
 }
 
-table.blueTable tfoot {
-  font-size: 14px;
-  font-weight: bold;
-  color: #FFFFFF;
-  background: #D0E4F5;
-  background: -moz-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
-  background: -webkit-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
-  background: linear-gradient(to bottom, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
-  border-top: 2px solid #444444;
-}
-table.blueTable tfoot td {
-  font-size: 14px;
-}
-table.blueTable tfoot .links {
-  text-align: right;
-}
-table.blueTable tfoot .links a{
-  display: inline-block;
-  background: #1C6EA4;
-  color: #FFFFFF;
-  padding: 2px 8px;
-  border-radius: 5px;
+.middle {
+  transition: .5s ease;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  text-align: center;
 }
 
-#submit-btn {
-    background: rgb(28, 184, 65);
+.container:hover .image {
+  opacity: 0.3;
 }
-</style>
+
+.container:hover .middle {
+  opacity: 1;
+}
+
+.text {
+  /*background-color: #4CAF50;
+  color: white;*/
+
+      color: #d02727;
+    font-size: 16px;
+    font-weight: bolder;
+  font-size: 16px;
+  padding: 16px 32px;
+}
+  </style>
+</head>
 <body>
 
-<script id="address-template" type="text/x-handlebars-template">
-    <table class="similar-words blueTable">
-        <thead>
-            <tr>
-                <td>Similar words</td>
-                <td>Distance</td>
-            </tr>
-        </thead>
-        <tbody>
-            {{#each top_words}}
-                <tr>
-                    <td>{{this.word}}</td>
-                    <td>{{this.distance}}</td>
-                </tr>
-            {{/each}}
-
-        </tbody>
-
-    </table>
-</script>
-
-<!--<form action="/word_embedding_proximity">-->
-  <!--Find similar words to:<br>-->
-  <!--<input type="text" name="word" value="RNN">-->
-  <!--<br>-->
-  <!--<br><br>-->
-  <!--<input type="submit" value="Submit">-->
-<!--</form>-->
-
-<!--<form id="form-country_v1" name="form-country_v1">-->
-    <!--<div class="typeahead__container">-->
-        <!--<div class="typeahead__field">-->
-            <!--<div class="typeahead__query">-->
-                <!--<input class="js-typeahead-country_v1" name="country_v1[query]" type="search" placeholder="Search" autocomplete="off">-->
-            <!--</div>-->
-            <!--<div class="typeahead__button">-->
-                <!--<button type="submit">-->
-                    <!--<i class="typeahead__search-icon"></i>-->
-                <!--</button>-->
-            <!--</div>-->
-        <!--</div>-->
-    <!--</div>-->
-<!--</form>-->
-
-<div style="margin-left: auto;
-    margin-right: auto;
-    width: 50%;">
-    <div style="text-align: center;">
-        <input type="text" name="word" value="RNN" id="search-box">
-        <br>
-        <select id="embedding-type">
-            <option value="gensim" selected>Gensim</option>
-            <option value="fast_text">fastText</option>
-        </select>
-        <button id="submit-btn" style="">Submit</button>
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">AI Distillery</a>
     </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Gallery</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+      <!--<ul class="nav navbar-nav navbar-right">-->
+        <!--<li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>-->
+      <!--</ul>-->
+    </div>
+  </div>
+</nav>
+
+<div class="jumbotron">
+  <div class="container text-center">
+    <h1>AI Distillery</h1>
+    <p>Automatically modelling and distilling knowledge within AI</p>
+  </div>
 </div>
 
-<div class="content-placeholder">
+<div class="container-fluid bg-3 text-center">
+  <h3>Some of our work</h3><br>
+  <div class="row">
+    <div class="col-sm-6 container">
+        <a href="/word-embedding-table">
+            <p>Search for similar Word Embeddings</p>
+            <img src="/images/ai-distillery-heroku-table.png" class="img-responsive image" style="width:100%" alt="Image">
+            <div class="middle">
+                <div class="text">Search for similar Word Embeddings</div>
+            </div>
+        </a>
+    </div>
+    <div class="col-sm-6 container">
+        <a href="/word-embedding-viz">
+            <p>Word Embedding Visualisation</p>
+            <img src="/images/word2vecexplorer-on-heroku.png" class="img-responsive image" style="width:100%" alt="Image">
+            <div class="middle">
+                <div class="text">Word Embeddings Visualisation</div>
+            </div>
+        </a>
+    </div>
 
-</div>
+    <!--<div class="col-sm-3">-->
+      <!--<p>Some text..</p>-->
+      <!--<img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image">-->
+    <!--</div>-->
+    <!--<div class="col-sm-3">-->
+      <!--<p>Some text..</p>-->
+      <!--<img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image">-->
+    <!--</div>-->
+  </div>
+</div><br>
 
+<!--<div class="container-fluid bg-3 text-center">-->
+  <!--<div class="row">-->
+    <!--<div class="col-sm-3">-->
+      <!--<p>Some text..</p>-->
+      <!--<img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image">-->
+    <!--</div>-->
+    <!--<div class="col-sm-3">-->
+      <!--<p>Some text..</p>-->
+      <!--<img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image">-->
+    <!--</div>-->
+    <!--<div class="col-sm-3">-->
+      <!--<p>Some text..</p>-->
+      <!--<img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image">-->
+    <!--</div>-->
+    <!--<div class="col-sm-3">-->
+      <!--<p>Some text..</p>-->
+      <!--<img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image">-->
+    <!--</div>-->
+  <!--</div>-->
+<!--</div>-->
+
+<br><br>
+
+<!--<footer class="container-fluid text-center">-->
+  <!--<p>Footer Text</p>-->
+<!--</footer>-->
 
 </body>
-
-<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.js"></script>
-<!--<script src="js/typeahead.bundle.js"></script>-->
-
-<script>
-    $(function () {
-
-        //$.typeahead({ // todo
-
-
-        var tableData, context;
-        var getSimilarWords = function(searchTerm, embeddingType) {
-            $.get('/word_embedding_proximity', {'word': searchTerm, 'type': embeddingType}, function(data) {
-                console.log(data);
-                tableData = data;
-                context = {
-                    'top_words': tableData
-                }
-                fillTable(context);
-            })
-        }
-
-        var fillTable = function(context) {
-            console.log('Ready');
-            // Grab the template script
-            var theTemplateScript = $("#address-template").html();
-
-            // Compile the template
-            var theTemplate = Handlebars.compile(theTemplateScript);
-
-            // Pass our data to the template
-            var theCompiledHtml = theTemplate(context);
-
-            console.log(context);
-
-            // Add the compiled html to the page
-            $('.content-placeholder').html(theCompiledHtml);
-            console.log('Done');
-        }
-
-        //getSimilarWords();
-
-
-        $(document).bind('keypress', function(e) {
-            if(e.keyCode==13) {
-                 $('#submit-btn').trigger('click');
-             }
-        });
-
-        $('#submit-btn').click(function (data) {
-            var searchTerm = $('#search-box').val();
-            var embeddingType = $("#embedding-type").val();
-            getSimilarWords(searchTerm, embeddingType);
-        });
-    });
-</script>
 </html>
