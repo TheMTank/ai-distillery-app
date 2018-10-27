@@ -5,6 +5,8 @@ import os
 import numpy as np
 from flask import Flask, request, render_template, send_from_directory, jsonify
 
+from explorer import Model
+
 # file_dir = os.path.dirname(__file__)
 # sys.path.append(file_dir)
 
@@ -12,7 +14,7 @@ default_n = 15
 STATIC_DIR = os.path.dirname(os.path.realpath(__file__)) + '/public'
 CACHE = {}
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='public', static_url_path='')
 
 
 def get_closest_vectors(labels, all_vectors, vector_to_compare, n=5):
@@ -24,6 +26,7 @@ def get_closest_vectors(labels, all_vectors, vector_to_compare, n=5):
 
 # All routes -----------
 # /
+# /word-embedding-viz
 # /word_embedding_proximity
 
 @app.route("/")
@@ -31,17 +34,16 @@ def root():
     # return render_template('index.html')
     return send_from_directory('public/html', 'index.html')
 
+@app.route("/word-embedding-viz")
+def word_embedding_viz():
+    return send_from_directory('public/html', 'embedding_viz.html')
 
-# @app.route("/word_embedding_viz")
-# def render_word_embedding_visualisation():
-#     global embedding_model
-#     print('Loading word embedding model')
-#     embedding_model = word_embedding_model
-#     print('in word_embedding viz embedding_model:', embedding_model)
-#     global CACHE
-#     CACHE = {}
-#     return jsonify({'status': 'success'})
-#     #return render_template('embedding_visualiser.html')
+    # print('Loading word embedding model')
+    # embedding_model = word_embedding_model
+    # print('in word_embedding viz embedding_model:', embedding_model)
+    # return jsonify({'status': 'success'})
+    #return render_template('embedding_visualiser.html')
+
 
 @app.route("/word_embedding_proximity")
 def get_word_embedding():
@@ -93,7 +95,7 @@ def send_styles(path):
 
 
 # removed because quite slow.
-'''@app.route("/explore")
+'''@app.route("/api/explore")
 def explore():
     query = request.args.get('query', '')
     limit = request.args.get('limit', '1000')
@@ -120,28 +122,28 @@ def explore():
         return jsonify({'error': {'message': 'No vector found for ' + query}})'''
 
 
-# @app.route("/compare")
-# def compare():
-#     limit = request.args.get('limit', 100)
-#     # queries = request.args.getlist('queries[]')
-#     queries = request.args.get('queries')
-#     queries = queries.split(';')
-#     print(limit)
-#     print(queries)
-#     print('embedding_model:', embedding_model)
-#
-#     # todo have query param or better way of changing embedding models for concurrent pages/users
-#
-#     try:
-#         for i in range(len(queries)):
-#             queries[i] = queries[i].strip().lower()
-#             if embedding_model is word_embedding_model:
-#                 queries[i] = queries[i].replace(' ', '_')
-#         result = embedding_model.compare(queries, limit=int(limit))
-#         return jsonify({'result': result})
-#     except KeyError:
-#         return jsonify({'error':
-#                             {'message': 'No vector found for {}'.format(queries)}})
+@app.route("/api/compare")
+def compare():
+    limit = request.args.get('limit', 100)
+    queries = request.args.getlist('queries[]')
+    # queries = request.args.get('queries')
+    # queries = queries.split(';')
+    print(limit)
+    print(queries)
+    print('embedding_model:', embedding_model)
+
+    # todo have query param or better way of changing embedding models for concurrent pages/users
+
+    try:
+        # for i in range(len(queries)):
+        #     queries[i] = queries[i].strip().lower()
+        #       if embedding_model is word_embedding_model:
+        #       queries[i] = queries[i].replace(' ', '_')
+        result = embedding_model.compare(queries, limit=int(limit))
+        return jsonify({'result': result})
+    except KeyError:
+        return jsonify({'error':
+                            {'message': 'No vector found for {}'.format(queries)}})
 
 
 # All models and saved objects
@@ -170,6 +172,8 @@ with open(gensim_embedding_path, 'rb') as handle:
 #     fast_text_embeddings = fast_text_embedding_obj['embeddings']
 #     fast_text_label_to_embeddings = {label: fast_text_embeddings[idx] for idx, label in enumerate(fast_text_labels)}
 #     print('Num vectors: {}'.format(len(fast_text_labels)))
+
+embedding_model = Model(gensim_embedding_path)
 
 if __name__ == '__main__':
     """
