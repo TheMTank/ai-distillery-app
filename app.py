@@ -34,6 +34,11 @@ def root():
     # return render_template('index.html')
     return send_from_directory('public/html', 'index.html')
 
+@app.route("/word-embedding-table")
+def word_embedding_table():
+    return send_from_directory('public/html', 'word_embedding_table_similarity.html')
+
+
 @app.route("/word-embedding-viz")
 def word_embedding_viz():
     return send_from_directory('public/html', 'embedding_viz.html')
@@ -95,7 +100,7 @@ def send_styles(path):
 
 
 # removed because quite slow.
-'''@app.route("/api/explore")
+@app.route("/api/explore")
 def explore():
     query = request.args.get('query', '')
     limit = request.args.get('limit', '1000')
@@ -119,7 +124,7 @@ def explore():
         CACHE[cache_key] = result
         return jsonify({'result': result, 'cached': False})
     except KeyError:
-        return jsonify({'error': {'message': 'No vector found for ' + query}})'''
+        return jsonify({'error': {'message': 'No vector found for ' + query}})
 
 
 @app.route("/api/compare")

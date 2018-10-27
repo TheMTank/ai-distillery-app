@@ -44036,8 +44036,8 @@ ReactDOM.render(React.createElement(
   React.createElement(
     _reactRouter.Route,
     { component: App },
-//    React.createElement(_reactRouter.Route, { path: '/word-embedding-viz', component: ExploreSection }),
-    React.createElement(_reactRouter.Route, { path: '/word-embedding-viz', component: CompareSection }),
+    React.createElement(_reactRouter.Route, { path: '/word-embedding-viz', component: ExploreSection }),
+//    React.createElement(_reactRouter.Route, { path: '/word-embedding-viz', component: CompareSection }),
     React.createElement(_reactRouter.Route, { path: '/explore', component: ExploreSection }),
     React.createElement(_reactRouter.Route, { path: '/compare', component: CompareSection })
   )
