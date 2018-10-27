@@ -34,6 +34,10 @@ def root():
     # return render_template('index.html')
     return send_from_directory('public/html', 'index.html')
 
+@app.route("/charts")
+def charts():
+    return send_from_directory('public/html', 'all-charts.html')
+
 @app.route("/word-embedding-table")
 def word_embedding_table():
     return send_from_directory('public/html', 'word_embedding_table_similarity.html')
@@ -48,7 +52,6 @@ def word_embedding_viz():
     # print('in word_embedding viz embedding_model:', embedding_model)
     # return jsonify({'status': 'success'})
     #return render_template('embedding_visualiser.html')
-
 
 @app.route("/word_embedding_proximity")
 def get_word_embedding():
