@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Root</title>
+
+
+</head>
+<style>
+    table.blueTable {
+  border: 1px solid #1C6EA4;
+  background-color: #EEEEEE;
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+
+    /* extra */
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+table.blueTable td, table.blueTable th {
+  border: 1px solid #AAAAAA;
+  padding: 3px 2px;
+}
+table.blueTable tbody td {
+  font-size: 13px;
+}
+table.blueTable tr:nth-child(even) {
+  background: #D0E4F5;
+}
+table.blueTable thead {
+  background: #1C6EA4;
+  background: -moz-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
+  background: -webkit-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
+  background: linear-gradient(to bottom, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
+  border-bottom: 2px solid #444444;
+}
+table.blueTable thead th {
+  font-size: 15px;
+  font-weight: bold;
+  color: #FFFFFF;
+  border-left: 2px solid #D0E4F5;
+}
+table.blueTable thead th:first-child {
+  border-left: none;
+}
+
+table.blueTable tfoot {
+  font-size: 14px;
+  font-weight: bold;
+  color: #FFFFFF;
+  background: #D0E4F5;
+  background: -moz-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+  background: -webkit-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+  background: linear-gradient(to bottom, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+  border-top: 2px solid #444444;
+}
+table.blueTable tfoot td {
+  font-size: 14px;
+}
+table.blueTable tfoot .links {
+  text-align: right;
+}
+table.blueTable tfoot .links a{
+  display: inline-block;
+  background: #1C6EA4;
+  color: #FFFFFF;
+  padding: 2px 8px;
+  border-radius: 5px;
+}
+
+#submit-btn {
+    background: rgb(28, 184, 65);
+}
+</style>
+<body>
+
+<script id="address-template" type="text/x-handlebars-template">
+    <table class="similar-words blueTable">
+        <thead>
+            <tr>
+                <td>Similar words</td>
+                <td>Distance</td>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each top_words}}
+                <tr>
+                    <td>{{this.word}}</td>
+                    <td>{{this.distance}}</td>
+                </tr>
+            {{/each}}
+
+        </tbody>
+
+    </table>
+</script>
+
+<!--<form action="/word_embedding_proximity">-->
+  <!--Find similar words to:<br>-->
+  <!--<input type="text" name="word" value="RNN">-->
+  <!--<br>-->
+  <!--<br><br>-->
+  <!--<input type="submit" value="Submit">-->
+<!--</form>-->
+
+<!--<form id="form-country_v1" name="form-country_v1">-->
+    <!--<div class="typeahead__container">-->
+        <!--<div class="typeahead__field">-->
+            <!--<div class="typeahead__query">-->
+                <!--<input class="js-typeahead-country_v1" name="country_v1[query]" type="search" placeholder="Search" autocomplete="off">-->
+            <!--</div>-->
+            <!--<div class="typeahead__button">-->
+                <!--<button type="submit">-->
+                    <!--<i class="typeahead__search-icon"></i>-->
+                <!--</button>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</form>-->
+
+<div style="margin-left: auto;
+    margin-right: auto;
+    width: 50%;">
+    <div style="text-align: center;">
+        <input type="text" name="word" value="RNN" id="search-box">
+        <br>
+        <select id="embedding-type">
+            <option value="gensim" selected>Gensim</option>
+            <option value="fast_text">fastText</option>
+        </select>
+        <button id="submit-btn" style="">Submit</button>
+    </div>
+</div>
+
+<div class="content-placeholder">
+
+</div>
+
+
+</body>
+
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.js"></script>
+<script src="js/typeahead.bundle.js"></script>
+
+<script>
+    $(function () {
+
+        //$.typeahead({ // todo
+
+
+        var tableData, context;
+        var getSimilarWords = function(searchTerm, embeddingType) {
+            $.get('/word_embedding_proximity', {'word': searchTerm, 'type': embeddingType}, function(data) {
+                console.log(data);
+                tableData = data;
+                context = {
+                    'top_words': tableData
+                }
+                fillTable(context);
+            })
+        }
+
+        var fillTable = function(context) {
+            console.log('Ready');
+            // Grab the template script
+            var theTemplateScript = $("#address-template").html();
+
+            // Compile the template
+            var theTemplate = Handlebars.compile(theTemplateScript);
+
+            // Pass our data to the template
+            var theCompiledHtml = theTemplate(context);
+
+            console.log(context);
+
+            // Add the compiled html to the page
+            $('.content-placeholder').html(theCompiledHtml);
+            console.log('Done');
+        }
+
+        //getSimilarWords();
+
+
+        $(document).bind('keypress', function(e) {
+            if(e.keyCode==13) {
+                 $('#submit-btn').trigger('click');
+             }
+        });
+
+        $('#submit-btn').click(function (data) {
+            var searchTerm = $('#search-box').val();
+            var embeddingType = $("#embedding-type").val();
+            getSimilarWords(searchTerm, embeddingType);
+        });
+    });
+</script>
+</html>
