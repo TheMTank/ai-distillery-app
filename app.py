@@ -144,36 +144,36 @@ def explore():
 #                             {'message': 'No vector found for {}'.format(queries)}})
 
 
+# All models and saved objects
+# ------------------
+# gensim word2vec model;'s embeddings
+# ------------------
+
+# model = gensim.models.Word2Vec.load(args.word2vec_model_path)
+# vocab = list(model.wv.index2word)
+
+# Load skill and people embeddings
+gensim_embedding_path = 'data/word_embeddings/gensim_vectors.pkl'
+print('Loading gensim vectors at path: {}'.format(gensim_embedding_path))
+with open(gensim_embedding_path, 'rb') as handle:
+    gensim_embedding_obj = pickle.load(handle, encoding='latin1')
+    gensim_labels = gensim_embedding_obj['labels']
+    gensim_embeddings = gensim_embedding_obj['embeddings']
+    gensim_label_to_embeddings = {label: gensim_embeddings[idx] for idx, label in enumerate(gensim_labels)}
+    print('Num vectors: {}'.format(len(gensim_labels)))
+
+# fast_text_embedding_path = 'data/word_embeddings/fast_text_vectors.pkl'
+# print('Loading fast_text vectors at path: {}'.format(fast_text_embedding_path))
+# with open(fast_text_embedding_path, 'rb') as handle:
+#     fast_text_embedding_obj = pickle.load(handle, encoding='latin1')
+#     fast_text_labels = fast_text_embedding_obj['labels']
+#     fast_text_embeddings = fast_text_embedding_obj['embeddings']
+#     fast_text_label_to_embeddings = {label: fast_text_embeddings[idx] for idx, label in enumerate(fast_text_labels)}
+#     print('Num vectors: {}'.format(len(fast_text_labels)))
+
 if __name__ == '__main__':
     """
     """
-
-    # All models and saved objects
-    # ------------------
-    # gensim word2vec model;'s embeddings
-    # ------------------
-
-    # model = gensim.models.Word2Vec.load(args.word2vec_model_path)
-    # vocab = list(model.wv.index2word)
-
-    # Load skill and people embeddings
-    gensim_embedding_path = 'data/word_embeddings/gensim_vectors.pkl'
-    print('Loading gensim vectors at path: {}'.format(gensim_embedding_path))
-    with open(gensim_embedding_path, 'rb') as handle:
-        gensim_embedding_obj = pickle.load(handle, encoding='latin1')
-        gensim_labels = gensim_embedding_obj['labels']
-        gensim_embeddings = gensim_embedding_obj['embeddings']
-        gensim_label_to_embeddings = {label: gensim_embeddings[idx] for idx, label in enumerate(gensim_labels)}
-        print('Num vectors: {}'.format(len(gensim_labels)))
-
-    # fast_text_embedding_path = 'data/word_embeddings/fast_text_vectors.pkl'
-    # print('Loading fast_text vectors at path: {}'.format(fast_text_embedding_path))
-    # with open(fast_text_embedding_path, 'rb') as handle:
-    #     fast_text_embedding_obj = pickle.load(handle, encoding='latin1')
-    #     fast_text_labels = fast_text_embedding_obj['labels']
-    #     fast_text_embeddings = fast_text_embedding_obj['embeddings']
-    #     fast_text_label_to_embeddings = {label: fast_text_embeddings[idx] for idx, label in enumerate(fast_text_labels)}
-    #     print('Num vectors: {}'.format(len(fast_text_labels)))
 
     print('Listening')
     app.run(debug=True, use_reloader=True)
