@@ -43483,7 +43483,7 @@ exports.default = React.createClass({
     if (params && !params.query) vectorListTitle = 'Sample Rated';
     return React.createElement(
       'div',
-      { className: 'exploration' },
+      { className: 'exploration col-md-10' },
       this.state.error && React.createElement(
         'div',
         { className: 'alert alert-danger' },
