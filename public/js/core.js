@@ -43529,7 +43529,8 @@ exports.default = React.createClass({
       query: params.query,
       limit: params.limit || 1000,
       enable_clustering: true,
-      num_clusters: params.num_clusters
+      num_clusters: params.num_clusters,
+      embedding_type: 'gensim'
     }, function (error, result) {
       if (result) {
         _this.refs.plot && _this.refs.plot.setState({
@@ -43620,6 +43621,16 @@ exports.default = React.createClass({
               ),
               React.createElement('input', { id: 'numClustersInput', ref: 'numClustersInput', className: 'form-control', type: 'text', defaultValue: this.state.params.num_clusters })
             ),
+//            React.createElement(
+//              'div',
+//              { className: 'form-group' },
+//              React.createElement(
+//                'label',
+//                { htmlFor: 'limitInput' },
+//                'Num Clusters:'
+//              ),
+//              React.createElement('select', { id: 'embeddingTypeInput', ref: 'embeddingTypeInput', className: 'form-control', type: 'text', defaultValue: this.state.params.embedding_type })
+//            ),
             React.createElement(
               'div',
               { className: 'form-group' },
@@ -43733,7 +43744,8 @@ exports.default = React.createClass({
     return 20;
   },
   _nominalNodeLabelTextSize: function _nominalNodeLabelTextSize() {
-    var size = 10;
+//    var size = 10;
+    var size = 6;
     if (this.state.points.length >= 10000) size = 1;
     if (this.state.points.length >= 1000) size = 2;
     if (this.state.points.length >= 500) size = 5;
