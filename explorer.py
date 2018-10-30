@@ -11,7 +11,7 @@ from scipy.spatial.distance import cosine
 
 class Exploration():
 
-    def __init__(self, query, labels=[], vectors=[]):
+    def __init__(self, query, labels=[], vectors=[], already_2D=False):
         self.query = query
         self.parsed_query = {}
         self.labels = labels
@@ -20,14 +20,20 @@ class Exploration():
         self.clusters = []
         self.distances = []
         self.stats = {}
+        self.already_2D = already_2D
 
     def reduce(self):
-        print('Performing tSNE reduction ' +
-              'on {} vectors'.format(len(self.vectors)))
-        self.reduction = TSNE(n_components=2, verbose=1).fit_transform(
-            np.array(self.vectors, dtype=np.float64))  # slower than below
-        # replaced below tsne with scikit's above
-        # self.reduction = bh_sne(np.array(self.vectors, dtype=np.float64))
+        if not self.already_2D:
+            print('Performing tSNE reduction ' +
+                  'on {} vectors'.format(len(self.vectors)))
+            self.reduction = TSNE(n_components=2, verbose=1).fit_transform(
+                np.array(self.vectors, dtype=np.float64))  # slower than below
+            # replaced below tsne with scikit's above
+            # self.reduction = bh_sne(np.array(self.vectors, dtype=np.float64))
+        else:
+            print('Already 2D, no TSNE needed')
+            self.reduction = np.array(self.vectors, dtype=np.float64)
+
 
     def cluster(self, num_clusters=30):
         clustering = KMeans(n_clusters=num_clusters)
@@ -80,14 +86,9 @@ class EmbeddingModel(object):
 
 
 def get_closest_vectors(labels, all_vectors, vector_to_compare, n=5):
-    # import pdb; pdb.set_trace()
-    distances = np.array([np.linalg.norm(vec - vector_to_compare) for vec in all_vectors])
+    # distances = np.array([np.linalg.norm(vec - vector_to_compare) for vec in all_vectors])
+    distances = np.linalg.norm(all_vectors - vector_to_compare, axis=1) # vectorised
     sorted_idx = np.argsort(distances)  # [::-1]
-    # todo vectorise better.
-    # print(sorted_idx[0:5])
-    # print(distances[sorted_idx][0:10])
-
-    # todo return the labels to visualise and inspect
 
     return list(zip(list(np.array(labels)[sorted_idx][0:n]), [x.item() for x in list(distances[sorted_idx][0:n])]))
 
@@ -98,7 +99,7 @@ class Model(object):
         # try:
         # self.model1 = gensim.models.Word2Vec.load(filename)
         # self.model = EmbeddingModel(self.model1.wv.vocab)
-        # todo allow option to take gensim without conversion, otherwise below
+        # todo allow option above to take gensim without conversion, otherwise below
 
         with open(filename, 'rb') as handle:
             print('Attempting to open file at: ', filename)
@@ -107,6 +108,8 @@ class Model(object):
             self.embeddings_array = embeddings_object['embeddings']
             self.embeddings_dict = {self.vocab[i]: self.embeddings_array[i] for i in range(len(self.vocab))}
             print('Finished reading file and creating embeddings dictionary')
+
+        self.already_2D = self.embeddings_array.shape[1] == 2
 
         # ideally the only input should be labels and embeddings in one file
         # how to convert from word2vec explorer into an embedding explorer
@@ -160,7 +163,7 @@ class Model(object):
 
     def explore(self, query, limit=1000):
         print('Model#explore query={}, limit={}'.format(query, limit))
-        exploration = Exploration(query)
+        exploration = Exploration(query, already_2D=self.already_2D)
         if len(query):
             print('Finding')
             positive, negative = self._parse_query(query)

@@ -7,8 +7,6 @@ from flask import Flask, request, render_template, send_from_directory, jsonify
 
 from explorer import Model
 
-# file_dir = os.path.dirname(__file__)
-# sys.path.append(file_dir)
 
 default_n = 15
 STATIC_DIR = os.path.dirname(os.path.realpath(__file__)) + '/public'
@@ -22,12 +20,6 @@ def get_closest_vectors(labels, all_vectors, vector_to_compare, n=5):
     sorted_idx = np.argsort(distances)
 
     return list(np.array(labels)[sorted_idx][0:n]), list(distances[sorted_idx][0:n])
-
-
-# All routes -----------
-# /
-# /word-embedding-viz
-# /word_embedding_proximity
 
 @app.route("/")
 def root():
@@ -47,11 +39,11 @@ def word_embedding_table():
 def word_embedding_viz():
     return send_from_directory('public/html', 'embedding_viz.html')
 
-    # print('Loading word embedding model')
-    # embedding_model = word_embedding_model
-    # print('in word_embedding viz embedding_model:', embedding_model)
-    # return jsonify({'status': 'success'})
-    #return render_template('embedding_visualiser.html')
+# could do it this way or cookie way (https://www.w3schools.com/js/js_cookies.asp)
+# (https://stackoverflow.com/questions/13531149/check-for-a-cookie-with-python-flask)
+# @app.route("/paper-embedding-viz")
+# def paper_embedding_viz():
+#     return send_from_directory('public/html', 'embedding_viz.html')
 
 @app.route("/word_embedding_proximity")
 def get_word_embedding():
@@ -109,10 +101,16 @@ def explore():
     limit = request.args.get('limit', '1000')
     enable_clustering = 'True'
     num_clusters = request.args.get('num_clusters', '30')
+    embedding_type = request.args.get('embedding_type', 'gensim')
 
-    print('embedding_model:', embedding_model)
+    if embedding_type == 'gensim':
+        embedding_model = gensim_embedding_model
+    elif embedding_type == 'lsa':
+        embedding_model = lsa_embedding_model
 
-    cache_key = '-'.join([query, limit, enable_clustering, num_clusters])
+    print('Embedding type: {}. embedding_model: {}'.format(embedding_type, embedding_model))
+
+    cache_key = '-'.join([query, limit, enable_clustering, num_clusters, embedding_type])
     result = CACHE.get(cache_key, {})
     if len(result) > 0:
         return jsonify({'result': CACHE[cache_key], 'cached': True})
@@ -129,18 +127,21 @@ def explore():
     except KeyError:
         return jsonify({'error': {'message': 'No vector found for ' + query}})
 
-
 @app.route("/api/compare")
 def compare():
     limit = request.args.get('limit', 100)
     queries = request.args.getlist('queries[]')
     # queries = request.args.get('queries')
     # queries = queries.split(';')
+    embedding_type = request.args.get('embedding_type', 'gensim')
     print(limit)
     print(queries)
-    print('embedding_model:', embedding_model)
 
-    # todo have query param or better way of changing embedding models for concurrent pages/users
+    if embedding_type == 'gensim':
+        embedding_model = gensim_embedding_model
+    elif embedding_type == 'lsa':
+        embedding_model = lsa_embedding_model
+        print('Embedding type: {}. embedding_model: {}'.format(embedding_type, embedding_model))
 
     try:
         # for i in range(len(queries)):
@@ -156,13 +157,15 @@ def compare():
 
 # All models and saved objects
 # ------------------
-# gensim word2vec model;'s embeddings
+# gensim word2vec embeddings
+# fastText word embeddings
+# LSA paper embeddings
 # ------------------
 
 # model = gensim.models.Word2Vec.load(args.word2vec_model_path)
 # vocab = list(model.wv.index2word)
 
-# Load skill and people embeddings
+# Load all word embeddings
 gensim_embedding_path = 'data/word_embeddings/gensim_vectors.pkl'
 print('Loading gensim vectors at path: {}'.format(gensim_embedding_path))
 with open(gensim_embedding_path, 'rb') as handle:
@@ -171,6 +174,12 @@ with open(gensim_embedding_path, 'rb') as handle:
     gensim_embeddings = gensim_embedding_obj['embeddings']
     gensim_label_to_embeddings = {label: gensim_embeddings[idx] for idx, label in enumerate(gensim_labels)}
     print('Num vectors: {}'.format(len(gensim_labels)))
+
+# Load gensim model into word2vec-explorer visualisation
+# gensim_embedding_model = Model(gensim_embedding_path)
+# Load gensim 2d embedding model into word2vec-explorer visualisation
+gensim_2d_embeddings_path = 'data/word_embeddings/gensim_vectors_2d.pkl'
+gensim_embedding_model = Model(gensim_2d_embeddings_path)
 
 # fast_text_embedding_path = 'data/word_embeddings/fast_text_vectors.pkl'
 # print('Loading fast_text vectors at path: {}'.format(fast_text_embedding_path))
@@ -181,7 +190,10 @@ with open(gensim_embedding_path, 'rb') as handle:
 #     fast_text_label_to_embeddings = {label: fast_text_embeddings[idx] for idx, label in enumerate(fast_text_labels)}
 #     print('Num vectors: {}'.format(len(fast_text_labels)))
 
-embedding_model = Model(gensim_embedding_path)
+# Load paper embeddings
+lsa_embedding_path = 'data/paper_embeddings/lsa-300-converted.pkl'
+# Load lsa model into word2vec-explorer visualisation
+lsa_embedding_model = Model(lsa_embedding_path)
 
 if __name__ == '__main__':
     """
