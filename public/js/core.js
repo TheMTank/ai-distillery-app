@@ -43499,7 +43499,7 @@ exports.default = React.createClass({
         { className: 'result' },
         React.createElement(
           'div',
-          { className: 'col-md-8 center-pane' },
+          { className: 'col-md-10 center-pane' },
           result && result.stats && React.createElement(Stats, { data: result.stats }),
           React.createElement(ScatterPlot2d, { ref: 'plot', color: this.state.color, points: result.reduction, clusters: result.clusters, labels: result.labels })
         ),
