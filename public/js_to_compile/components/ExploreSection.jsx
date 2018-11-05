@@ -17,8 +17,7 @@ export default React.createClass({
     }
   },
   handleChange(event) {
-    //alert(event.target.value)
-    //this.setState({value: event.target.value});
+    this.setState({value: event.target.value});
     this.embedding_type = event.target.value
   },
   componentDidMount () {

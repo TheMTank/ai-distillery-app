@@ -9,6 +9,7 @@ export default React.createClass({
       points: this.props.points,
       clusters: this.props.clusters,
       labels: this.props.labels,
+      // todo need to reset sometimes
       viewOptions: {
         showLabels: this.props.showLabels || localStorage.scatter2dShowLabels
       }
