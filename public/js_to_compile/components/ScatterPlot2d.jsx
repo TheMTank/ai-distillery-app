@@ -66,7 +66,7 @@ export default React.createClass({
     return 20
   },
   _nominalNodeLabelTextSize () {
-    var size = 10
+    var size = 3 // 10
     if (this.state.points.length >= 10000) size = 1
     if (this.state.points.length >= 1000) size = 2
     if (this.state.points.length >= 500) size = 5

@@ -6,13 +6,20 @@ const Exploration = require('./Exploration')
 export default React.createClass({
   getInitialState () {
     let { query } = this.props.location
+    this.embedding_type = 'gensim'
     return {
       params: {
         query: query ? query.query : '',
         limit: 1000,
-        num_clusters: 30
+        num_clusters: 30,
+        embedding_type: 'gensim'
       }
     }
+  },
+  handleChange(event) {
+    //alert(event.target.value)
+    //this.setState({value: event.target.value});
+    this.embedding_type = event.target.value
   },
   componentDidMount () {
     $('.navbar-nav li').removeClass('active')
@@ -36,6 +43,13 @@ export default React.createClass({
                 <label htmlFor='limitInput'>Num Clusters:</label>
                 <input id='numClustersInput' ref='numClustersInput' className='form-control' type='text' defaultValue={this.state.params.num_clusters}></input>
               </div>
+              <label>
+                  Choose your embedding:
+                  <select value={this.embedding_type} onChange={this.handleChange} ref='embedding_type_input'>
+                    <option value="gensim">Gensim word embedding</option>
+                    <option value="lsa">LSA paper embedding</option>
+                  </select>
+                </label>
               <div className='form-group'>
                 <input type='submit' className='btn btn-primary' value='Explore'/>
               </div>
@@ -51,10 +65,12 @@ export default React.createClass({
     var query = this.refs.queryInput.value
     var limit = parseInt(this.refs.limitInput.value, 10)
     var numClusters = parseInt(this.refs.numClustersInput.value, 10)
+    var embedding_type = this.refs.embedding_type_input.value
     var params = this.state.params
     params.query = query
     params.limit = limit
     params.num_clusters = numClusters
+    params.embedding_type = embedding_type
     this.props.history.pushState(null, '/explore', {query: query})
     this.setState({params})
     this.refs.exploration.setState({params})

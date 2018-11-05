@@ -1,3 +1,4 @@
+import os
 import time
 import math
 import pickle
@@ -93,6 +94,7 @@ def _all_vectors(limit):
     return labels, vectors, sample_rate
 
 filename = '../data/word_embeddings/gensim_vectors.pkl'
+filename = './data/paper_embeddings/lsa-300-converted.pkl'
 with open(filename, 'rb') as handle:
     print('Attempting to open file at: ', filename)
     embeddings_object = pickle.load(handle, encoding='latin1')
@@ -124,8 +126,9 @@ with open(filename, 'rb') as handle:
     reduced_embeddings_obj_2d = {'labels': vocab, 'embeddings': reduction}
 
     output_path = '../data/word_embeddings/gensim_vectors_2d.pkl'
+    output_path = './data/paper_embeddings/lsa-300-converted-2d.pkl'
     with open(output_path, 'wb') as f:
         pickle.dump(reduced_embeddings_obj_2d, f)
-        print('Saved 2d gensim file to: {}'.format(output_path))
+        print('Saved 2d file to: {}'.format(output_path))
 
 

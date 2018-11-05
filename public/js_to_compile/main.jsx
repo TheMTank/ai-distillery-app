@@ -16,7 +16,7 @@ const CompareSection = require('./components/CompareSection')
 ReactDOM.render(
   <Router history={history}>
     <Route component={App}>
-      <Route path='/' component={ExploreSection} />
+      <Route path='/word-embedding-viz' component={ExploreSection} />
       <Route path='/explore' component={ExploreSection} />
       <Route path='/compare' component={CompareSection} />
     </Route>

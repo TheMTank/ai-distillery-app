@@ -28,7 +28,7 @@ export default React.createClass({
     let params = this.state.params
     if (params && !params.query) vectorListTitle = 'Sample Rated'
     return (
-      <div className='exploration'>
+      <div className='exploration col-md-10'>
         {(this.state.error) && (
           <div className='alert alert-danger'>{this.state.error.message}</div>
         )}
@@ -37,7 +37,7 @@ export default React.createClass({
         )}
         {(result) && (
           <div className='result'>
-            <div className='col-md-8 center-pane'>
+            <div className='col-md-10 center-pane'>
               {(result) && (result.stats) && (
                 <Stats data={result.stats} />
               )}
@@ -63,7 +63,8 @@ export default React.createClass({
       query: params.query,
       limit: (params.limit || 1000),
       enable_clustering: true,
-      num_clusters: params.num_clusters
+      num_clusters: params.num_clusters,
+      embedding_type: params.embedding_type
     }, (error, result) => {
       if (result) {
         this.refs.plot && this.refs.plot.setState({
