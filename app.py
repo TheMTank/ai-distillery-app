@@ -192,8 +192,9 @@ gensim_embedding_model = Model(gensim_2d_embeddings_path)
 
 # Load paper embeddings
 # lsa_embedding_path = 'data/paper_embeddings/lsa-300-converted.pkl'
+lsa_embedding_path = 'data/paper_embeddings/lsa-300-converted-2d.pkl'
 # Load lsa model into word2vec-explorer visualisation
-# lsa_embedding_model = Model(lsa_embedding_path)
+lsa_embedding_model = Model(lsa_embedding_path)
 
 if __name__ == '__main__':
     """
