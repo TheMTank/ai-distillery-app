@@ -204,6 +204,18 @@ def compare():
         return jsonify({'error':
                             {'message': 'No vector found for {}'.format(queries)}})
 
+def get_embedding_objs(embedding_path):
+    print('Loading embeddings at path: {}'.format(embedding_path))
+    with open(embedding_path, 'rb') as handle:
+        embedding_obj = pickle.load(handle, encoding='latin1')
+        labels = embedding_obj['labels']
+        embeddings = embedding_obj['embeddings']
+        label_to_embeddings = {label: embeddings[idx] for idx, label in
+                                      enumerate(labels)}
+        print('Num vectors: {}'.format(len(labels)))
+
+        return labels, embeddings, label_to_embeddings
+
 
 # All models and saved objects
 # ------------------
@@ -217,13 +229,7 @@ def compare():
 
 # Load all word embeddings
 gensim_embedding_path = 'data/word_embeddings/gensim_vectors.pkl'
-print('Loading gensim vectors at path: {}'.format(gensim_embedding_path))
-with open(gensim_embedding_path, 'rb') as handle:
-    gensim_embedding_obj = pickle.load(handle, encoding='latin1')
-    gensim_labels = gensim_embedding_obj['labels']
-    gensim_embeddings = gensim_embedding_obj['embeddings']
-    gensim_label_to_embeddings = {label: gensim_embeddings[idx] for idx, label in enumerate(gensim_labels)}
-    print('Num vectors: {}'.format(len(gensim_labels)))
+gensim_labels, gensim_embeddings, gensim_label_to_embeddings = get_embedding_objs(gensim_embedding_path)
 
 # Load gensim model into word2vec-explorer visualisation
 # gensim_embedding_model = Model(gensim_embedding_path)
@@ -233,28 +239,15 @@ gensim_embedding_model = Model(gensim_2d_embeddings_path)
 
 # fast_text_embedding_path = 'data/word_embeddings/fast_text_vectors.pkl'
 # print('Loading fast_text vectors at path: {}'.format(fast_text_embedding_path))
-# with open(fast_text_embedding_path, 'rb') as handle:
-#     fast_text_embedding_obj = pickle.load(handle, encoding='latin1')
-#     fast_text_labels = fast_text_embedding_obj['labels']
-#     fast_text_embeddings = fast_text_embedding_obj['embeddings']
-#     fast_text_label_to_embeddings = {label: fast_text_embeddings[idx] for idx, label in enumerate(fast_text_labels)}
-#     print('Num vectors: {}'.format(len(fast_text_labels)))
+# fast_text_labels, fast_text_embeddings, fast_text_label_to_embeddings = get_embedding_objs(fast_text_embedding_path)
 
-# todo put into functions
 # Load paper embeddings
-lsa_embedding_path = 'data/paper_embeddings/lsa-300-converted-2d.pkl' # todo should compare in 2d or 300d?
-print('Loading lsa vectors at path: {}'.format(lsa_embedding_path))
-with open(lsa_embedding_path, 'rb') as handle:
-    lsa_embedding_obj = pickle.load(handle, encoding='latin1')
-    lsa_labels = lsa_embedding_obj['labels']
-    lsa_embeddings = lsa_embedding_obj['embeddings']
-    lsa_label_to_embeddings = {label: lsa_embeddings[idx] for idx, label in enumerate(lsa_labels)}
-    print('Num lsa vectors: {}'.format(len(lsa_labels)))
+lsa_embedding_path = 'data/paper_embeddings/lsa-300-converted.pkl'
+lsa_labels, lsa_embeddings, lsa_label_to_embeddings = get_embedding_objs(lsa_embedding_path)
 
-#  lsa_embedding_path = 'data/paper_embeddings/lsa-300-converted.pkl'
-
+lsa_embedding_2d_path = 'data/paper_embeddings/lsa-300-converted-2d.pkl'
 # Load lsa model into word2vec-explorer visualisation
-lsa_embedding_model = Model(lsa_embedding_path)
+lsa_embedding_model = Model(lsa_embedding_2d_path)
 
 if __name__ == '__main__':
     """
