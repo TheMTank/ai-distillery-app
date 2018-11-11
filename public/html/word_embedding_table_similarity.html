@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <title>Word embeddings trained on Arxiv</title>
 
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>-->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.js"></script>
+    <!--<script src="js/typeahead.bundle.js"></script>-->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 </head>
 <style>
@@ -77,6 +84,7 @@ table.blueTable tfoot .links a{
 <body>
 
 <script id="address-template" type="text/x-handlebars-template">
+    <h1 style="text-align:center">Results for {{selectedWord}}</h1>
     <table class="similar-words blueTable">
         <thead>
             <tr>
@@ -96,29 +104,6 @@ table.blueTable tfoot .links a{
 
     </table>
 </script>
-
-<!--<form action="/word_embedding_proximity">-->
-  <!--Find similar words to:<br>-->
-  <!--<input type="text" name="word" value="RNN">-->
-  <!--<br>-->
-  <!--<br><br>-->
-  <!--<input type="submit" value="Submit">-->
-<!--</form>-->
-
-<!--<form id="form-country_v1" name="form-country_v1">-->
-    <!--<div class="typeahead__container">-->
-        <!--<div class="typeahead__field">-->
-            <!--<div class="typeahead__query">-->
-                <!--<input class="js-typeahead-country_v1" name="country_v1[query]" type="search" placeholder="Search" autocomplete="off">-->
-            <!--</div>-->
-            <!--<div class="typeahead__button">-->
-                <!--<button type="submit">-->
-                    <!--<i class="typeahead__search-icon"></i>-->
-                <!--</button>-->
-            <!--</div>-->
-        <!--</div>-->
-    <!--</div>-->
-<!--</form>-->
 
 <div style="margin-left: auto;
     margin-right: auto;
@@ -141,31 +126,27 @@ table.blueTable tfoot .links a{
 
 </body>
 
-<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.js"></script>
-<!--<script src="js/typeahead.bundle.js"></script>-->
-
 <script>
     $(function () {
-
-        //$.typeahead({ // todo
-
-
         var tableData, context;
         var getSimilarWords = function(searchTerm, embeddingType) {
             $.get('/word_embedding_proximity', {'word': searchTerm, 'type': embeddingType}, function(data) {
                 console.log(data);
-                tableData = data;
+                if (data == 'Word not found') {
+                    tableData = [{'distance': -1, 'word': 'Word not found in embedding labels'}]
+                }
+                else {
+                    tableData = data;
+                }
                 context = {
-                    'top_words': tableData
+                    'top_words': tableData,
+                    'selectedWord': searchTerm
                 }
                 fillTable(context);
             })
         }
 
         var fillTable = function(context) {
-            console.log('Ready');
             // Grab the template script
             var theTemplateScript = $("#address-template").html();
 
@@ -175,11 +156,8 @@ table.blueTable tfoot .links a{
             // Pass our data to the template
             var theCompiledHtml = theTemplate(context);
 
-            console.log(context);
-
             // Add the compiled html to the page
             $('.content-placeholder').html(theCompiledHtml);
-            console.log('Done');
         }
 
         //getSimilarWords();
@@ -187,8 +165,8 @@ table.blueTable tfoot .links a{
 
         $(document).bind('keypress', function(e) {
             if(e.keyCode==13) {
-                 $('#submit-btn').trigger('click');
-             }
+                $('#submit-btn').trigger('click');
+            }
         });
 
         $('#submit-btn').click(function (data) {
@@ -196,6 +174,30 @@ table.blueTable tfoot .links a{
             var embeddingType = $("#embedding-type").val();
             getSimilarWords(searchTerm, embeddingType);
         });
+
+        var typeahead_data_to_get = ['gensim'] // fasttext
+        var typeahead_labels = {}
+
+        for (let i = 0; i < typeahead_data_to_get.length; i++) {
+            $.get( "get_embedding_labels", function( data ) {
+              var labels = data
+              typeahead_labels[typeahead_data_to_get[i]] = labels
+              console.log(typeahead_labels);
+              if (typeahead_data_to_get[i] == 'gensim') {
+                  $("#search-box").autocomplete({
+                      //source: typeahead_labels['gensim'],
+                      source: function(request, response) {
+                            var results = $.ui.autocomplete.filter(typeahead_labels['gensim'], request.term);
+
+                            response(results.slice(0, 20));
+                      },
+                      minLength: 2
+                  });
+              }
+            });
+        }
+
+        // todo when two types and select changes https://stackoverflow.com/questions/18441716/jquery-autocomplete-change-source
     });
 </script>
 </html>

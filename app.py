@@ -83,6 +83,14 @@ def get_word_embedding():
 
     return jsonify(response)
 
+@app.route("/get_embedding_labels")
+def get_embedding_labels():
+    selected_embedding = request.args.get('embedding_type', 'gensim')
+    if selected_embedding == 'gensim':
+        labels = gensim_labels
+
+    return jsonify(labels)
+
 
 @app.route('/js/<path:path>')
 def send_js(path):
