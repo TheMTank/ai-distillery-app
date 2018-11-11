@@ -73,6 +73,10 @@ export default React.createClass({
           labels: result.labels
         })
         this.refs.mostSimilarList && this.refs.mostSimilarList.setState({selected: null})
+
+        if (this.refs.plot) {
+            this.refs.plot.turnOffCheckbox()
+        }
       }
       let loading = false
       this.setState({error, result, loading})
