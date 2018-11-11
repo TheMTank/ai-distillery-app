@@ -15,7 +15,7 @@ table.blueTable td, table.blueTable th {
   padding: 3px 2px;
 }
 table.blueTable tbody td {
-  font-size: 24px;
+  font-size: 13px;
 }
 table.blueTable tr:nth-child(even) {
   background: #D0E4F5;
@@ -61,6 +61,14 @@ table.blueTable tfoot .links a{
   border-radius: 5px;
 }
 
+.wordEmbFontSize {
+    font-size: 24px;
+}
+
+.paperFontSize {
+    font-size: 15px;
+}
+
 #submit-btn {
     background: rgb(28, 184, 65);
     font-size: 30px;
@@ -73,3 +81,10 @@ table.blueTable tfoot .links a{
 #search-box {
     font-size: 25px;
 }
+
+.search-box-papers {
+    font-size: 15px;
+    width: 100%;
+}
+
+/*todo other divs to 100% because papers need more space*/

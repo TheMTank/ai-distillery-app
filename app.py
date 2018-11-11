@@ -30,40 +30,43 @@ def root():
 def charts():
     return send_from_directory('public/html', 'all-charts.html')
 
-@app.route("/word-embedding-table")
+@app.route("/word-embedding-proximity-page")
 def word_embedding_table():
-    return send_from_directory('public/html', 'word_embedding_table_similarity.html')
+    print('word-embedding-proximity-page')
+    return send_from_directory('public/html', 'word_embedding_proximity.html')
 
+@app.route("/paper-embedding-proximity-page")
+def paper_embedding_table():
+    print('paper-embedding-proximity-page')
+    return send_from_directory('public/html', 'paper_embedding_proximity.html')
 
 @app.route("/word-embedding-viz")
 def word_embedding_viz():
     return send_from_directory('public/html', 'embedding_viz.html')
 
-# could do it this way or cookie way (https://www.w3schools.com/js/js_cookies.asp)
-# (https://stackoverflow.com/questions/13531149/check-for-a-cookie-with-python-flask)
 # @app.route("/paper-embedding-viz")
 # def paper_embedding_viz():
 #     return send_from_directory('public/html', 'embedding_viz.html')
 
-@app.route("/word_embedding_proximity")
-def get_word_embedding():
+@app.route("/word-embedding-proximity")
+def get_word_embedding_proximity():
     # query params
     n = int(request.args.get('n', default_n))
-    inputted_word = request.args.get('word')
+    input_str = request.args.get('input_str')
     selected_word_embedding = request.args.get('type')
 
     # inputted_word = inputted_word.strip().lower() # todo both upper and lower case atm. find lowercase version if not found
     # inputted_word = inputted_word.replace(' ', '_') # todo probably keep
     # fuzzy match similar ones!!!!! and show
 
-    print('Inputted word: {}. Embedding type: {}'.format(inputted_word, selected_word_embedding))
+    print('Inputted string: {}. Embedding type: {}'.format(input_str, selected_word_embedding))
 
     if selected_word_embedding == 'gensim':
-        if inputted_word in gensim_labels:
-            print('Words most similar to:', inputted_word)
+        if input_str in gensim_labels:
+            print('Words most similar to:', input_str)
             similar_words, distances = get_closest_vectors(gensim_labels, gensim_embeddings,
-                                                           gensim_label_to_embeddings[inputted_word], n=15)
-            response = [{'word': word, 'distance': round(float(dist), 5)} for word, dist in
+                                                           gensim_label_to_embeddings[input_str], n=15)
+            response = [{'label': word, 'distance': round(float(dist), 5)} for word, dist in
                         zip(similar_words, distances)]
             print(response)
         else:
@@ -83,11 +86,50 @@ def get_word_embedding():
 
     return jsonify(response)
 
-@app.route("/get_embedding_labels")
+@app.route("/paper-embedding-proximity")
+def get_paper_embedding_proximity():
+    print('Within paper embedding proximity table get ')
+    # query params
+    n = int(request.args.get('n', default_n))
+    input_str = request.args.get('input_str')
+    selected_embedding = request.args.get('type')
+
+    print('Inputted string: {}. Embedding type: {}'.format(input_str, selected_embedding))
+
+    if selected_embedding == 'lsa':
+        if input_str in lsa_labels:
+            print('Labels most similar to:', input_str)
+            similar_papers, distances = get_closest_vectors(lsa_labels, lsa_embeddings,
+                                                           lsa_label_to_embeddings[input_str], n=15)
+            response = [{'label': label, 'distance': round(float(dist), 5)} for label, dist in
+                        zip(similar_papers, distances)]
+            print(response)
+        else:
+            response = 'paper not found'
+    # elif selected_embedding == 'doc2vec':
+    #     if input_str in fast_text_labels:
+    #         print('Words most similar to:', inputted_word)
+    #         similar_words, distances = get_closest_vectors(fast_text_labels, fast_text_embeddings,
+    #                                                        fast_text_label_to_embeddings[inputted_word], n=15)
+    #         response = [{'word': word, 'distance': round(float(dist), 5)} for word, dist in
+    #                     zip(similar_words, distances)]
+    #         print(response)
+    #     else:
+    #         response = 'Word not found'
+    else:
+        response = 'Selected wrong embedding'
+
+    return jsonify(response)
+
+@app.route("/get-embedding-labels")
 def get_embedding_labels():
     selected_embedding = request.args.get('embedding_type', 'gensim')
     if selected_embedding == 'gensim':
         labels = gensim_labels
+    elif selected_embedding == 'lsa':
+        labels = lsa_labels
+    else:
+        labels = ['embedding_type not found']
 
     return jsonify(labels)
 
@@ -198,9 +240,19 @@ gensim_embedding_model = Model(gensim_2d_embeddings_path)
 #     fast_text_label_to_embeddings = {label: fast_text_embeddings[idx] for idx, label in enumerate(fast_text_labels)}
 #     print('Num vectors: {}'.format(len(fast_text_labels)))
 
+# todo put into functions
 # Load paper embeddings
-# lsa_embedding_path = 'data/paper_embeddings/lsa-300-converted.pkl'
-lsa_embedding_path = 'data/paper_embeddings/lsa-300-converted-2d.pkl'
+lsa_embedding_path = 'data/paper_embeddings/lsa-300-converted-2d.pkl' # todo should compare in 2d or 300d?
+print('Loading lsa vectors at path: {}'.format(lsa_embedding_path))
+with open(lsa_embedding_path, 'rb') as handle:
+    lsa_embedding_obj = pickle.load(handle, encoding='latin1')
+    lsa_labels = lsa_embedding_obj['labels']
+    lsa_embeddings = lsa_embedding_obj['embeddings']
+    lsa_label_to_embeddings = {label: lsa_embeddings[idx] for idx, label in enumerate(lsa_labels)}
+    print('Num lsa vectors: {}'.format(len(lsa_labels)))
+
+#  lsa_embedding_path = 'data/paper_embeddings/lsa-300-converted.pkl'
+
 # Load lsa model into word2vec-explorer visualisation
 lsa_embedding_model = Model(lsa_embedding_path)
 

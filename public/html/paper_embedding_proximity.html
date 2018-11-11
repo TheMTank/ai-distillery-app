@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Paper embeddings trained on Arxiv</title>
+
+
+    <link rel="stylesheet" href="/styles/embedding_proximity.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+</head>
+<style>
+
+</style>
+<body>
+
+<script id="address-template" type="text/x-handlebars-template">
+    <h4 style="text-align:center">Results for {{selectedWord}}</h4>
+    <table class="similar-words blueTable paperFontSize">
+        <thead>
+            <tr>
+                <td>Similar words</td>
+                <td>Distance</td>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each top_words}}
+                <tr>
+                    <td>{{this.label}}</td>
+                    <td>{{this.distance}}</td>
+                </tr>
+            {{/each}}
+        </tbody>
+
+    </table>
+</script>
+
+<div style="margin-left: auto;margin-right: auto;width: 50%;" data-embedding-type="paper" id="input-form">
+    <div style="text-align: center;">
+        <input type="text" name="word" value="" id="search-box" class="search-box-papers">
+        <br>
+        <select id="embedding-type">
+            <option value="lsa" selected>LSA</option>
+            <!--<option value="fast_text">fastText</option>-->
+        </select>
+        <button id="submit-btn" style="">Submit</button>
+    </div>
+</div>
+
+<div class="content-placeholder">
+
+</div>
+</body>
+<script>
+    $(function () {
+        // global variables different between word and paper embedding page. Avoids dangerous caching
+        higherLevelEmbeddingType = $('#input-form').data('embedding-type');
+        embeddingProximityRoute = '/' + higherLevelEmbeddingType + '-embedding-proximity';
+    })
+</script>
+<script src="/js/embedding_proximity.js"></script>
+</html>
