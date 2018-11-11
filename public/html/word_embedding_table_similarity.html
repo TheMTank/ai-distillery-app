@@ -4,82 +4,16 @@
     <meta charset="UTF-8">
     <title>Word embeddings trained on Arxiv</title>
 
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>-->
+    <link rel="stylesheet" href="/styles/embedding_proximity.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.js"></script>
-    <!--<script src="js/typeahead.bundle.js"></script>-->
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 </head>
 <style>
-table.blueTable {
-    border: 1px solid #1C6EA4;
-    background-color: #EEEEEE;
-    width: 100%;
-    text-align: left;
-    border-collapse: collapse;
 
-    /* extra */
-    margin-left: auto;
-    margin-right: auto;
-    width: 50%;
-}
-table.blueTable td, table.blueTable th {
-  border: 1px solid #AAAAAA;
-  padding: 3px 2px;
-}
-table.blueTable tbody td {
-  font-size: 13px;
-}
-table.blueTable tr:nth-child(even) {
-  background: #D0E4F5;
-}
-table.blueTable thead {
-  background: #1C6EA4;
-  background: -moz-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
-  background: -webkit-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
-  background: linear-gradient(to bottom, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
-  border-bottom: 2px solid #444444;
-}
-table.blueTable thead th {
-  font-size: 15px;
-  font-weight: bold;
-  color: #FFFFFF;
-  border-left: 2px solid #D0E4F5;
-}
-table.blueTable thead th:first-child {
-  border-left: none;
-}
-
-table.blueTable tfoot {
-  font-size: 14px;
-  font-weight: bold;
-  color: #FFFFFF;
-  background: #D0E4F5;
-  background: -moz-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
-  background: -webkit-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
-  background: linear-gradient(to bottom, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
-  border-top: 2px solid #444444;
-}
-table.blueTable tfoot td {
-  font-size: 14px;
-}
-table.blueTable tfoot .links {
-  text-align: right;
-}
-table.blueTable tfoot .links a{
-  display: inline-block;
-  background: #1C6EA4;
-  color: #FFFFFF;
-  padding: 2px 8px;
-  border-radius: 5px;
-}
-
-#submit-btn {
-    background: rgb(28, 184, 65);
-}
 </style>
 <body>
 
@@ -99,15 +33,12 @@ table.blueTable tfoot .links a{
                     <td>{{this.distance}}</td>
                 </tr>
             {{/each}}
-
         </tbody>
 
     </table>
 </script>
 
-<div style="margin-left: auto;
-    margin-right: auto;
-    width: 50%;">
+<div style="margin-left: auto;margin-right: auto;width: 50%;">
     <div style="text-align: center;">
         <input type="text" name="word" value="RNN" id="search-box">
         <br>
@@ -122,82 +53,7 @@ table.blueTable tfoot .links a{
 <div class="content-placeholder">
 
 </div>
-
-
 </body>
 
-<script>
-    $(function () {
-        var tableData, context;
-        var getSimilarWords = function(searchTerm, embeddingType) {
-            $.get('/word_embedding_proximity', {'word': searchTerm, 'type': embeddingType}, function(data) {
-                console.log(data);
-                if (data == 'Word not found') {
-                    tableData = [{'distance': -1, 'word': 'Word not found in embedding labels'}]
-                }
-                else {
-                    tableData = data;
-                }
-                context = {
-                    'top_words': tableData,
-                    'selectedWord': searchTerm
-                }
-                fillTable(context);
-            })
-        }
-
-        var fillTable = function(context) {
-            // Grab the template script
-            var theTemplateScript = $("#address-template").html();
-
-            // Compile the template
-            var theTemplate = Handlebars.compile(theTemplateScript);
-
-            // Pass our data to the template
-            var theCompiledHtml = theTemplate(context);
-
-            // Add the compiled html to the page
-            $('.content-placeholder').html(theCompiledHtml);
-        }
-
-        //getSimilarWords();
-
-
-        $(document).bind('keypress', function(e) {
-            if(e.keyCode==13) {
-                $('#submit-btn').trigger('click');
-            }
-        });
-
-        $('#submit-btn').click(function (data) {
-            var searchTerm = $('#search-box').val();
-            var embeddingType = $("#embedding-type").val();
-            getSimilarWords(searchTerm, embeddingType);
-        });
-
-        var typeahead_data_to_get = ['gensim'] // fasttext
-        var typeahead_labels = {}
-
-        for (let i = 0; i < typeahead_data_to_get.length; i++) {
-            $.get( "get_embedding_labels", function( data ) {
-              var labels = data
-              typeahead_labels[typeahead_data_to_get[i]] = labels
-              console.log(typeahead_labels);
-              if (typeahead_data_to_get[i] == 'gensim') {
-                  $("#search-box").autocomplete({
-                      //source: typeahead_labels['gensim'],
-                      source: function(request, response) {
-                            var results = $.ui.autocomplete.filter(typeahead_labels['gensim'], request.term);
-
-                            response(results.slice(0, 20));
-                      },
-                      minLength: 2
-                  });
-              }
-            });
-        }
-
-        // todo when two types and select changes https://stackoverflow.com/questions/18441716/jquery-autocomplete-change-source
-    });
-</script>
+<script src="/js/embedding_proximity.js"></script>
 </html>
