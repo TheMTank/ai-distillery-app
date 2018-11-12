@@ -2,6 +2,7 @@ import os
 import time
 import math
 import pickle
+import argparse
 
 import numpy as np
 from sklearn.manifold import TSNE
@@ -93,10 +94,17 @@ def _all_vectors(limit):
         i += 1
     return labels, vectors, sample_rate
 
-filename = '../data/word_embeddings/gensim_vectors.pkl'
-filename = './data/paper_embeddings/lsa-300-converted.pkl'
-with open(filename, 'rb') as handle:
-    print('Attempting to open file at: ', filename)
+
+parser = argparse.ArgumentParser(description='Convert to 2d')
+parser.add_argument('--input-path', type=str,
+                    help='Input embedding path')
+parser.add_argument('--output-path', type=str,
+                    help='Output embedding')
+
+args = parser.parse_args()
+
+with open(args.input_path, 'rb') as handle:
+    print('Attempting to open file at: ', args.input_path)
     embeddings_object = pickle.load(handle, encoding='latin1')
     vocab = embeddings_object['labels']
     embeddings_array = embeddings_object['embeddings']
@@ -125,10 +133,8 @@ with open(filename, 'rb') as handle:
 
     reduced_embeddings_obj_2d = {'labels': vocab, 'embeddings': reduction}
 
-    output_path = '../data/word_embeddings/gensim_vectors_2d.pkl'
-    output_path = './data/paper_embeddings/lsa-300-converted-2d.pkl'
-    with open(output_path, 'wb') as f:
+    with open(args.output_path, 'wb') as f:
         pickle.dump(reduced_embeddings_obj_2d, f)
-        print('Saved 2d file to: {}'.format(output_path))
+        print('Saved 2d file to: {}'.format(args.output_path))
 
 
