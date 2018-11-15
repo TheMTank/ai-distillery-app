@@ -1,3 +1,7 @@
+"""
+Heavily adapted from: https://github.com/dominiek/word2vec-explorer
+"""
+
 import math
 import gensim
 import pickle
@@ -108,33 +112,14 @@ class Model(object):
     """
 
     def __init__(self, filename):
-        # try:
-        # self.model1 = gensim.models.Word2Vec.load(filename)
-        # self.model = EmbeddingModel(self.model1.wv.vocab)
-        # todo allow option above to take gensim without conversion, otherwise below
-
         with open(filename, 'rb') as handle:
             print('Attempting to open file at: ', filename)
             embeddings_object = pickle.load(handle, encoding='latin1')
             self.vocab = embeddings_object['labels']
             self.embeddings_array = embeddings_object['embeddings']
             self.embeddings_dict = {self.vocab[i]: self.embeddings_array[i] for i in range(len(self.vocab))}
-            print('Finished reading file and creating embeddings dictionary')
 
         self.already_2D = self.embeddings_array.shape[1] == 2
-
-        # ideally the only input should be labels and embeddings in one file
-        # how to convert from word2vec explorer into an embedding explorer
-        # self.model.wv is a <gensim.models.keyedvectors.Word2VecKeyedVectors object at 0x7f594822b210>
-        # self.model.wv.vocab is a dict full of of keyedVectors
-        # self.model.wv.vocab['cat'] gets the specific keyedvector which holds the count and index
-        # self.model['cat'] gets the numpy array
-
-        # self.model.n_similarity() "Compute cosine similarity between two sets of words." returns float
-        # self.model.most_similar() returns a list of tuples (word, score)
-        '''except cPickle.UnpicklingError:
-            load = gensim.models.Word2Vec.load_word2vec_format
-            self.model = load(filename, binary=True)'''
 
     def compare(self, queries, limit):
         all_words = []

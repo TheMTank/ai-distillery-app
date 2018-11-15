@@ -32,9 +32,6 @@ $(function () {
         $('.content-placeholder').html(theCompiledHtml);
     }
 
-    //getSimilarEmbeddings();
-
-
     $(document).bind('keypress', function(e) {
         if(e.keyCode==13) {
             $('#submit-btn').trigger('click');
@@ -48,22 +45,22 @@ $(function () {
     });
 
     // typeahead setup
-    var currentEmbeddingName = higherLevelEmbeddingType == 'word' ? 'gensim' : 'lsa' ;
-    var typeahead_data_to_get = [currentEmbeddingName] // fasttext
+    var currentPagesEmbeddingOptions = higherLevelEmbeddingType == 'word' ? ['gensim'] : ['lsa', 'doc2vec'];
+    //var typeahead_data_to_get = currentPagesEmbeddingOptions // fasttext
     var typeahead_labels = {}
 
-    for (let i = 0; i < typeahead_data_to_get.length; i++) {
-        $.get( "get-embedding-labels", {'embedding_type': currentEmbeddingName}, function( data ) {
+    for (let i = 0; i < currentPagesEmbeddingOptions.length; i++) {
+        $.get( "get-embedding-labels", {'embedding_type': currentPagesEmbeddingOptions[i]}, function( data ) {
           var labels = data
-          typeahead_labels[typeahead_data_to_get[i]] = labels
+          typeahead_labels[currentPagesEmbeddingOptions[i]] = labels
           console.log(typeahead_labels);
-          $('#search-box').val(typeahead_labels[currentEmbeddingName][0]);
-//          if (typeahead_data_to_get[i] == 'gensim') {
-          if (i == 0) {
+          if (i == 0) { // first one should be default
+              currentEmbeddingSelected = currentPagesEmbeddingOptions[i];
+              $('#search-box').val(typeahead_labels[currentPagesEmbeddingOptions[i]][Math.floor(Math.random() * typeahead_labels[currentPagesEmbeddingOptions[i]].length)]);
               $("#search-box").autocomplete({
-                  //source: typeahead_labels['gensim'],
+                  //source: typeahead_labels['gensim'], // for all
                   source: function(request, response) {
-                        var results = $.ui.autocomplete.filter(typeahead_labels[currentEmbeddingName], request.term);
+                        var results = $.ui.autocomplete.filter(typeahead_labels[currentPagesEmbeddingOptions[i]], request.term);
 
                         response(results.slice(0, 20));
                   },
@@ -73,5 +70,14 @@ $(function () {
         });
     }
 
-    // todo when two types and select changes https://stackoverflow.com/questions/18441716/jquery-autocomplete-change-source
+    // if select embedding changes, get other typeahead and replace source
+    $('#embedding-type').change(function() {
+        console.log($(this).val())
+        currentEmbeddingSelected = $(this).val()
+        $( "#search-box" ).autocomplete('option', {'source': function(request, response) {
+                        var results = $.ui.autocomplete.filter(typeahead_labels[currentEmbeddingSelected], request.term);
+
+                        response(results.slice(0, 20));
+                  }})
+    });
 });

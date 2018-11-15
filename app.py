@@ -67,7 +67,7 @@ def get_word_embedding_proximity():
         if input_str in gensim_labels:
             print('Words most similar to:', input_str)
             similar_words, distances = get_closest_vectors(gensim_labels, gensim_embeddings,
-                                                           gensim_label_to_embeddings[input_str], n=15)
+                                                           gensim_label_to_embeddings[input_str], n=n)
             response = [{'label': word, 'distance': round(float(dist), 5)} for word, dist in
                         zip(similar_words, distances)]
             print(response)
@@ -102,22 +102,22 @@ def get_paper_embedding_proximity():
         if input_str in lsa_labels:
             print('Labels most similar to:', input_str)
             similar_papers, distances = get_closest_vectors(lsa_labels, lsa_embeddings,
-                                                           lsa_label_to_embeddings[input_str], n=15)
+                                                           lsa_label_to_embeddings[input_str], n=n)
             response = [{'label': label, 'distance': round(float(dist), 5)} for label, dist in
                         zip(similar_papers, distances)]
             print(response)
         else:
             response = 'paper not found'
-    # elif selected_embedding == 'doc2vec':
-    #     if input_str in fast_text_labels:
-    #         print('Words most similar to:', inputted_word)
-    #         similar_words, distances = get_closest_vectors(fast_text_labels, fast_text_embeddings,
-    #                                                        fast_text_label_to_embeddings[inputted_word], n=15)
-    #         response = [{'word': word, 'distance': round(float(dist), 5)} for word, dist in
-    #                     zip(similar_words, distances)]
-    #         print(response)
-    #     else:
-    #         response = 'Word not found'
+    elif selected_embedding == 'doc2vec':
+        if input_str in doc2vec_labels:
+            print('Labels most similar to:', input_str)
+            similar_words, distances = get_closest_vectors(doc2vec_labels, doc2vec_embeddings,
+                                                           doc2vec_label_to_embeddings[input_str], n=n)
+            response = [{'word': word, 'distance': round(float(dist), 5)} for word, dist in
+                        zip(similar_words, distances)]
+            print(response)
+        else:
+            response = 'Word not found'
     else:
         response = 'Selected wrong embedding'
 
@@ -130,23 +130,21 @@ def get_embedding_labels():
         labels = gensim_labels
     elif selected_embedding == 'lsa':
         labels = lsa_labels
+    elif selected_embedding == 'doc2vec':
+        labels = doc2vec_labels
     else:
         labels = ['embedding_type not found']
 
     return jsonify(labels)
 
-
 @app.route('/js/<path:path>')
 def send_js(path):
     return send_from_directory('public/js', path)
-
 
 @app.route('/styles/<path:path>')
 def send_styles(path):
     return send_from_directory('public/styles', path)
 
-
-# removed because quite slow.
 @app.route("/api/explore")
 def explore():
     query = request.args.get('query', '')
@@ -187,7 +185,7 @@ def explore():
 def compare():
     limit = request.args.get('limit', 100)
     queries = request.args.getlist('queries[]')
-    # queries = request.args.get('queries')
+    # queries = request.args.get('queries') # todo double check all browsers
     # queries = queries.split(';')
     embedding_type = request.args.get('embedding_type', 'gensim')
     print(limit)
@@ -244,7 +242,7 @@ def download_model(key, output_path):
 # ------------------
 # gensim word2vec word embeddings (2d + 100d)
 # fastText word embeddings
-# LSA paper paper embeddings (2d + 300d)
+# LSA paper paper embeddings (2d + 100d + 300d)
 # doc2vec paper embeddings (2d + 100d)
 # ------------------
 
@@ -253,7 +251,7 @@ gensim_embedding_name = 'type_word2vec#dim_100#dataset_ArxivNov4#time_2018-11-13
 gensim_2d_embeddings_name = 'type_word2vec#dim_2#dataset_ArxivNov4#time_2018-11-13T07_17_46.600182'
 lsa_embedding_name = 'lsa-100.pkl' # 'lsa-300.pkl' # seems too big
 lsa_embedding_2d_name = 'lsa-2.pkl'
-doc2vec_embedding_name = 'type_doc2vec#dim_100#dataset_ArxivNov4#time_2018-11-14T02_10_25.587584' # 'doc2vec-300.pkl'
+doc2vec_embedding_name = 'type_doc2vec#dim_100#dataset_ArxivNov4#time_2018-11-14T02_10_25.587584' # 'doc2vec-300.pkl' # not right format
 doc2vec_embedding_2d_name = 'type_doc2vec#dim_2#dataset_ArxivNov4#time_2018-11-14T02_10_25.587584'
 
 gensim_embedding_path = 'data/word_embeddings/' + gensim_embedding_name
