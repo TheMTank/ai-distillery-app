@@ -1,12 +1,14 @@
+import datetime
 import pickle
 import sys
 import os
+import os.path
 
 import numpy as np
 from flask import Flask, request, render_template, send_from_directory, jsonify
 
 from explorer import Model
-
+from download_from_s3_bucket import download_file_from_s3
 
 default_n = 15
 STATIC_DIR = os.path.dirname(os.path.realpath(__file__)) + '/public'
@@ -42,11 +44,11 @@ def paper_embedding_table():
 
 @app.route("/word-embedding-viz")
 def word_embedding_viz():
-    return send_from_directory('public/html', 'embedding_viz.html')
+    return send_from_directory('public/html', 'word_embedding_viz.html')
 
-# @app.route("/paper-embedding-viz")
-# def paper_embedding_viz():
-#     return send_from_directory('public/html', 'embedding_viz.html')
+@app.route("/paper-embedding-viz")
+def paper_embedding_viz():
+    return send_from_directory('public/html', 'paper_embedding_viz.html')
 
 @app.route("/word-embedding-proximity")
 def get_word_embedding_proximity():
@@ -157,6 +159,10 @@ def explore():
         embedding_model = gensim_embedding_model
     elif embedding_type == 'lsa':
         embedding_model = lsa_embedding_model
+    elif embedding_type == 'doc2vec':
+        embedding_model = doc2vec_embedding_model
+    else:
+        embedding_model = gensim_embedding_model  # default model so it doesn't crash
 
     print('Embedding type: {}. embedding_model: {}'.format(embedding_type, embedding_model))
 
@@ -191,7 +197,12 @@ def compare():
         embedding_model = gensim_embedding_model
     elif embedding_type == 'lsa':
         embedding_model = lsa_embedding_model
-        print('Embedding type: {}. embedding_model: {}'.format(embedding_type, embedding_model))
+    elif embedding_type == 'doc2vec':
+        embedding_model = doc2vec_embedding_model
+    else:
+        embedding_model = gensim_embedding_model  # default model so it doesn't crash
+
+    print('Embedding type: {}. embedding_model: {}'.format(embedding_type, embedding_model))
 
     try:
         # for i in range(len(queries)):
@@ -216,25 +227,59 @@ def get_embedding_objs(embedding_path):
 
         return labels, embeddings, label_to_embeddings
 
+def download_model(key, output_path):
+    """
+    Function downloads necessary files from S3 bucket on server startup
+    :param key: path within S3 bucket to get model
+    :param output_path: where to store the downloaded model
+
+    """
+
+    if os.path.exists(output_path):
+        print('File at: {} already exists'.format(output_path))
+    else:
+        download_file_from_s3(key, output_path)
 
 # All models and saved objects
 # ------------------
 # gensim word2vec embeddings
 # fastText word embeddings
 # LSA paper embeddings
+# doc2vec Embeddings
 # ------------------
+
+# Download all models if they don't already exist (download_model() checks)
+gensim_embedding_name = 'gensim_vectors.pkl'
+gensim_2d_embeddings_name = 'gensim_vectors_2d.pkl'
+lsa_embedding_name = 'lsa-300-converted.pkl'
+lsa_embedding_2d_name = 'lsa-300-converted-2d.pkl'
+doc2vec_embedding_2d_name = 'type_doc2vec#dim_100#dataset_ArxivNov4#time_2018-11-14T02_10_25.587584' # TODO change to 2dim version e.g. 'all_doc2vec_embed_2_dim.pkl'
+
+gensim_embedding_path = 'data/word_embeddings/' + gensim_embedding_name
+gensim_2d_embeddings_path = 'data/word_embeddings/' + gensim_2d_embeddings_name
+lsa_embedding_path = 'data/paper_embeddings/' + lsa_embedding_name
+lsa_embedding_2d_path = 'data/paper_embeddings/' + lsa_embedding_2d_name
+doc2vec_embedding_2d_path = 'data/paper_embeddings/' + doc2vec_embedding_2d_name
+
+print('Beginning to download all models')
+download_model('101x101maze.png', 'data/word_embeddings/maze2.png')
+download_model('model_objects/' + gensim_embedding_name, gensim_embedding_path)
+download_model('model_objects/' + gensim_2d_embeddings_name, gensim_2d_embeddings_path)
+download_model('model_objects/' + lsa_embedding_name, lsa_embedding_path)
+download_model('model_objects/' + lsa_embedding_2d_name, lsa_embedding_2d_path)
+download_model('model_objects/' + doc2vec_embedding_2d_name, doc2vec_embedding_2d_path)
+
+# Loading models into embedding objects and Explorer objects
 
 # model = gensim.models.Word2Vec.load(args.word2vec_model_path)
 # vocab = list(model.wv.index2word)
 
 # Load all word embeddings
-gensim_embedding_path = 'data/word_embeddings/gensim_vectors.pkl'
 gensim_labels, gensim_embeddings, gensim_label_to_embeddings = get_embedding_objs(gensim_embedding_path)
 
 # Load gensim model into word2vec-explorer visualisation
 # gensim_embedding_model = Model(gensim_embedding_path)
 # Load gensim 2d embedding model into word2vec-explorer visualisation
-gensim_2d_embeddings_path = 'data/word_embeddings/gensim_vectors_2d.pkl'
 gensim_embedding_model = Model(gensim_2d_embeddings_path)
 
 # fast_text_embedding_path = 'data/word_embeddings/fast_text_vectors.pkl'
@@ -242,17 +287,19 @@ gensim_embedding_model = Model(gensim_2d_embeddings_path)
 # fast_text_labels, fast_text_embeddings, fast_text_label_to_embeddings = get_embedding_objs(fast_text_embedding_path)
 
 # Load paper embeddings
-lsa_embedding_path = 'data/paper_embeddings/lsa-300-converted.pkl'
 lsa_labels, lsa_embeddings, lsa_label_to_embeddings = get_embedding_objs(lsa_embedding_path)
 
-lsa_embedding_2d_path = 'data/paper_embeddings/lsa-300-converted-2d.pkl'
 # Load lsa model into word2vec-explorer visualisation
 lsa_embedding_model = Model(lsa_embedding_2d_path)
+
+# Load doc2vec model into word2vec-explorer visualisation
+doc2vec_embedding_model = Model(doc2vec_embedding_2d_path)
 
 if __name__ == '__main__':
     """
     """
 
-    print('Listening')
+    print('Server has started up at time: {}'.format(datetime.datetime.now().
+                                                     strftime("%I:%M%p on %B %d, %Y")))
     app.run(debug=True, use_reloader=True)
     # app.run(host='0.0.0.0', port=8080)
