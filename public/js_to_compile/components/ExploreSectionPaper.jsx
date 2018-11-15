@@ -6,13 +6,13 @@ const Exploration = require('./Exploration')
 export default React.createClass({
   getInitialState () {
     let { query } = this.props.location
-    this.embedding_type = 'gensim'
+    this.embedding_type = 'doc2vec'
     return {
       params: {
         query: query ? query.query : '',
         limit: 1000,
         num_clusters: 30,
-        embedding_type: 'gensim'
+        embedding_type: this.embedding_type
       }
     }
   },

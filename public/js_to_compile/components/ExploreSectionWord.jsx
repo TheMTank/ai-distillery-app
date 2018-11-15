@@ -12,7 +12,7 @@ export default React.createClass({
         query: query ? query.query : '',
         limit: 1000,
         num_clusters: 30,
-        embedding_type: 'gensim'
+        embedding_type: this.embedding_type
       }
     }
   },
