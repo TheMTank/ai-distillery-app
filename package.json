@@ -5,8 +5,8 @@
   "scripts": {
     "test": "mocha test/unit/**/*.js",
     "build": "browserify -t browserify-css ui/app.js --extension=.jsx public/js_to_compile/main.jsx | uglifyjs -cm > public/js/core.js",
-    "start": "watchify --extension=.jsx -o public/js/core_word.js -v -d public/js_to_compile/main_word.jsx",
-    "start_paper": "watchify --extension=.jsx -o public/js/core_paper.js -v -d public/js_to_compile/main_paper.jsx"
+    "start_word": "watchify --extension=.jsx -o public/js/core_word.js -v -d public/js_to_compile/main_word.jsx",
+    "start": "watchify --extension=.jsx -o public/js/core_paper.js -v -d public/js_to_compile/main_paper.jsx"
   },
   "browser": {
     "bootstrap": "./node_modules/bootstrap/dist/js/bootstrap.js"

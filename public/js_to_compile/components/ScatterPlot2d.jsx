@@ -33,7 +33,8 @@ export default React.createClass({
               <input
                 ref='showLabelsInput'
                 type='checkbox'
-                defaultValue='yes'
+                defaultValue='false'
+                defaultChecked={false}
                 checked={viewOptions.showLabels}
                 onChange={this._setViewOptions} /> Show Labels
             </label>
@@ -209,6 +210,19 @@ export default React.createClass({
 
       // Change existing nodes
       nodes
+        .on("mouseover", function(d, i) { // todo on mouse just close!!!
+            div.transition()
+                .duration(200)
+                .style("opacity", .9);
+            div.html(labels[i])
+                .style("left", (d3.event.pageX) + "px")
+                .style("top", (d3.event.pageY - 28) + "px");
+            })
+        .on("mouseout", function(d) {
+            div.transition()
+                .duration(500)
+                .style("opacity", 0);
+        })
         .transition()
         .duration(1000)
         .delay((d, i) => i / dataset.length * 500)
