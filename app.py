@@ -242,38 +242,36 @@ def download_model(key, output_path):
 
 # All models and saved objects
 # ------------------
-# gensim word2vec embeddings
+# gensim word2vec word embeddings (2d + 100d)
 # fastText word embeddings
-# LSA paper embeddings
-# doc2vec Embeddings
+# LSA paper paper embeddings (2d + 300d)
+# doc2vec paper embeddings (2d + 100d)
 # ------------------
 
 # Download all models if they don't already exist (download_model() checks)
-gensim_embedding_name = 'gensim_vectors.pkl'
-gensim_2d_embeddings_name = 'gensim_vectors_2d.pkl'
-lsa_embedding_name = 'lsa-300-converted.pkl'
-lsa_embedding_2d_name = 'lsa-300-converted-2d.pkl'
-doc2vec_embedding_2d_name = 'type_doc2vec#dim_100#dataset_ArxivNov4#time_2018-11-14T02_10_25.587584' # TODO change to 2dim version e.g. 'all_doc2vec_embed_2_dim.pkl'
+gensim_embedding_name = 'type_word2vec#dim_100#dataset_ArxivNov4#time_2018-11-13T07_17_46.600182'
+gensim_2d_embeddings_name = 'type_word2vec#dim_2#dataset_ArxivNov4#time_2018-11-13T07_17_46.600182'
+lsa_embedding_name = 'lsa-100.pkl' # 'lsa-300.pkl' # seems too big
+lsa_embedding_2d_name = 'lsa-2.pkl'
+doc2vec_embedding_name = 'type_doc2vec#dim_100#dataset_ArxivNov4#time_2018-11-14T02_10_25.587584' # 'doc2vec-300.pkl'
+doc2vec_embedding_2d_name = 'type_doc2vec#dim_2#dataset_ArxivNov4#time_2018-11-14T02_10_25.587584'
 
 gensim_embedding_path = 'data/word_embeddings/' + gensim_embedding_name
 gensim_2d_embeddings_path = 'data/word_embeddings/' + gensim_2d_embeddings_name
 lsa_embedding_path = 'data/paper_embeddings/' + lsa_embedding_name
 lsa_embedding_2d_path = 'data/paper_embeddings/' + lsa_embedding_2d_name
+doc2vec_embedding_path = 'data/paper_embeddings/' + doc2vec_embedding_name
 doc2vec_embedding_2d_path = 'data/paper_embeddings/' + doc2vec_embedding_2d_name
 
 print('Beginning to download all models')
-download_model('101x101maze.png', 'data/word_embeddings/maze2.png')
 download_model('model_objects/' + gensim_embedding_name, gensim_embedding_path)
 download_model('model_objects/' + gensim_2d_embeddings_name, gensim_2d_embeddings_path)
 download_model('model_objects/' + lsa_embedding_name, lsa_embedding_path)
 download_model('model_objects/' + lsa_embedding_2d_name, lsa_embedding_2d_path)
+download_model('model_objects/' + doc2vec_embedding_name, doc2vec_embedding_path)
 download_model('model_objects/' + doc2vec_embedding_2d_name, doc2vec_embedding_2d_path)
 
 # Loading models into embedding objects and Explorer objects
-
-# model = gensim.models.Word2Vec.load(args.word2vec_model_path)
-# vocab = list(model.wv.index2word)
-
 # Load all word embeddings
 gensim_labels, gensim_embeddings, gensim_label_to_embeddings = get_embedding_objs(gensim_embedding_path)
 
@@ -288,18 +286,15 @@ gensim_embedding_model = Model(gensim_2d_embeddings_path)
 
 # Load paper embeddings
 lsa_labels, lsa_embeddings, lsa_label_to_embeddings = get_embedding_objs(lsa_embedding_path)
+doc2vec_labels, doc2vec_embeddings, doc2vec_label_to_embeddings = get_embedding_objs(doc2vec_embedding_path)
 
-# Load lsa model into word2vec-explorer visualisation
+# Load lsa model (2d TSNE-precomputed) into word2vec-explorer visualisation
 lsa_embedding_model = Model(lsa_embedding_2d_path)
 
-# Load doc2vec model into word2vec-explorer visualisation
+# Load doc2vec model (2d TSNE-precomputed) into word2vec-explorer visualisation
 doc2vec_embedding_model = Model(doc2vec_embedding_2d_path)
 
 if __name__ == '__main__':
-    """
-    """
-
     print('Server has started up at time: {}'.format(datetime.datetime.now().
                                                      strftime("%I:%M%p on %B %d, %Y")))
     app.run(debug=True, use_reloader=True)
-    # app.run(host='0.0.0.0', port=8080)

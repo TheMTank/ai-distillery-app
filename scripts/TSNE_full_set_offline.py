@@ -96,9 +96,9 @@ def _all_vectors(limit):
 
 
 parser = argparse.ArgumentParser(description='Convert to 2d')
-parser.add_argument('--input-path', type=str,
+parser.add_argument('-i', '--input-path', type=str,
                     help='Input embedding path')
-parser.add_argument('--output-path', type=str,
+parser.add_argument('-o', '--output-path', type=str,
                     help='Output embedding')
 
 args = parser.parse_args()

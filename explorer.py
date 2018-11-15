@@ -94,6 +94,18 @@ def get_closest_vectors(labels, all_vectors, vector_to_compare, n=5):
 
 
 class Model(object):
+    """
+    Instead of taking a gensim object designed very specifically for word embeddings (word2vec), we
+    have created the BF format (Ben Format) which is a pickled dictionary like this:
+    {
+        'labels': ['label1', 'label2],
+        'embeddings': np.array((vocab_size, embedding_size))
+    }
+
+    This format enables us to take embeddings calculated from many different packages
+    (PyTorch, gensim, graphs, scikit-learn, etc) and therefore standardizes the expected input. The
+    Model object then allows us to explore the space of embeddings and visualise them.
+    """
 
     def __init__(self, filename):
         # try:
@@ -123,20 +135,6 @@ class Model(object):
         '''except cPickle.UnpicklingError:
             load = gensim.models.Word2Vec.load_word2vec_format
             self.model = load(filename, binary=True)'''
-
-    '''def autocomplete(self, query, limit):
-        words = []
-        i = 0
-        #for word in self.model.wv.vocab:
-        for word in self.vocab:
-            if word.startswith(query):
-                words.append({
-                    'word': word,
-                    'count': self.model.wv.vocab[word].count})
-                i += 1
-
-        words = sorted(words, key=lambda x: x['count'], reverse=True)
-        return words[0:limit]'''
 
     def compare(self, queries, limit):
         all_words = []
