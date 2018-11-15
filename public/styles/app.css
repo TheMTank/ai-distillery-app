@@ -114,7 +114,13 @@ body {
   opacity: 0.8;
 }
 
+.scatter-plot-2d circle:hover {
+  cursor: pointer;
+}
+
 .scatter-plot-2d text.node-label {
+    user-select: none;
+    pointer-events: none;
 }
 
 .exploration .info {

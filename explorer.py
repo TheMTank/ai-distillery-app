@@ -207,7 +207,7 @@ class Model(object):
         vectors = []
         i = 0
         for word in self.vocab:
-            if (i % sample) == 0:
+            if (i % sample) == 0: # todo find out why not taking exactly limit amount
                 vectors.append(self.embeddings_dict[word])
                 labels.append(word)
             i += 1

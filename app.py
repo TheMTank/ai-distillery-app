@@ -18,7 +18,7 @@ app = Flask(__name__, static_folder='public', static_url_path='')
 
 
 def get_closest_vectors(labels, all_vectors, vector_to_compare, n=5):
-    distances = np.linalg.norm(all_vectors - vector_to_compare, axis=1)  # vectorised
+    distances = np.linalg.norm(all_vectors - vector_to_compare, axis=1)  # vectorised # todo try scikit
     sorted_idx = np.argsort(distances)
 
     return list(np.array(labels)[sorted_idx][0:n]), list(distances[sorted_idx][0:n])
