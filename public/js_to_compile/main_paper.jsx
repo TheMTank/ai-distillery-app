@@ -10,13 +10,13 @@ import { createHistory } from 'history'
 let history = createHistory()
 
 const App = require('./components/App')
-const ExploreSection = require('./components/ExploreSection')
+const ExploreSection = require('./components/ExploreSectionPaper')
 const CompareSection = require('./components/CompareSection')
 
 ReactDOM.render(
   <Router history={history}>
     <Route component={App}>
-      <Route path='/word-embedding-viz' component={ExploreSection} />
+      <Route path='/paper-embedding-viz' component={ExploreSection} />
       <Route path='/explore' component={ExploreSection} />
       <Route path='/compare' component={CompareSection} />
     </Route>
