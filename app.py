@@ -77,7 +77,7 @@ def get_word_embedding_proximity():
                         zip(similar_words, distances)]
             print(response)
         else:
-            response = 'Word not found'
+            response = ['Word not found']
     # elif selected_word_embedding == 'fast_text':
     #     if inputted_word in fast_text_labels:
     #         print('Words most similar to:', inputted_word)
@@ -101,13 +101,13 @@ def get_paper_embedding_proximity():
     input_str = request.args.get('input_str')
     selected_embedding = request.args.get('type')
 
-    input_str = input_str.lower().strip()
+    input_str_clean = input_str.lower().strip()
 
-    print('Inputted string: {}. Embedding type: {}'.format(input_str, selected_embedding))
+    print('Inputted string: {}.\nInputted string clean: {}. Embedding type: {}'.format(input_str, input_str_clean, selected_embedding))
 
     if selected_embedding == 'lsa':
         lsa_labels_lowercase = [x.lower().strip() for x in lsa_labels]
-        if input_str in lsa_labels_lowercase:
+        if input_str_clean in lsa_labels_lowercase:
             print('Labels most similar to:', input_str)
             similar_papers, distances, sorted_idx = get_closest_vectors(lsa_labels, lsa_embeddings,
                                                            lsa_label_to_embeddings[input_str], n=n)
@@ -115,18 +115,18 @@ def get_paper_embedding_proximity():
                         zip(similar_papers, distances)]
             print(response)
         else:
-            response = 'paper not found'
+            response = ['Paper not found']
     elif selected_embedding == 'doc2vec':
         doc2vec_labels_lowercase = [x.lower().strip() for x in doc2vec_labels]
-        if input_str in doc2vec_labels_lowercase:
+        if input_str_clean in doc2vec_labels_lowercase:
             print('Labels most similar to:', input_str)
             similar_words, distances, sorted_idx = get_closest_vectors(doc2vec_labels, doc2vec_embeddings,
                                                            doc2vec_label_to_embeddings[input_str], n=n)
-            response = [{'word': word, 'distance': round(float(dist), 5)} for word, dist in
+            response = [{'label': word, 'distance': round(float(dist), 5)} for word, dist in
                         zip(similar_words, distances)]
             print(response)
         else:
-            response = 'Word not found'
+            response = ['Paper not found']
     else:
         response = 'Selected wrong embedding'
 
