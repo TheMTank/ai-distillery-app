@@ -1,14 +1,13 @@
 import datetime
 import pickle
-import sys
 import os
 import os.path
 
 import numpy as np
-from flask import Flask, request, render_template, send_from_directory, jsonify
+from flask import Flask, request, send_from_directory, jsonify
 
 from explorer import Model
-from download_from_s3_bucket import download_file_from_s3
+from scripts.download_from_s3_bucket import download_file_from_s3
 
 default_n = 15
 STATIC_DIR = os.path.dirname(os.path.realpath(__file__)) + '/public'
@@ -16,12 +15,9 @@ CACHE = {}
 
 app = Flask(__name__, static_folder='public', static_url_path='')
 
-
-def get_closest_vectors(labels, all_vectors, vector_to_compare, n=5):
-    distances = np.linalg.norm(all_vectors - vector_to_compare, axis=1)  # vectorised # todo try scikit
-    sorted_idx = np.argsort(distances)
-
-    return list(np.array(labels)[sorted_idx][0:n]), list(distances[sorted_idx][0:n])
+# --------------------
+# Routes to all HTML pages
+# --------------------
 
 @app.route("/")
 def root():
@@ -32,14 +28,16 @@ def root():
 def charts():
     return send_from_directory('public/html', 'all-charts.html')
 
+@app.route("/paper-search-page")
+def paper_search_page():
+    return send_from_directory('public/html', 'paper_search.html')
+
 @app.route("/word-embedding-proximity-page")
 def word_embedding_table():
-    print('word-embedding-proximity-page')
     return send_from_directory('public/html', 'word_embedding_proximity.html')
 
 @app.route("/paper-embedding-proximity-page")
 def paper_embedding_table():
-    print('paper-embedding-proximity-page')
     return send_from_directory('public/html', 'paper_embedding_proximity.html')
 
 @app.route("/word-embedding-viz")
@@ -50,12 +48,18 @@ def word_embedding_viz():
 def paper_embedding_viz():
     return send_from_directory('public/html', 'paper_embedding_viz.html')
 
+# --------------------
+# All other routes
+# --------------------
+
 @app.route("/word-embedding-proximity")
 def get_word_embedding_proximity():
     # query params
     n = int(request.args.get('n', default_n))
     input_str = request.args.get('input_str')
     selected_word_embedding = request.args.get('type')
+
+    input_str = input_str.lower()
 
     # inputted_word = inputted_word.strip().lower() # todo both upper and lower case atm. find lowercase version if not found
     # inputted_word = inputted_word.replace(' ', '_') # todo probably keep
@@ -66,7 +70,7 @@ def get_word_embedding_proximity():
     if selected_word_embedding == 'gensim':
         if input_str in gensim_labels:
             print('Words most similar to:', input_str)
-            similar_words, distances = get_closest_vectors(gensim_labels, gensim_embeddings,
+            similar_words, distances, sorted_idx = get_closest_vectors(gensim_labels, gensim_embeddings,
                                                            gensim_label_to_embeddings[input_str], n=n)
             response = [{'label': word, 'distance': round(float(dist), 5)} for word, dist in
                         zip(similar_words, distances)]
@@ -96,12 +100,14 @@ def get_paper_embedding_proximity():
     input_str = request.args.get('input_str')
     selected_embedding = request.args.get('type')
 
+    input_str = input_str.lower()
+
     print('Inputted string: {}. Embedding type: {}'.format(input_str, selected_embedding))
 
     if selected_embedding == 'lsa':
         if input_str in lsa_labels:
             print('Labels most similar to:', input_str)
-            similar_papers, distances = get_closest_vectors(lsa_labels, lsa_embeddings,
+            similar_papers, distances, sorted_idx = get_closest_vectors(lsa_labels, lsa_embeddings,
                                                            lsa_label_to_embeddings[input_str], n=n)
             response = [{'label': label, 'distance': round(float(dist), 5)} for label, dist in
                         zip(similar_papers, distances)]
@@ -111,7 +117,7 @@ def get_paper_embedding_proximity():
     elif selected_embedding == 'doc2vec':
         if input_str in doc2vec_labels:
             print('Labels most similar to:', input_str)
-            similar_words, distances = get_closest_vectors(doc2vec_labels, doc2vec_embeddings,
+            similar_words, distances, sorted_idx = get_closest_vectors(doc2vec_labels, doc2vec_embeddings,
                                                            doc2vec_label_to_embeddings[input_str], n=n)
             response = [{'word': word, 'distance': round(float(dist), 5)} for word, dist in
                         zip(similar_words, distances)]
@@ -136,6 +142,36 @@ def get_embedding_labels():
         labels = ['embedding_type not found']
 
     return jsonify(labels)
+
+@app.route("/search-papers")
+def search_papers():
+    query = request.args.get('query', '')
+    selected_embedding = request.args.get('c', 'lsa')
+
+    if selected_embedding == 'tfidf':
+        # features = doc_tfidf_features # todo use internal tfidf?
+        pass
+    elif selected_embedding == 'lsa':
+        model = lsa_IR_model
+        # features = doc_lsa_features
+    else:
+        labels = ['embedding_type not found']
+
+    preprocessed_query = query.lower()
+    print('Searching for query: {}'.format(preprocessed_query))
+    query_feats = model['model'].transform([preprocessed_query])
+
+    closest_papers_titles, distances, sorted_indices = get_closest_vectors(model['titles'],
+                                                                           model['feats'],
+                                                                           query_feats, n=100)
+
+    print('Closest paper titles top 5: {}'.format(closest_papers_titles[0:5]))
+    top_paper_ids = np.array(model['ids'])[sorted_indices]
+
+    response_obj = [{'title': title, 'paper_id': paper_id, 'distance': round(distance, 4)} for title,
+                        paper_id, distance in zip(closest_papers_titles, top_paper_ids, distances)]
+
+    return jsonify(response_obj)
 
 @app.route('/js/<path:path>')
 def send_js(path):
@@ -213,6 +249,32 @@ def compare():
         return jsonify({'error':
                             {'message': 'No vector found for {}'.format(queries)}})
 
+# --------------------
+# Helper functions
+# --------------------
+
+def get_closest_vectors(labels, all_vectors, query_vector, n=5):
+    distances = np.linalg.norm(all_vectors - query_vector, axis=1)  # vectorised # todo try scikit
+    sorted_idx = np.argsort(distances)
+
+    return list(np.array(labels)[sorted_idx][0:n]), list(distances[sorted_idx][0:n]), sorted_idx[0:n]
+
+def get_model_obj(model_object_path):
+    print('Loading embeddings at path: {}'.format(model_object_path))
+    with open(model_object_path, 'rb') as handle:
+        model_obj = pickle.load(handle, encoding='latin1')
+        # labels = model_obj['labels']
+        # embeddings = model_obj['embeddings']
+        # label_to_embeddings = {label: embeddings[idx] for idx, label in
+        #                        enumerate(labels)}
+        print('Num ids: {}'.format(len(model_obj['ids'])))
+        print('Num titles: {}'.format(len(model_obj['titles'])))
+        print('feats shape: {}'.format(model_obj['feats'].shape))
+        print('Model: {}'.format(model_obj['model']))
+        model_obj['model'].named_steps.tfidf_vectorizer.input = 'content'
+
+        return model_obj
+
 def get_embedding_objs(embedding_path):
     print('Loading embeddings at path: {}'.format(embedding_path))
     with open(embedding_path, 'rb') as handle:
@@ -247,10 +309,12 @@ def download_model(key, output_path):
 # ------------------
 
 # Download all models if they don't already exist (download_model() checks)
+# todo should be done in another script so 4 workers dont do it as well
 gensim_embedding_name = 'type_word2vec#dim_100#dataset_ArxivNov4#time_2018-11-13T07_17_46.600182'
 gensim_2d_embeddings_name = 'type_word2vec#dim_2#dataset_ArxivNov4#time_2018-11-13T07_17_46.600182'
 lsa_embedding_name = 'lsa-100.pkl' # 'lsa-300.pkl' # seems too big
 lsa_embedding_2d_name = 'lsa-2.pkl'
+lsa_IR_model_object_name = 'lsa-tfidf-pipeline-50k-feats-400-dim.pkl'
 doc2vec_embedding_name = 'type_doc2vec#dim_100#dataset_ArxivNov4#time_2018-11-14T02_10_25.587584' # 'doc2vec-300.pkl' # not right format
 doc2vec_embedding_2d_name = 'type_doc2vec#dim_2#dataset_ArxivNov4#time_2018-11-14T02_10_25.587584'
 
@@ -258,6 +322,7 @@ gensim_embedding_path = 'data/word_embeddings/' + gensim_embedding_name
 gensim_2d_embeddings_path = 'data/word_embeddings/' + gensim_2d_embeddings_name
 lsa_embedding_path = 'data/paper_embeddings/' + lsa_embedding_name
 lsa_embedding_2d_path = 'data/paper_embeddings/' + lsa_embedding_2d_name
+lsa_IR_model_object_path = 'data/models/' + lsa_IR_model_object_name
 doc2vec_embedding_path = 'data/paper_embeddings/' + doc2vec_embedding_name
 doc2vec_embedding_2d_path = 'data/paper_embeddings/' + doc2vec_embedding_2d_name
 
@@ -266,6 +331,7 @@ download_model('model_objects/' + gensim_embedding_name, gensim_embedding_path)
 download_model('model_objects/' + gensim_2d_embeddings_name, gensim_2d_embeddings_path)
 download_model('model_objects/' + lsa_embedding_name, lsa_embedding_path)
 download_model('model_objects/' + lsa_embedding_2d_name, lsa_embedding_2d_path)
+download_model('model_objects/' + lsa_IR_model_object_name, lsa_IR_model_object_path)
 download_model('model_objects/' + doc2vec_embedding_name, doc2vec_embedding_path)
 download_model('model_objects/' + doc2vec_embedding_2d_name, doc2vec_embedding_2d_path)
 
@@ -273,8 +339,6 @@ download_model('model_objects/' + doc2vec_embedding_2d_name, doc2vec_embedding_2
 # Load all word embeddings
 gensim_labels, gensim_embeddings, gensim_label_to_embeddings = get_embedding_objs(gensim_embedding_path)
 
-# Load gensim model into word2vec-explorer visualisation
-# gensim_embedding_model = Model(gensim_embedding_path)
 # Load gensim 2d embedding model into word2vec-explorer visualisation
 gensim_embedding_model = Model(gensim_2d_embeddings_path)
 
@@ -292,7 +356,10 @@ lsa_embedding_model = Model(lsa_embedding_2d_path)
 # Load doc2vec model (2d TSNE-precomputed) into word2vec-explorer visualisation
 doc2vec_embedding_model = Model(doc2vec_embedding_2d_path)
 
+# Load IR model objects for Information Retrieval
+lsa_IR_model = get_model_obj(lsa_IR_model_object_path)
+
 if __name__ == '__main__':
     print('Server has started up at time: {}'.format(datetime.datetime.now().
                                                      strftime("%I:%M%p on %B %d, %Y")))
-    app.run(debug=True, use_reloader=True)
+    app.run(debug=True, use_reloader=True)  # not run for production

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Paper search</title>
+
+    <link rel="stylesheet" href="/styles/embedding_proximity.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+</head>
+<style>
+
+</style>
+<body>
+
+<script id="address-template" type="text/x-handlebars-template">
+    <h1 style="text-align:center">Results for {{selectedWord}}</h1>
+    <table class="similar-words redTable wordEmbFontSize">
+        <thead>
+            <tr>
+                <td>ID</td>
+                <td>Title</td>
+                <td>Distance</td>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each top_words}}
+                <tr>
+                    <td>{{this.paper_id}}</td>
+                    <td><a href="https://arxiv.org/abs/{{this.paper_id}}">{{this.title}}</a></td>
+                    <td>{{this.distance}}</td>
+                </tr>
+            {{/each}}
+        </tbody>
+
+    </table>
+</script>
+
+<div style="margin-left: auto;margin-right: auto;width: 50%;" data-embedding-type="paper" id="input-form">
+    <div style="text-align: center;">
+        <input type="text" name="word" value="" id="search-box">
+        <br>
+        <select id="embedding-type">
+            <option value="lsa" selected>LSA</option>
+            <!--<option value="fast_text">fastText</option>-->
+        </select>
+        <button id="submit-btn" style="">Submit</button>
+    </div>
+</div>
+
+<div class="content-placeholder">
+
+</div>
+
+<a href="/" style="position: absolute; top: 0; right: 0;">Go Back</a>
+</body>
+
+<script>
+    /*$(function () {
+        // global variables different between word and paper embedding page. Avoids dangerous caching
+        higherLevelEmbeddingType = $('#input-form').data('embedding-type');
+        embeddingProximityRoute = '/' + higherLevelEmbeddingType + '-embedding-proximity';
+    })*/
+
+    $(function () {
+        var searchRoute = '/search-papers'
+        var tableData, context;
+
+        var searchPapers = function(searchTerm, embeddingType) {
+            $.get(searchRoute, {'query': searchTerm, 'embedding_type': embeddingType}, function(data) {
+                console.log(data);
+                if (data == 'Word not found') {
+                    tableData = [{'distance': -1, 'label': 'Word not found in embedding labels'}]
+                }
+                else {
+                    tableData = data;
+                }
+                context = {
+                    'top_words': tableData,
+                    'selectedWord': searchTerm
+                }
+                fillTable(context);
+            }, "json")
+        }
+
+        var fillTable = function(context) {
+            // Grab the template script
+            var theTemplateScript = $("#address-template").html();
+
+            // Compile the template
+            var theTemplate = Handlebars.compile(theTemplateScript);
+
+            // Pass our data to the template
+            var theCompiledHtml = theTemplate(context);
+
+            // Add the compiled html to the page
+            $('.content-placeholder').html(theCompiledHtml);
+        }
+
+        $(document).bind('keypress', function(e) {
+            if(e.keyCode==13) {
+                $('#submit-btn').trigger('click');
+            }
+        });
+
+        $('#submit-btn').click(function (data) {
+            var searchTerm = $('#search-box').val();
+            var embeddingType = $("#embedding-type").val();
+            searchPapers(searchTerm, embeddingType);
+        });
+
+        // typeahead setup
+        /*var currentPagesEmbeddingOptions = higherLevelEmbeddingType == 'word' ? ['gensim'] : ['lsa', 'doc2vec'];
+        //var typeahead_data_to_get = currentPagesEmbeddingOptions // fasttext
+        var typeahead_labels = {}
+
+        for (let i = 0; i < currentPagesEmbeddingOptions.length; i++) {
+            $.get( "get-embedding-labels", {'embedding_type': currentPagesEmbeddingOptions[i]}, function( data ) {
+              var labels = data
+              typeahead_labels[currentPagesEmbeddingOptions[i]] = labels
+              console.log(typeahead_labels);
+              if (i == 0) { // first one should be default
+                  currentEmbeddingSelected = currentPagesEmbeddingOptions[i];
+                  $('#search-box').val(typeahead_labels[currentPagesEmbeddingOptions[i]][Math.floor(Math.random() * typeahead_labels[currentPagesEmbeddingOptions[i]].length)]);
+                  $("#search-box").autocomplete({
+                      //source: typeahead_labels['gensim'], // for all
+                      source: function(request, response) {
+                            var results = $.ui.autocomplete.filter(typeahead_labels[currentPagesEmbeddingOptions[i]], request.term);
+
+                            response(results.slice(0, 20));
+                      },
+                      minLength: 2
+                  });
+              }
+            });
+        }*/
+
+        // if select embedding changes, get other typeahead and replace source
+        /*$('#embedding-type').change(function() {
+            console.log($(this).val())
+            currentEmbeddingSelected = $(this).val()
+            $( "#search-box" ).autocomplete('option', {'source': function(request, response) {
+                            var results = $.ui.autocomplete.filter(typeahead_labels[currentEmbeddingSelected], request.term);
+
+                            response(results.slice(0, 20));
+                      }})
+        });*/
+    });
+
+</script>
+<!--<script src="/js/embedding_proximity.js"></script>-->
+
+</html>
