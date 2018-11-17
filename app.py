@@ -68,7 +68,8 @@ def get_word_embedding_proximity():
     print('Inputted string: {}. Embedding type: {}'.format(input_str, selected_word_embedding))
 
     if selected_word_embedding == 'gensim':
-        if input_str in gensim_labels:
+        gensim_labels_lowercase_strip = [x.lower().strip() for x in gensim_labels]
+        if input_str in gensim_labels_lowercase_strip:
             print('Words most similar to:', input_str)
             similar_words, distances, sorted_idx = get_closest_vectors(gensim_labels, gensim_embeddings,
                                                            gensim_label_to_embeddings[input_str], n=n)
@@ -100,12 +101,13 @@ def get_paper_embedding_proximity():
     input_str = request.args.get('input_str')
     selected_embedding = request.args.get('type')
 
-    input_str = input_str.lower()
+    input_str = input_str.lower().strip()
 
     print('Inputted string: {}. Embedding type: {}'.format(input_str, selected_embedding))
 
     if selected_embedding == 'lsa':
-        if input_str in lsa_labels:
+        lsa_labels_lowercase = [x.lower().strip() for x in lsa_labels]
+        if input_str in lsa_labels_lowercase:
             print('Labels most similar to:', input_str)
             similar_papers, distances, sorted_idx = get_closest_vectors(lsa_labels, lsa_embeddings,
                                                            lsa_label_to_embeddings[input_str], n=n)
@@ -115,7 +117,8 @@ def get_paper_embedding_proximity():
         else:
             response = 'paper not found'
     elif selected_embedding == 'doc2vec':
-        if input_str in doc2vec_labels:
+        doc2vec_labels_lowercase = [x.lower().strip() for x in doc2vec_labels]
+        if input_str in doc2vec_labels_lowercase:
             print('Labels most similar to:', input_str)
             similar_words, distances, sorted_idx = get_closest_vectors(doc2vec_labels, doc2vec_embeddings,
                                                            doc2vec_label_to_embeddings[input_str], n=n)
