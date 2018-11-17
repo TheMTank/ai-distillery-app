@@ -331,7 +331,7 @@ download_model('model_objects/' + gensim_embedding_name, gensim_embedding_path)
 download_model('model_objects/' + gensim_2d_embeddings_name, gensim_2d_embeddings_path)
 download_model('model_objects/' + lsa_embedding_name, lsa_embedding_path)
 download_model('model_objects/' + lsa_embedding_2d_name, lsa_embedding_2d_path)
-download_model('model_objects/' + lsa_IR_model_object_name, lsa_IR_model_object_path)
+#download_model('model_objects/' + lsa_IR_model_object_name, lsa_IR_model_object_path)
 download_model('model_objects/' + doc2vec_embedding_name, doc2vec_embedding_path)
 download_model('model_objects/' + doc2vec_embedding_2d_name, doc2vec_embedding_2d_path)
 
@@ -357,9 +357,9 @@ lsa_embedding_model = Model(lsa_embedding_2d_path)
 doc2vec_embedding_model = Model(doc2vec_embedding_2d_path)
 
 # Load IR model objects for Information Retrieval
-lsa_IR_model = get_model_obj(lsa_IR_model_object_path)
+# lsa_IR_model = get_model_obj(lsa_IR_model_object_path)
 
 if __name__ == '__main__':
     print('Server has started up at time: {}'.format(datetime.datetime.now().
                                                      strftime("%I:%M%p on %B %d, %Y")))
-    app.run(debug=True, use_reloader=True)  # not run for production
+    app.run(debug=True, use_reloader=True)  # not run for production. # host=0.0.0.0. port=80
