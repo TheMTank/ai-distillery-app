@@ -79,9 +79,10 @@
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
         <li class="active"><a href="#">Home</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Gallery</a></li>
-        <li><a href="#">Contact</a></li>
+        <li><a href="#word-header">Work</a></li>
+        <li><a href="#about-header">About</a></li>
+        <!--<li><a href="/gallery">Gallery</a></li>-->
+        <li><a href="#contact-header">Contact</a></li>
       </ul>
       <!--<ul class="nav navbar-nav navbar-right">-->
         <!--<li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>-->
@@ -94,85 +95,119 @@
   <div class="container text-center">
     <h1>AI Distillery</h1>
     <p>Automatically modelling and distilling knowledge within AI</p>
+    <p><strong>The M Tank</strong><br>Organisation Website: <a href="http://www.themtank.org">www.themtank.org</a></p>
   </div>
 </div>
 
-<div class="container-fluid bg-3 text-center">
-  <h3>Some of our work</h3><br>
-  <div class="row">
-    <div class="col-sm-4 container">
-        <a href="/word-embedding-proximity-page">
-            <p>Search for similar Word Embeddings</p>
-            <img src="/images/ai-distillery-heroku-table.png" class="img-responsive image" style="width:100%" alt="Image">
-            <div class="middle">
-                <div class="text">Search for similar Word Embeddings</div>
-            </div>
-        </a>
-    </div>
-    <div class="col-sm-4 container">
-        <a href="/word-embedding-viz">
-            <p>Word Embedding Visualisation</p>
-            <img src="/images/word2vecexplorer-on-heroku.png" class="img-responsive image" style="width:100%" alt="Image">
-            <div class="middle">
-                <div class="text">Word Embedding Visualisation</div>
-            </div>
-        </a>
-    </div>
-    <div class="col-sm-4 container">
-        <a href="/paper-search-page">
-            <p>Search for papers free text</p>
-            <img src="/images/ai-distillery-heroku-table.png" class="img-responsive image" style="width:100%" alt="Image">
-            <div class="middle">
-                <div class="text">Search for papers free text</div>
-            </div>
-        </a>
-    </div>
-
-
-  </div>
-    <div class="row">
+<div id="word-header" class="container-fluid bg-3 text-center">
+      <h3>Some of our work</h3><br>
+      <div class="row">
         <div class="col-sm-4 container">
-            <a href="/paper-embedding-proximity-page">
-                <p>Search for similar Paper Embeddings</p>
-
-                <img src="/images/ai-distillery-paper-embeddings-lip-reading.png" class="img-responsive image" style="width:100%" alt="Image">
+            <a href="/word-embedding-proximity-page">
+                <p>Search for similar Word Embeddings</p>
+                <img src="/images/ai-distillery-word-embedding-proximity.png" class="img-responsive image" style="width:100%" alt="Image">
                 <div class="middle">
-                    <div class="text">Search for similar Paper Embeddings</div>
+                    <div class="text">Search for similar Word Embeddings</div>
                 </div>
             </a>
         </div>
         <div class="col-sm-4 container">
-            <a href="/paper-embedding-viz">
-                <p>Paper Embedding Visualisation</p>
-                <img src="/images/paper_embedding_viz_resized_bad_aspect_ratio.png" class="img-responsive image" style="width:100%" alt="Image">
+            <a href="/word-embedding-viz">
+                <p>Word Embedding Visualisation</p>
+                <img src="/images/word2vecexplorer-on-heroku.png" class="img-responsive image" style="width:100%" alt="Image">
                 <div class="middle">
-                    <div class="text">Paper Embedding Visualisation</div>
+                    <div class="text">Word Embedding Visualisation</div>
                 </div>
             </a>
         </div>
         <div class="col-sm-4 container">
-        <a href="/charts">
-            <p>Charts</p>
-            <img src="/images/AI-Distillery-charts-page.png" class="img-responsive image" style="width:100%" alt="Image">
-            <div class="middle">
-                <div class="text">Charts</div>
+            <a href="/paper-search-page">
+                <p>Search for papers with free text</p>
+                <img src="/images/stack-cap.png" class="img-responsive image" style="width:100%" alt="Image">
+                <div class="middle">
+                    <div class="text">Search for papers with free text</div>
+                </div>
+            </a>
+        </div>
+
+
+      </div>
+        <div class="row">
+            <div class="col-sm-4 container">
+                <a href="/paper-embedding-proximity-page">
+                    <p>Search for similar Paper Embeddings</p>
+
+                    <img src="/images/ai-distillery-paper-embeddings-lip-reading.png" class="img-responsive image" style="width:100%" alt="Image">
+                    <div class="middle">
+                        <div class="text">Search for similar Paper Embeddings</div>
+                    </div>
+                </a>
             </div>
-        </a>
+            <div class="col-sm-4 container">
+                <a href="/paper-embedding-viz">
+                    <p>Paper Embedding Visualisation</p>
+                    <img src="/images/paper_embedding_viz_resized_bad_aspect_ratio.png" class="img-responsive image" style="width:100%" alt="Image">
+                    <div class="middle">
+                        <div class="text">Paper Embedding Visualisation</div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-sm-4 container">
+            <a href="/charts">
+                <p>Charts</p>
+                <img src="/images/AI-Distillery-charts-page.png" class="img-responsive image" style="width:100%" alt="Image">
+                <div class="middle">
+                    <div class="text">Charts</div>
+                </div>
+            </a>
+        </div>
     </div>
+
+    <div id="about-header" class="container-fluid bg-3 text-center">
+     <h3>What we intend to do</h3>
+        <p>Automatically model and distil knowledge within AI.<br>
+            In other words, summarise the arxiv/research firehose.<br>
+            Map, categorise, quantify, qualify, filter, search, browse, reduce, digest, compress,
+            summarise and model all knowledge within ML/DL/RL/AI/DS/CV/NLP/CS/Stats. <br>
+            Always for the community.
+        </p>
+    </div>
+    <div class="container-fluid bg-3 text-left">
+        <p><strong>Other related goals</strong>:
+            <ul>
+                <li>
+                    Have an automatically updated web page and dashboard for showing any of the relevant
+                    insights and visualisations we want for the world to see.
+                </li>
+                <li>
+                    Information Retrieval: Help researchers find what they are looking for and help the community
+                </li>
+                <li>
+                    Show what is currently trending within AI. Predict future trends.
+                </li>
+                <li>
+                    Show how a specific field or the general field of AI evolves over time.
+                </li>
+            </ul>
+        </p>
     </div>
 
+    <div id="contact-header" class="container-fluid bg-3 text-centre">
+        <h3>Contact</h3>
+        <a href="mailto:info@themtank.com" style="font-size: 24px;">info@themtank.com</a>
+    </div>
 
+        <!--<div class="col-sm-3">-->
+          <!--<p>Some text..</p>-->
+          <!--<img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image">-->
+        <!--</div>-->
+        <!--<div class="col-sm-3">-->
+          <!--<p>Some text..</p>-->
+          <!--<img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image">-->
+        <!--</div>-->
 
-    <!--<div class="col-sm-3">-->
-      <!--<p>Some text..</p>-->
-      <!--<img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image">-->
-    <!--</div>-->
-    <!--<div class="col-sm-3">-->
-      <!--<p>Some text..</p>-->
-      <!--<img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image">-->
-    <!--</div>-->
-
-</div><br>
+</div>
+<br>
 
 <!--<div class="container-fluid bg-3 text-center">-->
   <!--<div class="row">-->
@@ -195,7 +230,8 @@
   <!--</div>-->
 <!--</div>-->
 
-<br><br>
+<br>
+<!--<br>-->
 
 <!--<footer class="container-fluid text-center">-->
   <!--<p>Footer Text</p>-->
