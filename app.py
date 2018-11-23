@@ -24,6 +24,11 @@ def root():
     # return render_template('index.html')
     return send_from_directory('public/html', 'index.html')
 
+
+@app.route("/i2")
+def i2():
+    return send_from_directory('public/html', 'index2.html')
+
 @app.route("/charts")
 def charts():
     return send_from_directory('public/html', 'all-charts.html')
