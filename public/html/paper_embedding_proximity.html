@@ -78,8 +78,8 @@
                                             data-toggle="collapse" data-target="#accordion{{@index}}"
                                             aria-expanded="false" aria-controls="accordion{{@index}}">
                                         Abstract</button>
-                                      <button type="button" class="btn btn-success btn-sm">Paper Page</button>
-                                      <button type="button" class="btn btn-danger btn-sm">PDF</button>
+                                      <a type="button" href="https://arxiv.org/abs/{{this.id}}" class="btn btn-success btn-sm">Paper Page</a>
+                                      <a type="button" href="https://arxiv.org/pdf/{{this.id}}.pdf" class="btn btn-danger btn-sm">PDF</a>
                                     </div>
 
                                 </td>
@@ -87,7 +87,7 @@
                             </tr>
                             <tr id="accordion{{@index}}" class="collapse">
                                     <td colspan="3">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam accumsan nisi metus, nec suscipit purus malesuada ut. Cras euismod a mi accumsan sagittis. Morbi urna dui, tristique non lectus vitae, varius facilisis urna. Duis vel est eu purus congue tristique at ut ante. Maecenas in nisl a justo mattis tristique. Donec rutrum lacus sed lectus interdum imperdiet. Duis est turpis, dignissim sit amet metus quis, semper tincidunt orci. Aliquam vel imperdiet justo. Phasellus molestie justo ac tincidunt facilisis. Suspendisse aliquet imperdiet mi eu aliquam. Sed tempus ut metus eu maximus. In felis leo, tempor id venenatis sit amet, scelerisque id est. Sed ultrices, elit eu luctus vehicula, arcu velit molestie tellus, congue mattis dui sapien et nunc. Suspendisse maximus ac erat eu congue. Curabitur congue lacus sit amet convallis porttitor. Donec lobortis viverra rhoncus.
+                                        {{this.abstract}}
                                     </td>
                             </tr>
                         {{/each}}
