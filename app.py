@@ -379,4 +379,5 @@ if not os.environ.get('IS_HEROKU'):
 if __name__ == '__main__':
     print('Server has started up at time: {}'.format(datetime.datetime.now().
                                                      strftime("%I:%M%p on %B %d, %Y")))
-    app.run(debug=True, use_reloader=True)  # not run for production. # host=0.0.0.0. port=80
+    #app.run(debug=True, use_reloader=True)  # not run for production
+    app.run(host='0.0.0.0', debug=True, use_reloader=True, port=80)

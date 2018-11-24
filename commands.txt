@@ -1,0 +1,1 @@
+nohup sudo -E /home/benfduffy/miniconda3/bin/python -u app.py &> output_log.txt& tail -f output_log.txt
