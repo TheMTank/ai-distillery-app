@@ -3,14 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Paper embeddings trained on Arxiv</title>
+    <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
-
-    <link rel="stylesheet" href="/styles/embedding_proximity.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 </head>
 <style>
@@ -21,44 +29,66 @@
 <!--todo add help modal box and button -->
 <!--todo back to home button -->
 
-<script id="address-template" type="text/x-handlebars-template">
-    <h4 style="text-align:center">Results for {{selectedWord}}</h4>
-    <table class="similar-words blueTable paperFontSize">
-        <thead>
-            <tr>
-                <td>Similar papers</td>
-                <td>Distance</td>
-            </tr>
-        </thead>
-        <tbody>
-            {{#each top_words}}
-                <tr>
-                    <td>{{this.label}}</td>
-                    <td>{{this.distance}}</td>
-                </tr>
-            {{/each}}
-        </tbody>
+<div class="container">
+    <div class="row">
+        <script id="address-template" type="text/x-handlebars-template">
+            <h3>Paper Similar to {{selectedWord}}</h3>
+            <table class="similar-words table-striped table paperFontSize">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Similar papers</td>
+                        <th scope="col">Abstract</td>
+                        <th scope="col">Distance</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each top_words}}
+                        <tr>
+                            <td><a href=""> {{this.label}} </a></td>
+                            <td>
+                                <button class="btn btn-primary" type="button"
+                                        data-toggle="collapse" data-target="#accordion{{@index}}"
+                                        aria-expanded="false" aria-controls="accordion{{@index}}">
+                                    Show</button>
+                            </td>
+                            <td>{{this.distance}}</td>
+                        </tr>
+                        <tr id="accordion{{@index}}" class="collapse">
+                                <td colspan="3">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam accumsan nisi metus, nec suscipit purus malesuada ut. Cras euismod a mi accumsan sagittis. Morbi urna dui, tristique non lectus vitae, varius facilisis urna. Duis vel est eu purus congue tristique at ut ante. Maecenas in nisl a justo mattis tristique. Donec rutrum lacus sed lectus interdum imperdiet. Duis est turpis, dignissim sit amet metus quis, semper tincidunt orci. Aliquam vel imperdiet justo. Phasellus molestie justo ac tincidunt facilisis. Suspendisse aliquet imperdiet mi eu aliquam. Sed tempus ut metus eu maximus. In felis leo, tempor id venenatis sit amet, scelerisque id est. Sed ultrices, elit eu luctus vehicula, arcu velit molestie tellus, congue mattis dui sapien et nunc. Suspendisse maximus ac erat eu congue. Curabitur congue lacus sit amet convallis porttitor. Donec lobortis viverra rhoncus.
+                                </td>
+                        </tr>
+                    {{/each}}
+                </tbody>
 
-    </table>
-</script>
-
-<div style="margin-left: auto;margin-right: auto;width: 50%;" data-embedding-type="paper" id="input-form">
-    <div style="text-align: center;">
-        <input type="text" name="word" value="" id="search-box" class="search-box-papers">
-        <br>
-        <select id="embedding-type">
-            <option value="lsa" selected>LSA</option>
-            <option value="doc2vec">doc2vec</option>
-        </select>
-        <button id="submit-btn" style="">Submit</button>
+            </table>
+        </script>
     </div>
-</div>
 
-<div class="content-placeholder">
+    <div data-embedding-type="paper" id="input-form">
+      <div class="form-group">
+        <label for="exampleInputEmail1">Paper Title</label>
+        <input type="text" class="form-control" id="search-box" class="search-box-papers">
+      </div>
+      <div class="form-group">
+        <label for="exampleSelect1">Select Embedding</label>
+        <select class="form-control" id="embedding-type">
+            <option value="lsa" selected>LSA</option>
+            <option value="doc2vec">Doc2Vec</option>
+        </select>
+      </div>
+      <button type="submit" id="submit-btn" class="btn btn-primary">Submit</button>
+    </div>
 
-</div>
+
+
+    <div class="content-placeholder">
+
+    </div>
 
 <a href="/" style="position: absolute; top: 0; right: 0;">Go Back</a>
+</div>
+
 </body>
 <script>
     $(function () {
