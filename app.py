@@ -4,7 +4,7 @@ import os
 import os.path
 
 import numpy as np
-from flask import Flask, request, send_from_directory, jsonify
+from flask import Flask, request, send_from_directory, jsonify, render_template
 
 from explorer import Model
 from scripts.download_from_s3_bucket import download_file_from_s3
@@ -13,7 +13,7 @@ default_n = 15
 STATIC_DIR = os.path.dirname(os.path.realpath(__file__)) + '/public'
 CACHE = {}
 
-app = Flask(__name__, static_folder='public', static_url_path='')
+app = Flask(__name__, static_folder='public', static_url_path='', template_folder="public/html")
 
 # --------------------
 # Routes to all HTML pages
@@ -27,7 +27,7 @@ def root():
 
 @app.route("/i2")
 def i2():
-    return send_from_directory('public/html', 'index2.html')
+    return render_template('index2.html')
 
 @app.route("/charts")
 def charts():
@@ -43,7 +43,7 @@ def word_embedding_table():
 
 @app.route("/paper-embedding-proximity-page")
 def paper_embedding_table():
-    return send_from_directory('public/html', 'paper_embedding_proximity.html')
+    return render_template('paper_embedding_proximity.html')
 
 @app.route("/word-embedding-viz")
 def word_embedding_viz():

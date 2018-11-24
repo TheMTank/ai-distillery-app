@@ -1,62 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Paper embeddings trained on Arxiv</title>
+{% extends "layouts/post_page_layout.html" %}
 
-    <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
-    <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
-
-    <!-- Custom styles for this template -->
-    <link href="/styles/agency.min.css" rel="stylesheet">
-
-
-    <!-- Custom scripts for this template -->
-
-</head>
-<style>
-
-</style>
-<body>
-
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top navbar-shrink" id="mainNav">
-      <div class="container">
-        <a class="navbar-brand js-scroll-trigger" href="/">AI Distillery</a>
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-          Menu
-          <i class="fas fa-bars"></i>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-          <ul class="navbar-nav text-uppercase ml-auto">
-            <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="/">Home</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-
-<section id="services">
+{% block content %}
+    <section id="services">
       <div class="container">
         <div class="row">
           <div class="col-lg-12 text-center">
             <h2 class="section-heading text-uppercase">Paper Search</h2>
-            <h3 class="section-subheading text-muted">Paper search with Doc2Vec and LSA.</h3>
+            <h3 class="section-subheading text-muted">Paper search over the Arxiv Dataset with Doc2Vec and LSA.</h3>
           </div>
         </div>
+        {% raw %}
         <div class="row text-center">
             <script id="address-template" type="text/x-handlebars-template">
                 <h3>Paper Similar to {{selectedWord}}</h3>
@@ -69,6 +22,7 @@
                         </tr>
                     </thead>
                     <tbody>
+
                         {{#each top_words}}
                             <tr>
                                 <td>{{this.label}}</td>
@@ -78,8 +32,8 @@
                                             data-toggle="collapse" data-target="#accordion{{@index}}"
                                             aria-expanded="false" aria-controls="accordion{{@index}}">
                                         Abstract</button>
-                                      <a type="button" href="https://arxiv.org/abs/{{this.id}}" class="btn btn-success btn-sm">Paper Page</a>
-                                      <a type="button" href="https://arxiv.org/pdf/{{this.id}}.pdf" class="btn btn-danger btn-sm">PDF</a>
+                                      <a type="button" href="https://arxiv.org/abs/{{this.id}}" target="_blank" class="btn btn-success btn-sm">Paper Page</a>
+                                      <a type="button" href="https://arxiv.org/pdf/{{this.id}}.pdf" target="_blank" class="btn btn-danger btn-sm">PDF</a>
                                     </div>
 
                                 </td>
@@ -91,11 +45,13 @@
                                     </td>
                             </tr>
                         {{/each}}
+
                     </tbody>
 
                 </table>
             </script>
     </div>
+        {% endraw %}
         <div class="row justify-content-center align-items-center">
                 <div class="col col-sm-12 col-md-12">
                 <div data-embedding-type="paper" id="input-form">
@@ -124,18 +80,19 @@
         </div>
     </section>
 
+{% endblock %}
 
+{% block javascript %}
+    {{ super() }}
+    <script>
+        $(function () {
+            // global variables different between word and paper embedding page. Avoids dangerous caching
+            higherLevelEmbeddingType = $('#input-form').data('embedding-type');
+            embeddingProximityRoute = '/' + higherLevelEmbeddingType + '-embedding-proximity';
+        })
 
-</body>
-<script>
-    $(function () {
-        // global variables different between word and paper embedding page. Avoids dangerous caching
-        higherLevelEmbeddingType = $('#input-form').data('embedding-type');
-        embeddingProximityRoute = '/' + higherLevelEmbeddingType + '-embedding-proximity';
-    })
+    </script>
 
-</script>
+    <script src="/js/embedding_proximity.js"></script>
+{% endblock %}
 
-<script src="/js/embedding_proximity.js"></script>
-    <!-- Custom scripts for this template -->
-</html>
