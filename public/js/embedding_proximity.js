@@ -4,8 +4,8 @@ $(function () {
     var getSimilarEmbeddings = function(searchTerm, embeddingType) {
         $.get(embeddingProximityRoute, {'input_str': searchTerm, 'type': embeddingType}, function(data) {
             console.log(data);
-            if (data == 'Word not found') {
-                tableData = [{'distance': -1, 'label': 'Word not found in embedding labels'}]
+            if (data.length == 1) {
+                tableData = [{'distance': -1, 'label': data[0]}] //'Word not found in embedding labels'}]
             }
             else {
                 tableData = data;

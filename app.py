@@ -24,6 +24,11 @@ def root():
     # return render_template('index.html')
     return send_from_directory('public/html', 'index.html')
 
+
+@app.route("/i2")
+def i2():
+    return send_from_directory('public/html', 'index2.html')
+
 @app.route("/charts")
 def charts():
     return send_from_directory('public/html', 'all-charts.html')
@@ -68,7 +73,8 @@ def get_word_embedding_proximity():
     print('Inputted string: {}. Embedding type: {}'.format(input_str, selected_word_embedding))
 
     if selected_word_embedding == 'gensim':
-        if input_str in gensim_labels:
+        gensim_labels_lowercase_strip = [x.lower().strip() for x in gensim_labels]
+        if input_str in gensim_labels_lowercase_strip:
             print('Words most similar to:', input_str)
             similar_words, distances, sorted_idx = get_closest_vectors(gensim_labels, gensim_embeddings,
                                                            gensim_label_to_embeddings[input_str], n=n)
@@ -76,7 +82,7 @@ def get_word_embedding_proximity():
                         zip(similar_words, distances)]
             print(response)
         else:
-            response = 'Word not found'
+            response = ['Word not found']
     # elif selected_word_embedding == 'fast_text':
     #     if inputted_word in fast_text_labels:
     #         print('Words most similar to:', inputted_word)
@@ -100,12 +106,13 @@ def get_paper_embedding_proximity():
     input_str = request.args.get('input_str')
     selected_embedding = request.args.get('type')
 
-    input_str = input_str.lower()
+    input_str_clean = input_str.lower().strip()
 
-    print('Inputted string: {}. Embedding type: {}'.format(input_str, selected_embedding))
+    print('Inputted string: {}.\nInputted string clean: {}. Embedding type: {}'.format(input_str, input_str_clean, selected_embedding))
 
     if selected_embedding == 'lsa':
-        if input_str in lsa_labels:
+        lsa_labels_lowercase = [x.lower().strip() for x in lsa_labels]
+        if input_str_clean in lsa_labels_lowercase:
             print('Labels most similar to:', input_str)
             similar_papers, distances, sorted_idx = get_closest_vectors(lsa_labels, lsa_embeddings,
                                                            lsa_label_to_embeddings[input_str], n=n)
@@ -113,17 +120,18 @@ def get_paper_embedding_proximity():
                         zip(similar_papers, distances)]
             print(response)
         else:
-            response = 'paper not found'
+            response = ['Paper not found']
     elif selected_embedding == 'doc2vec':
-        if input_str in doc2vec_labels:
+        doc2vec_labels_lowercase = [x.lower().strip() for x in doc2vec_labels]
+        if input_str_clean in doc2vec_labels_lowercase:
             print('Labels most similar to:', input_str)
             similar_words, distances, sorted_idx = get_closest_vectors(doc2vec_labels, doc2vec_embeddings,
                                                            doc2vec_label_to_embeddings[input_str], n=n)
-            response = [{'word': word, 'distance': round(float(dist), 5)} for word, dist in
+            response = [{'label': word, 'distance': round(float(dist), 5)} for word, dist in
                         zip(similar_words, distances)]
             print(response)
         else:
-            response = 'Word not found'
+            response = ['Paper not found']
     else:
         response = 'Selected wrong embedding'
 
@@ -331,7 +339,8 @@ download_model('model_objects/' + gensim_embedding_name, gensim_embedding_path)
 download_model('model_objects/' + gensim_2d_embeddings_name, gensim_2d_embeddings_path)
 download_model('model_objects/' + lsa_embedding_name, lsa_embedding_path)
 download_model('model_objects/' + lsa_embedding_2d_name, lsa_embedding_2d_path)
-download_model('model_objects/' + lsa_IR_model_object_name, lsa_IR_model_object_path)
+if not os.environ.get('IS_HEROKU'):
+    download_model('model_objects/' + lsa_IR_model_object_name, lsa_IR_model_object_path)
 download_model('model_objects/' + doc2vec_embedding_name, doc2vec_embedding_path)
 download_model('model_objects/' + doc2vec_embedding_2d_name, doc2vec_embedding_2d_path)
 
@@ -357,7 +366,8 @@ lsa_embedding_model = Model(lsa_embedding_2d_path)
 doc2vec_embedding_model = Model(doc2vec_embedding_2d_path)
 
 # Load IR model objects for Information Retrieval
-lsa_IR_model = get_model_obj(lsa_IR_model_object_path)
+if not os.environ.get('IS_HEROKU'):
+    lsa_IR_model = get_model_obj(lsa_IR_model_object_path)
 
 if __name__ == '__main__':
     print('Server has started up at time: {}'.format(datetime.datetime.now().
