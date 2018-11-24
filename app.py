@@ -362,4 +362,5 @@ lsa_IR_model = get_model_obj(lsa_IR_model_object_path)
 if __name__ == '__main__':
     print('Server has started up at time: {}'.format(datetime.datetime.now().
                                                      strftime("%I:%M%p on %B %d, %Y")))
-    app.run(debug=True, use_reloader=True)  # not run for production
+    #app.run(debug=True, use_reloader=True)  # not run for production
+    app.run(host='0.0.0.0', debug=True, use_reloader=True, port=80)
