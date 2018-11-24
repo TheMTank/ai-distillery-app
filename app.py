@@ -114,10 +114,11 @@ def get_paper_embedding_proximity():
         lsa_labels_lowercase = [x.lower().strip() for x in lsa_labels]
         if input_str_clean in lsa_labels_lowercase:
             print('Labels most similar to:', input_str)
-            similar_papers, distances, sorted_idx = get_closest_vectors(lsa_labels, lsa_embeddings,
+            similar_papers, distances, sorted_indices = get_closest_vectors(lsa_labels, lsa_embeddings,
                                                            lsa_label_to_embeddings[input_str], n=n)
-            response = [{'label': label, 'distance': round(float(dist), 5)} for label, dist in
-                        zip(similar_papers, distances)]
+            response = [{'label': label, 'distance': round(float(dist), 5),
+                         'id': lsa_ids[sorted_idx], 'abstract': lsa_abstracts[sorted_idx]
+                         } for label, dist, sorted_idx in zip(similar_papers, distances, sorted_indices)]
             print(response)
         else:
             response = ['Paper not found']
@@ -323,6 +324,7 @@ gensim_2d_embeddings_name = 'type_word2vec#dim_2#dataset_ArxivNov4#time_2018-11-
 lsa_embedding_name = 'lsa-100.pkl' # 'lsa-300.pkl' # seems too big
 lsa_embedding_2d_name = 'lsa-2.pkl'
 lsa_IR_model_object_name = 'lsa-tfidf-pipeline-50k-feats-400-dim.pkl'
+lsa_info_object_name = 'LSA_info_object_54797.pkl'
 doc2vec_embedding_name = 'type_doc2vec#dim_100#dataset_ArxivNov4#time_2018-11-14T02_10_25.587584' # 'doc2vec-300.pkl' # not right format
 doc2vec_embedding_2d_name = 'type_doc2vec#dim_2#dataset_ArxivNov4#time_2018-11-14T02_10_25.587584'
 
@@ -331,6 +333,7 @@ gensim_2d_embeddings_path = 'data/word_embeddings/' + gensim_2d_embeddings_name
 lsa_embedding_path = 'data/paper_embeddings/' + lsa_embedding_name
 lsa_embedding_2d_path = 'data/paper_embeddings/' + lsa_embedding_2d_name
 lsa_IR_model_object_path = 'data/models/' + lsa_IR_model_object_name
+lsa_info_object_path = 'data/paper_embeddings/' + lsa_info_object_name
 doc2vec_embedding_path = 'data/paper_embeddings/' + doc2vec_embedding_name
 doc2vec_embedding_2d_path = 'data/paper_embeddings/' + doc2vec_embedding_2d_name
 
@@ -341,6 +344,7 @@ download_model('model_objects/' + lsa_embedding_name, lsa_embedding_path)
 download_model('model_objects/' + lsa_embedding_2d_name, lsa_embedding_2d_path)
 if not os.environ.get('IS_HEROKU'):
     download_model('model_objects/' + lsa_IR_model_object_name, lsa_IR_model_object_path)
+download_model('model_objects/' + lsa_info_object_name, lsa_info_object_path)
 download_model('model_objects/' + doc2vec_embedding_name, doc2vec_embedding_path)
 download_model('model_objects/' + doc2vec_embedding_2d_name, doc2vec_embedding_2d_path)
 
@@ -358,6 +362,9 @@ gensim_embedding_model = Model(gensim_2d_embeddings_path)
 # Load paper embeddings
 lsa_labels, lsa_embeddings, lsa_label_to_embeddings = get_embedding_objs(lsa_embedding_path)
 doc2vec_labels, doc2vec_embeddings, doc2vec_label_to_embeddings = get_embedding_objs(doc2vec_embedding_path)
+with open(lsa_info_object_path, 'rb') as f:
+    lsa_info_object = pickle.load(f)
+lsa_ids, lsa_abstracts = lsa_info_object['ids'], lsa_info_object['abstracts']
 
 # Load lsa model (2d TSNE-precomputed) into word2vec-explorer visualisation
 lsa_embedding_model = Model(lsa_embedding_2d_path)
