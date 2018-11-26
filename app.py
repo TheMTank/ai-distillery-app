@@ -82,16 +82,17 @@ def get_word_embedding_proximity():
             print(response)
         else:
             response = ['Word not found']
-    # elif selected_word_embedding == 'fast_text':
-    #     if inputted_word in fast_text_labels:
-    #         print('Words most similar to:', inputted_word)
-    #         similar_words, distances = get_closest_vectors(fast_text_labels, fast_text_embeddings,
-    #                                                        fast_text_label_to_embeddings[inputted_word], n=15)
-    #         response = [{'word': word, 'distance': round(float(dist), 5)} for word, dist in
-    #                     zip(similar_words, distances)]
-    #         print(response)
-    #     else:
-    #         response = 'Word not found'
+    elif selected_word_embedding == 'fasttext':
+        fasttext_labels_lowercase_strip = [x.lower().strip() for x in fasttext_labels]
+        if input_str in fasttext_labels_lowercase_strip:
+            print('Words most similar to:', input_str)
+            similar_words, distances, sorted_idx = get_closest_vectors(fasttext_labels, fasttext_embeddings,
+                                                           fasttext_label_to_embeddings[input_str], n=n)
+            response = [{'label': word, 'distance': round(float(dist), 5)} for word, dist in
+                        zip(similar_words, distances)]
+            print(response)
+        else:
+            response = 'Word not found'
     else:
         response = 'Selected wrong word embedding'
 
@@ -203,6 +204,8 @@ def explore():
         embedding_model = lsa_embedding_model
     elif embedding_type == 'doc2vec':
         embedding_model = doc2vec_embedding_model
+    elif embedding_type == 'fasttext':
+        embedding_model = fasttext_embedding_model
     else:
         embedding_model = gensim_embedding_model  # default model so it doesn't crash
 
@@ -320,6 +323,8 @@ def download_model(key, output_path):
 # todo should be done in another script so 4 workers dont do it as well
 gensim_embedding_name = 'type_word2vec#dim_100#dataset_ArxivNov4#time_2018-11-13T07_17_46.600182'
 gensim_2d_embeddings_name = 'type_word2vec#dim_2#dataset_ArxivNov4#time_2018-11-13T07_17_46.600182'
+fasttext_embedding_name = 'type_fasttext#dim_300#dataset_ArxivNov4th#time_2018-11-23T04_35_16.470276'
+# fasttext_2d_embedding_name = ''
 lsa_embedding_name = 'lsa-100.pkl' # 'lsa-300.pkl' # seems too big
 lsa_embedding_2d_name = 'lsa-2.pkl'
 lsa_IR_model_object_name = 'lsa-tfidf-pipeline-50k-feats-400-dim.pkl'
@@ -329,6 +334,8 @@ doc2vec_embedding_2d_name = 'type_doc2vec#dim_2#dataset_ArxivNov4#time_2018-11-1
 
 gensim_embedding_path = 'data/word_embeddings/' + gensim_embedding_name
 gensim_2d_embeddings_path = 'data/word_embeddings/' + gensim_2d_embeddings_name
+fasttext_embedding_path = 'data/word_embeddings/' + fasttext_embedding_name
+# fasttext_2d_embedding_path = 'data/word_embeddings/' + fasttext_2d_embedding_name
 lsa_embedding_path = 'data/paper_embeddings/' + lsa_embedding_name
 lsa_embedding_2d_path = 'data/paper_embeddings/' + lsa_embedding_2d_name
 lsa_IR_model_object_path = 'data/models/' + lsa_IR_model_object_name
@@ -341,6 +348,8 @@ download_model('model_objects/' + gensim_embedding_name, gensim_embedding_path)
 download_model('model_objects/' + gensim_2d_embeddings_name, gensim_2d_embeddings_path)
 download_model('model_objects/' + lsa_embedding_name, lsa_embedding_path)
 download_model('model_objects/' + lsa_embedding_2d_name, lsa_embedding_2d_path)
+download_model('model_objects/' + fasttext_embedding_name, fasttext_embedding_path)
+# download_model('model_objects/' + fasttext_2d_embedding_name, fasttext_2d_embedding_path)
 if not os.environ.get('IS_HEROKU'):
     download_model('model_objects/' + lsa_IR_model_object_name, lsa_IR_model_object_path)
 download_model('model_objects/' + lsa_info_object_name, lsa_info_object_path)
@@ -355,8 +364,10 @@ gensim_labels, gensim_embeddings, gensim_label_to_embeddings = get_embedding_obj
 gensim_embedding_model = Model(gensim_2d_embeddings_path)
 
 # fast_text_embedding_path = 'data/word_embeddings/fast_text_vectors.pkl'
-# print('Loading fast_text vectors at path: {}'.format(fast_text_embedding_path))
-# fast_text_labels, fast_text_embeddings, fast_text_label_to_embeddings = get_embedding_objs(fast_text_embedding_path)
+fasttext_labels, fasttext_embeddings, fasttext_label_to_embeddings = get_embedding_objs(fasttext_embedding_path)
+
+# Load fastText 2d embedding model into word2vec-explorer visualisation
+# fasttext_embedding_model = Model(fasttext_2d_embedding_path)
 
 # Load paper embeddings
 lsa_labels, lsa_embeddings, lsa_label_to_embeddings = get_embedding_objs(lsa_embedding_path)
@@ -379,4 +390,4 @@ if __name__ == '__main__':
     print('Server has started up at time: {}'.format(datetime.datetime.now().
                                                      strftime("%I:%M%p on %B %d, %Y")))
     #app.run(debug=True, use_reloader=True)  # not run for production
-    app.run(host='0.0.0.0', debug=True, use_reloader=True, port=80)
+    app.run(host='0.0.0.0', debug=True, use_reloader=True, port=80)  # 5000
