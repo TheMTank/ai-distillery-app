@@ -1,7 +1,12 @@
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    {% block head %}
+
+
     <title>Paper embeddings trained on Arxiv</title>
 
     <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -23,10 +28,9 @@
     <!-- Custom styles for this template -->
     <link href="/styles/agency.min.css" rel="stylesheet">
 
-
+    {% include "layouts/min_import.html" %}
     <!-- Custom scripts for this template -->
-{% endblock %}
-</head>
+
 
 
 <body id="page-top">
@@ -77,6 +81,7 @@
       </div>
     </footer>
 {% endblock %}
+
 
 {% block javascript %}
 

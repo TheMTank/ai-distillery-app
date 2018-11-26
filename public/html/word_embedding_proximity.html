@@ -1,68 +1,79 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Word embeddings trained on Arxiv</title>
+{% extends "layouts/post_page_layout.html" %}
 
-    <link rel="stylesheet" href="/styles/embedding_proximity.css">
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+{% block content %}
+    <section id="services">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 text-center">
+            <h2 class="section-heading text-uppercase">Word Proximity</h2>
+            <h3 class="section-subheading text-muted">Search For Similar Words Using FastText and Word2Vec.</h3>
+          </div>
+        </div>
+        {% raw %}
+        <div class="row text-center">
+            <script id="address-template" type="text/x-handlebars-template">
+                <h3>Paper Similar to {{selectedWord}}</h3>
+                <table class="similar-words table-striped table paperFontSize">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Similar words</th>
+                            <th scope="col">Distance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+                        {{#each top_words}}
+                            <tr>
+                                <td>{{this.label}}</td>
+                                <td>{{this.distance}}</td>
+                            </tr>
+                        {{/each}}
 
-</head>
-<style>
+                    </tbody>
 
-</style>
-<body>
-
-<script id="address-template" type="text/x-handlebars-template">
-    <h1 style="text-align:center">Results for {{selectedWord}}</h1>
-    <table class="similar-words redTable wordEmbFontSize">
-        <thead>
-            <tr>
-                <td>Similar words</td>
-                <td>Distance</td>
-            </tr>
-        </thead>
-        <tbody>
-            {{#each top_words}}
-                <tr>
-                    <td>{{this.label}}</td>
-                    <td>{{this.distance}}</td>
-                </tr>
-            {{/each}}
-        </tbody>
-
-    </table>
-</script>
-
-<div style="margin-left: auto;margin-right: auto;width: 50%;" data-embedding-type="word" id="input-form">
-    <div style="text-align: center;">
-        <input type="text" name="word" value="RNN" id="search-box">
-        <br>
-        <select id="embedding-type">
-            <option value="gensim" selected>Gensim</option>
-            <!--<option value="fast_text">fastText</option>-->
-        </select>
-        <button id="submit-btn" style="">Submit</button>
+                </table>
+            </script>
     </div>
-</div>
+        {% endraw %}
+        <div class="row justify-content-center align-items-center">
+                <div class="col col-sm-12 col-md-12">
+                <div data-embedding-type="word" id="input-form">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Word</label>
+                      <input type="text" name="word" value="RNN" id="search-box"
+                             class="form-control input-lg">
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleSelect1">Select Embedding</label>
+                    <select class="form-control" id="embedding-type">
+                        <option value="gensim" selected>Gensim</option>
+                    </select>
+                  </div>
+                  <button type="submit" id="submit-btn" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row text-center">
+            <div class="col-md-12">
+                <div class="content-placeholder">
+                </div>
+            </div>
+        </div>
+        </div>
+    </section>
+{% endblock %}
 
-<div class="content-placeholder">
+{% block javascript %}
+    {{ super() }}
+    <script>
+        $(function () {
+            // global variables different between word and paper embedding page. Avoids dangerous caching
+            higherLevelEmbeddingType = $('#input-form').data('embedding-type');
+            embeddingProximityRoute = '/' + higherLevelEmbeddingType + '-embedding-proximity';
+        })
 
-</div>
+    </script>
 
-<a href="/" style="position: absolute; top: 0; right: 0;">Go Back</a>
-</body>
-
-<script>
-    $(function () {
-        // global variables different between word and paper embedding page. Avoids dangerous caching
-        higherLevelEmbeddingType = $('#input-form').data('embedding-type');
-        embeddingProximityRoute = '/' + higherLevelEmbeddingType + '-embedding-proximity';
-    })
-</script>
-<script src="/js/embedding_proximity.js"></script>
-</html>
+    <script src="/js/embedding_proximity.js"></script>
+{% endblock %}

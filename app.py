@@ -24,7 +24,6 @@ def root():
     # return render_template('index.html')
     return send_from_directory('public/html', 'index.html')
 
-
 @app.route("/i2")
 def i2():
     return render_template('index2.html')
@@ -39,7 +38,7 @@ def paper_search_page():
 
 @app.route("/word-embedding-proximity-page")
 def word_embedding_table():
-    return send_from_directory('public/html', 'word_embedding_proximity.html')
+    return render_template('word_embedding_proximity.html')
 
 @app.route("/paper-embedding-proximity-page")
 def paper_embedding_table():
@@ -51,7 +50,7 @@ def word_embedding_viz():
 
 @app.route("/paper-embedding-viz")
 def paper_embedding_viz():
-    return send_from_directory('public/html', 'paper_embedding_viz.html')
+    return render_template('paper_embedding_viz.html')
 
 # --------------------
 # All other routes
