@@ -1,1 +1,3 @@
-nohup sudo -E /home/benfduffy/miniconda3/bin/python -u app.py &> output_log.txt& tail -f output_log.txt
+nohup sudo -E /home/benfduffy/miniconda3/bin/python -u app.py &> output_log.txt&
+sudo /home/benfduffy/miniconda3/bin/gunicorn -b 0.0.0.0:80 -w 4 app:app
+nohup sudo -E /home/benfduffy/miniconda3/bin/gunicorn -b 0.0.0.0:80 -w 4 app:app &> output_log.txt&
