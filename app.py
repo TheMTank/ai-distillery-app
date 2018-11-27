@@ -65,7 +65,6 @@ def get_word_embedding_proximity():
 
     input_str = input_str.lower()
 
-    # inputted_word = inputted_word.strip().lower() # todo both upper and lower case atm. find lowercase version if not found
     # inputted_word = inputted_word.replace(' ', '_') # todo probably keep
     # fuzzy match similar ones!!!!! and show
 
@@ -200,12 +199,12 @@ def explore():
 
     if embedding_type == 'gensim':
         embedding_model = gensim_embedding_model
+    elif embedding_type == 'fasttext':
+        embedding_model = fasttext_embedding_model
     elif embedding_type == 'lsa':
         embedding_model = lsa_embedding_model
     elif embedding_type == 'doc2vec':
         embedding_model = doc2vec_embedding_model
-    elif embedding_type == 'fasttext':
-        embedding_model = fasttext_embedding_model
     else:
         embedding_model = gensim_embedding_model  # default model so it doesn't crash
 
@@ -240,6 +239,8 @@ def compare():
 
     if embedding_type == 'gensim':
         embedding_model = gensim_embedding_model
+    elif embedding_type == 'fasttext':
+        embedding_model = fasttext_embedding_model
     elif embedding_type == 'lsa':
         embedding_model = lsa_embedding_model
     elif embedding_type == 'doc2vec':
@@ -320,11 +321,11 @@ def download_model(key, output_path):
 # ------------------
 
 # Download all models if they don't already exist (download_model() checks)
-# todo should be done in another script so 4 workers dont do it as well
 gensim_embedding_name = 'type_word2vec#dim_100#dataset_ArxivNov4#time_2018-11-13T07_17_46.600182'
 gensim_2d_embeddings_name = 'type_word2vec#dim_2#dataset_ArxivNov4#time_2018-11-13T07_17_46.600182'
-fasttext_embedding_name = 'type_fasttext#dim_300#dataset_ArxivNov4th#time_2018-11-23T04_35_16.470276'
-# fasttext_2d_embedding_name = ''
+# fasttext_embedding_name = 'type_fasttext#dim_300#dataset_ArxivNov4th#time_2018-11-23T04_35_16.470276'
+fasttext_embedding_name = 'type_fasttext#dim_100#dataset_ArxivNov4th#time_2018-11-22T01_00_16.104601'
+fasttext_2d_embedding_name = 'type_fasttext#dim_2#dataset_ArxivNov4th#time_2018-11-22T01_00_16.104601'
 lsa_embedding_name = 'lsa-100.pkl' # 'lsa-300.pkl' # seems too big
 lsa_embedding_2d_name = 'lsa-2.pkl'
 lsa_IR_model_object_name = 'lsa-tfidf-pipeline-50k-feats-400-dim.pkl'
@@ -335,7 +336,7 @@ doc2vec_embedding_2d_name = 'type_doc2vec#dim_2#dataset_ArxivNov4#time_2018-11-1
 gensim_embedding_path = 'data/word_embeddings/' + gensim_embedding_name
 gensim_2d_embeddings_path = 'data/word_embeddings/' + gensim_2d_embeddings_name
 fasttext_embedding_path = 'data/word_embeddings/' + fasttext_embedding_name
-# fasttext_2d_embedding_path = 'data/word_embeddings/' + fasttext_2d_embedding_name
+fasttext_2d_embedding_path = 'data/word_embeddings/' + fasttext_2d_embedding_name
 lsa_embedding_path = 'data/paper_embeddings/' + lsa_embedding_name
 lsa_embedding_2d_path = 'data/paper_embeddings/' + lsa_embedding_2d_name
 lsa_IR_model_object_path = 'data/models/' + lsa_IR_model_object_name
@@ -344,17 +345,18 @@ doc2vec_embedding_path = 'data/paper_embeddings/' + doc2vec_embedding_name
 doc2vec_embedding_2d_path = 'data/paper_embeddings/' + doc2vec_embedding_2d_name
 
 print('Beginning to download all models')
-download_model('model_objects/' + gensim_embedding_name, gensim_embedding_path)
-download_model('model_objects/' + gensim_2d_embeddings_name, gensim_2d_embeddings_path)
-download_model('model_objects/' + lsa_embedding_name, lsa_embedding_path)
-download_model('model_objects/' + lsa_embedding_2d_name, lsa_embedding_2d_path)
-download_model('model_objects/' + fasttext_embedding_name, fasttext_embedding_path)
-# download_model('model_objects/' + fasttext_2d_embedding_name, fasttext_2d_embedding_path)
+MODEL_OBJECTS_S3_PATH = 'model_objects/'
+download_model(MODEL_OBJECTS_S3_PATH + gensim_embedding_name, gensim_embedding_path)
+download_model(MODEL_OBJECTS_S3_PATH + gensim_2d_embeddings_name, gensim_2d_embeddings_path)
+download_model(MODEL_OBJECTS_S3_PATH + lsa_embedding_name, lsa_embedding_path)
+download_model(MODEL_OBJECTS_S3_PATH + lsa_embedding_2d_name, lsa_embedding_2d_path)
+download_model(MODEL_OBJECTS_S3_PATH + fasttext_embedding_name, fasttext_embedding_path)
+download_model(MODEL_OBJECTS_S3_PATH + fasttext_2d_embedding_name, fasttext_2d_embedding_path)
 if not os.environ.get('IS_HEROKU'):
-    download_model('model_objects/' + lsa_IR_model_object_name, lsa_IR_model_object_path)
-download_model('model_objects/' + lsa_info_object_name, lsa_info_object_path)
-download_model('model_objects/' + doc2vec_embedding_name, doc2vec_embedding_path)
-download_model('model_objects/' + doc2vec_embedding_2d_name, doc2vec_embedding_2d_path)
+    download_model(MODEL_OBJECTS_S3_PATH + lsa_IR_model_object_name, lsa_IR_model_object_path)
+download_model(MODEL_OBJECTS_S3_PATH + lsa_info_object_name, lsa_info_object_path)
+download_model(MODEL_OBJECTS_S3_PATH + doc2vec_embedding_name, doc2vec_embedding_path)
+download_model(MODEL_OBJECTS_S3_PATH + doc2vec_embedding_2d_name, doc2vec_embedding_2d_path)
 
 # Loading models into embedding objects and Explorer objects
 # Load all word embeddings
@@ -367,7 +369,7 @@ gensim_embedding_model = Model(gensim_2d_embeddings_path)
 fasttext_labels, fasttext_embeddings, fasttext_label_to_embeddings = get_embedding_objs(fasttext_embedding_path)
 
 # Load fastText 2d embedding model into word2vec-explorer visualisation
-# fasttext_embedding_model = Model(fasttext_2d_embedding_path)
+fasttext_embedding_model = Model(fasttext_2d_embedding_path)
 
 # Load paper embeddings
 lsa_labels, lsa_embeddings, lsa_label_to_embeddings = get_embedding_objs(lsa_embedding_path)
@@ -389,5 +391,4 @@ if not os.environ.get('IS_HEROKU'):
 if __name__ == '__main__':
     print('Server has started up at time: {}'.format(datetime.datetime.now().
                                                      strftime("%I:%M%p on %B %d, %Y")))
-    #app.run(debug=True, use_reloader=True)  # not run for production
     app.run(host='0.0.0.0', debug=True, use_reloader=True, port=80)  # 5000

@@ -46,6 +46,7 @@ export default React.createClass({
                   Choose your embedding:
                   <select value={this.embedding_type} onChange={this.handleChange} ref='embedding_type_input'>
                     <option value="gensim">Gensim word embedding</option>
+                    <option value="fasttext">FastText word embedding</option>
                   </select>
                 </label>
               <div className='form-group'>
