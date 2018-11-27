@@ -34,7 +34,7 @@ def charts():
 
 @app.route("/paper-search-page")
 def paper_search_page():
-    return send_from_directory('public/html', 'paper_search.html')
+    return render_template('paper_search.html')
 
 @app.route("/word-embedding-proximity-page")
 def word_embedding_table():

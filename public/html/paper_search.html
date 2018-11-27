@@ -1,64 +1,88 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Paper search</title>
+{% extends "layouts/post_page_layout.html" %}
 
-    <link rel="stylesheet" href="/styles/embedding_proximity.css">
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+{% block content %}
+    <section id="services">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 text-center">
+            <h2 class="section-heading text-uppercase">Paper Search</h2>
+            <h3 class="section-subheading text-muted">Free text serach over the Arxiv Dataset using Doc2Vec and LSA</h3>
+          </div>
+        </div>
+        {% raw %}
+        <div class="row text-center">
+            <script id="address-template" type="text/x-handlebars-template">
+                <h3>Papers similar to <b>{{selectedWord}}</b></h3>
+                <table class="similar-words table-striped table paperFontSize">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Similar papers</th>
+                            <th scope="col">Options</th>
+                            <th scope="col">Distance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+                        {{#each top_words}}
+                            <tr>
+                                <td>{{this.title}}</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                      <button class="btn btn-primary btn-sm" type="button"
+                                            data-toggle="collapse" data-target="#accordion{{@index}}"
+                                            aria-expanded="false" aria-controls="accordion{{@index}}">
+                                        Abstract</button>
+                                      <a type="button" href="https://arxiv.org/abs/{{this.paper_id}}" target="_blank" class="btn btn-success btn-sm">Paper Page</a>
+                                      <a type="button" href="https://arxiv.org/pdf/{{this.paper_id}}.pdf" target="_blank" class="btn btn-danger btn-sm">PDF</a>
+                                    </div>
 
-</head>
-<style>
+                                </td>
+                                <td>{{this.distance}}</td>
+                            </tr>
+                            <tr id="accordion{{@index}}" class="collapse">
+                                    <td colspan="3">
+                                        {{this.abstract}}
+                                    </td>
+                            </tr>
+                        {{/each}}
 
-</style>
-<body>
+                    </tbody>
 
-<script id="address-template" type="text/x-handlebars-template">
-    <h1 style="text-align:center">Results for {{selectedWord}}</h1>
-    <table class="similar-words redTable wordEmbFontSize">
-        <thead>
-            <tr>
-                <td>ID</td>
-                <td>Title</td>
-                <td>Distance</td>
-            </tr>
-        </thead>
-        <tbody>
-            {{#each top_words}}
-                <tr>
-                    <td>{{this.paper_id}}</td>
-                    <td><a href="https://arxiv.org/abs/{{this.paper_id}}">{{this.title}}</a></td>
-                    <td>{{this.distance}}</td>
-                </tr>
-            {{/each}}
-        </tbody>
-
-    </table>
-</script>
-
-<div style="margin-left: auto;margin-right: auto;width: 50%;" data-embedding-type="paper" id="input-form">
-    <div style="text-align: center;">
-        <input type="text" name="word" value="" id="search-box">
-        <br>
-        <select id="embedding-type">
-            <option value="lsa" selected>LSA</option>
-            <!--<option value="fast_text">fastText</option>-->
-        </select>
-        <button id="submit-btn" style="">Submit</button>
+                </table>
+            </script>
     </div>
-</div>
+        {% endraw %}
+        <div class="row justify-content-center align-items-center">
+                <div class="col col-sm-12 col-md-12">
+                <div data-embedding-type="paper" id="input-form">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Paper Title</label>
+                    <input type="text" class="form-control input-lg search-box-papers" id="search-box">
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleSelect1">Select Embedding</label>
+                    <select class="form-control" id="embedding-type">
+                        <option value="lsa" selected>LSA</option>
+                        <option value="doc2vec">Doc2Vec</option>
+                    </select>
+                  </div>
+                  <button type="submit" id="submit-btn" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row text-center">
+            <div class="col-md-12">
+                <div class="content-placeholder">
+                </div>
+            </div>
+        </div>
+        </div>
+    </section>
 
-<div class="content-placeholder">
+{% endblock %}
 
-</div>
-
-<a href="/" style="position: absolute; top: 0; right: 0;">Go Back</a>
-</body>
-
+{% block javascript %}
 <script>
     /*$(function () {
         // global variables different between word and paper embedding page. Avoids dangerous caching
@@ -154,4 +178,4 @@
 </script>
 <!--<script src="/js/embedding_proximity.js"></script>-->
 
-</html>
+{% endblock %}
