@@ -3,6 +3,7 @@ import pickle
 import os
 import os.path
 
+from sklearn.metrics.pairwise import euclidean_distances
 import numpy as np
 from flask import Flask, request, send_from_directory, jsonify, render_template
 
@@ -51,6 +52,18 @@ def word_embedding_viz():
 @app.route("/paper-embedding-viz")
 def paper_embedding_viz():
     return render_template('paper_embedding_viz.html')
+
+# --------------------
+# Routes to other files
+# --------------------
+
+@app.route('/js/<path:path>')
+def send_js(path):
+    return send_from_directory('public/js', path)
+
+@app.route('/styles/<path:path>')
+def send_styles(path):
+    return send_from_directory('public/styles', path)
 
 # --------------------
 # All other routes
@@ -154,11 +167,11 @@ def get_embedding_labels():
 @app.route("/search-papers")
 def search_papers():
     query = request.args.get('query', '')
-    selected_embedding = request.args.get('c', 'lsa')
+    selected_embedding = request.args.get('type', 'tfidf')
 
     if selected_embedding == 'tfidf':
-        # features = doc_tfidf_features # todo use internal tfidf?
-        pass
+        # features = doc_tfidf_features
+        model = tfidf_IR_model
     elif selected_embedding == 'lsa':
         model = lsa_IR_model
         # features = doc_lsa_features
@@ -167,27 +180,21 @@ def search_papers():
 
     preprocessed_query = query.lower()
     print('Searching for query: {}'.format(preprocessed_query))
-    query_feats = model['model'].transform([preprocessed_query])
+    query_feats = model['model'].transform([preprocessed_query])#.toarray()
 
     closest_papers_titles, distances, sorted_indices = get_closest_vectors(model['titles'],
                                                                            model['feats'],
-                                                                           query_feats, n=100)
+                                                                           query_feats, n=100,
+                                                                           sparse=True)
 
     print('Closest paper titles top 5: {}'.format(closest_papers_titles[0:5]))
     top_paper_ids = np.array(model['ids'])[sorted_indices]
+    top_paper_abstracts = np.array(model['abstracts'])[sorted_indices]
 
-    response_obj = [{'title': title, 'paper_id': paper_id, 'distance': round(distance, 4)} for title,
-                        paper_id, distance in zip(closest_papers_titles, top_paper_ids, distances)]
+    response_obj = [{'title': title, 'paper_id': paper_id, 'abstract': abstract, 'distance': round(distance, 4)} for title,
+                        paper_id, abstract, distance in zip(closest_papers_titles, top_paper_ids, top_paper_abstracts, distances)]
 
     return jsonify(response_obj)
-
-@app.route('/js/<path:path>')
-def send_js(path):
-    return send_from_directory('public/js', path)
-
-@app.route('/styles/<path:path>')
-def send_styles(path):
-    return send_from_directory('public/styles', path)
 
 @app.route("/api/explore")
 def explore():
@@ -265,8 +272,11 @@ def compare():
 # Helper functions
 # --------------------
 
-def get_closest_vectors(labels, all_vectors, query_vector, n=5):
-    distances = np.linalg.norm(all_vectors - query_vector, axis=1)  # vectorised # todo try scikit
+def get_closest_vectors(labels, all_vectors, query_vector, n=5, sparse=False):
+    if sparse:
+        distances = euclidean_distances(all_vectors, query_vector).flatten()
+    else:
+        distances = np.linalg.norm(all_vectors - query_vector, axis=1)  # vectorised # todo try scikit and many more and put in notebook
     sorted_idx = np.argsort(distances)
 
     return list(np.array(labels)[sorted_idx][0:n]), list(distances[sorted_idx][0:n]), sorted_idx[0:n]
@@ -283,7 +293,11 @@ def get_model_obj(model_object_path):
         print('Num titles: {}'.format(len(model_obj['titles'])))
         print('feats shape: {}'.format(model_obj['feats'].shape))
         print('Model: {}'.format(model_obj['model']))
-        model_obj['model'].named_steps.tfidf_vectorizer.input = 'content'
+        if model_obj.get('abstracts'):
+            print('Abstract shape: {}'.format(len(model_obj['abstracts'])))
+        model_obj['model'].input = 'content'
+        #model_obj['feats'] = model_obj['feats'].toarray()
+        #model_obj['model'].named_steps.tfidf_vectorizer.input = 'content'
 
         return model_obj
 
@@ -328,8 +342,9 @@ fasttext_embedding_name = 'type_fasttext#dim_100#dataset_ArxivNov4th#time_2018-1
 fasttext_2d_embedding_name = 'type_fasttext#dim_2#dataset_ArxivNov4th#time_2018-11-22T01_00_16.104601'
 lsa_embedding_name = 'lsa-100.pkl' # 'lsa-300.pkl' # seems too big
 lsa_embedding_2d_name = 'lsa-2.pkl'
-lsa_IR_model_object_name = 'lsa-tfidf-pipeline-50k-feats-400-dim.pkl'
 lsa_info_object_name = 'LSA_info_object_54797.pkl'
+lsa_IR_model_object_name = 'lsa-tfidf-pipeline-50k-feats-400-dim.pkl'
+tfidf_IR_model_object_name = 'tfidf-50k-feats-IR-object.pkl' #'tfidf-10k-feats-IR-object.pkl' #'tfidf-25k-feats-IR-object.pkl' #'tfidf-50k-feats-IR-object.pkl'  #'tfidf-200k-feats-IR-object.pkl'
 doc2vec_embedding_name = 'type_doc2vec#dim_100#dataset_ArxivNov4#time_2018-11-14T02_10_25.587584' # 'doc2vec-300.pkl' # not right format
 doc2vec_embedding_2d_name = 'type_doc2vec#dim_2#dataset_ArxivNov4#time_2018-11-14T02_10_25.587584'
 
@@ -339,8 +354,9 @@ fasttext_embedding_path = 'data/word_embeddings/' + fasttext_embedding_name
 fasttext_2d_embedding_path = 'data/word_embeddings/' + fasttext_2d_embedding_name
 lsa_embedding_path = 'data/paper_embeddings/' + lsa_embedding_name
 lsa_embedding_2d_path = 'data/paper_embeddings/' + lsa_embedding_2d_name
-lsa_IR_model_object_path = 'data/models/' + lsa_IR_model_object_name
 lsa_info_object_path = 'data/paper_embeddings/' + lsa_info_object_name
+lsa_IR_model_object_path = 'data/models/' + lsa_IR_model_object_name
+tfidf_IR_model_object_path = 'data/models/' + tfidf_IR_model_object_name
 doc2vec_embedding_path = 'data/paper_embeddings/' + doc2vec_embedding_name
 doc2vec_embedding_2d_path = 'data/paper_embeddings/' + doc2vec_embedding_2d_name
 
@@ -386,7 +402,8 @@ doc2vec_embedding_model = Model(doc2vec_embedding_2d_path)
 
 # Load IR model objects for Information Retrieval
 if not os.environ.get('IS_HEROKU'):
-    lsa_IR_model = get_model_obj(lsa_IR_model_object_path)
+    # lsa_IR_model = get_model_obj(lsa_IR_model_object_path)
+    tfidf_IR_model = get_model_obj(tfidf_IR_model_object_path)
 
 if __name__ == '__main__':
     print('Server has started up at time: {}'.format(datetime.datetime.now().
