@@ -6,6 +6,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
 
     <title>All Charts</title>
+    <style>
+        .chart-heading {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
 
@@ -14,10 +19,17 @@
         <section id="main-content">
           <h1 id="ai-distillery">AI Distillery charts</h1>
             <div>
+                <h1 class="chart-heading">Number of papers released on arxiv over time</h1>
                 <canvas id="myChart" width="1000" height="400"></canvas>
 
+                <h1 class="chart-heading">The number of mentions of GAN overtime since 2014</h1>
                 <canvas id="GANChart" width="1000" height="400"></canvas>
+                <h1 class="chart-heading">Most cited papers according to semantic scholar from 2014+ in our arxiv set</h1>
                 <canvas id="most-cited-papers" width="1000" height="1000"></canvas>
+
+                <h1 class="chart-heading">Authors who have published the most papers from 2014+</h1>
+                <canvas id="top-n-authors" width="1000" height="1000"></canvas>
+
             </div>
 
         </section>
@@ -116,6 +128,24 @@ $( document ).ready(function() {
                   "datasets":[
                         {"label":"Most cited papers according to semantic scholar from 2014+ in our arxiv set",
                          "data":top_cited_paper_citation_counts_top_100,
+                         "fill":false,
+                         "backgroundColor": background_colours,
+                         "borderWidth":1,
+                         "hoverBackgroundColor": "rgb(35, 20, 207)"}
+                         ]
+                   },
+         "options":{"scales":{"xAxes":[{"ticks":{"beginAtZero":true}}]}}});
+
+
+    top_n_author_labels = ['Yoshua Bengio', 'Chunhua Shen', 'Sergey Levine', 'Luc Van Gool', 'Pieter Abbeel', 'Trevor Darrell', 'Liang Lin', 'Kyunghyun Cho', 'Shuicheng Yan', 'Eric P. Xing', 'Jiashi Feng', 'Yang Liu', 'Xiaogang Wang', 'Alan L. Yuille', 'Bernt Schiele', 'Yi Yang', 'Nassir Navab', 'Dacheng Tao', 'Ruslan Salakhutdinov', 'Lei Zhang', 'Anton van den Hengel', 'Ming-Hsuan Yang', 'Aaron C. Courville', 'Shie Mannor', 'Philip H. S. Torr', 'Wei Liu', 'Michael I. Jordan', 'Jitendra Malik', 'Jun Zhu', 'Xiaodan Liang', 'Daniel Cremers', 'Abhinav Gupta', 'Li Fei-Fei', 'Max Welling', 'Mario Fritz', 'Xiaoou Tang', 'Andrea Vedaldi', 'Chris Dyer', 'Larry S. Davis', 'Bernhard Schölkopf', 'Oriol Vinyals', 'Jianfeng Gao', 'Yu Zhang', 'Rama Chellappa', 'Bo Li', 'Andrew Zisserman', 'Lawrence Carin', 'Graham Neubig', 'Dhruv Batra', 'Barnabás Póczos', 'Devi Parikh', 'Yann LeCun', 'Cordelia Schmid', 'Ian D. Reid', 'Le Song', 'Chen Change Loy', 'Thomas S. Huang', 'Daniel Rueckert', 'Silvio Savarese', 'Wei Li', 'Xi Chen', 'Xiaodong He', 'Joshua B. Tenenbaum', 'Tong Zhang', 'Ming Zhou', 'Jun Wang', 'Wei Wang', 'Alfred O. Hero', 'Svetha Venkatesh', 'Song-Chun Zhu', 'Mathieu Salzmann', 'Gang Wang', 'Philip S. Yu', 'Percy Liang', 'Pascal Fua', 'Andreas Krause', 'Pushmeet Kohli', 'Xu Sun', 'Alexander Wong', 'Timothy M. Hospedales', 'Tao Xiang', 'Hinrich Schütze', 'Kate Saenko', 'Anima Anandkumar', 'Nathan Srebro', 'Peng Wang', 'Andreas K. Maier', 'Antonio Torralba', 'Masashi Sugiyama', 'Noah A. Smith', 'Ian J. Goodfellow', 'Wangmeng Zuo', 'Stefano Ermon', 'Quoc V. Le', 'Ross B. Girshick', 'Jan Kautz', 'Tie-Yan Liu', 'Weinan Zhang', 'Honglak Lee', 'Jian Sun'];
+    top_n_author_counts = [201, 126, 119, 114, 101, 96, 96, 93, 91, 88, 87, 87, 87, 86, 83, 81, 76, 76, 74, 73, 73, 71, 69, 67, 67, 67, 66, 66, 65, 65, 65, 64, 64, 62, 62, 62, 62, 62, 61, 60, 60, 60, 59, 59, 58, 58, 57, 57, 56, 56, 54, 54, 54, 53, 53, 53, 53, 52, 52, 51, 51, 51, 50, 50, 50, 50, 50, 50, 49, 49, 49, 49, 49, 49, 49, 49, 49, 48, 48, 48, 48, 48, 48, 47, 47, 47, 47, 47, 47, 47, 46, 46, 46, 45, 45, 45, 45, 45, 45, 44];
+
+    new Chart(document.getElementById("top-n-authors"),
+        {"type":"horizontalBar",
+         "data": {"labels":top_n_author_labels,
+                  "datasets":[
+                        {"label":"Authors who have published the most papers from 2014+",
+                         "data":top_n_author_counts,
                          "fill":false,
                          "backgroundColor": background_colours,
                          "borderWidth":1,

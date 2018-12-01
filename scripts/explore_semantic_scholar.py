@@ -43,8 +43,15 @@ def get_all_unique_author_counts(all_paper_objs):
     print('Num authors: {}'.format(len(authors_flattened)))
     print('authors: {}'.format(authors_flattened[0:20]))
     c = Counter(authors_flattened)
-    for i in c.most_common(100):
+
+    top_100_authors = c.most_common(100)
+    for i in top_100_authors:
         print(i)
+
+    labels = [x[0] for x in top_100_authors]
+    data = [x[1] for x in top_100_authors]
+    print(labels)
+    print(data)
 
 def get_top_most_cited_papers(all_paper_objs):
     paper_citation_info = [(paper['title'], len(paper['citations']), paper['influentialCitationCount']) for paper in all_paper_objs]
@@ -52,15 +59,17 @@ def get_top_most_cited_papers(all_paper_objs):
     for p_c_i in paper_citation_info[0:100]:
         print(p_c_i)
 
-    return [(x[0], x[1]) for x in paper_citation_info[0:100]]
-    # print(paper_citation_info[0:100])
+    top_100 = paper_citation_info[0:100]
 
-# get_all_unique_author_counts(all_paper_objs)
-most_cited_papers = get_top_most_cited_papers(all_paper_objs)
-labels = [x[0] for x in most_cited_papers]
-data = [x[1] for x in most_cited_papers]
-print(labels)
-print(data)
+    labels = [x[0] for x in top_100]
+    data = [x[1] for x in top_100]
+    print(labels)
+    print(data)
+
+get_top_most_cited_papers(all_paper_objs)
+get_all_unique_author_counts(all_paper_objs)
+
+
 
 # expected javascript data in form below
 # javascript_data =
