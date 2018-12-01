@@ -312,6 +312,16 @@ def argtopk(A, k=None, sort=True):
     return ind
 
 
+def get_closest_vectors(labels, all_vectors, query_vector, n=5,
+                        cosine=True, **kwargs):
+    """ Forwards to either euclid distance or cosine similarity """
+    # TODO `cosine` could be a global option instead of parameter
+    # or even configurable in the UI
+    if cosine:
+        return get_closest_vectors_cosine(labels, all_vectors, query_vector, n=n, **kwargs)
+    else:
+        return get_closest_vectors_euclid(labels, all_vectors, query_vector, n=n, **kwargs)
+
 def get_closest_vectors_cosine(labels, all_vectors, query_vector, n=5):
     """
     Arguments
@@ -331,7 +341,7 @@ def get_closest_vectors_cosine(labels, all_vectors, query_vector, n=5):
     topk = argtopk(sim[0], k=n, sort=True)
     return list(np.asarray(labels)[topk])
 
-def get_closest_vectors(labels, all_vectors, query_vector, n=5, sparse=False):
+def get_closest_vectors_euclid(labels, all_vectors, query_vector, n=5, sparse=False):
     if sparse:
         distances = euclidean_distances(all_vectors, query_vector).flatten()
     else:
