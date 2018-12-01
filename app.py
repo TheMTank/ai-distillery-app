@@ -3,7 +3,7 @@ import pickle
 import os
 import os.path
 
-from sklearn.metrics.pairwise import euclidean_distances
+from sklearn.metrics.pairwise import euclidean_distances, cosine_similarity
 import numpy as np
 from flask import Flask, request, send_from_directory, jsonify, render_template
 
@@ -271,6 +271,65 @@ def compare():
 # --------------------
 # Helper functions
 # --------------------
+def argtopk(A, k=None, sort=True):
+    """ Get the the top k elements (in sorted order)
+    >>> A = np.asarray([5,4,3,6,7,8,9,0])
+    >>> A[argtopk(A, 3)]
+    array([9, 8, 7])
+    >>> argtopk(A, 1)
+    array([6])
+    >>> argtopk(A, 6)
+    array([6, 5, 4, 3, 0, 1])
+    >>> argtopk(A, 10)
+    array([6, 5, 4, 3, 0, 1, 2, 7])
+    >>> argtopk(A, 28)
+    array([6, 5, 4, 3, 0, 1, 2, 7])
+    >>> argtopk(A, None)
+    array([6, 5, 4, 3, 0, 1, 2, 7])
+    >>> X = np.arange(20)
+    >>> argtopk(X, 10)
+    array([19, 18, 17, 16, 15, 14, 13, 12, 11, 10])
+    """
+    A = np.asarray(A)
+    if len(A.shape) > 1:
+        raise ValueError('argtopk only defined for 1-d slices')
+    axis = -1
+    if k is None or k >= A.size:
+        # if list is too short or k is None, return all in sort order
+        if sort:
+            return np.argsort(A, axis=axis)[::-1]
+        else:
+            return np.arange(A.shape[0])
+
+    assert k > 0
+    # now 0 < k < len(A)
+    ind = np.argpartition(A, -k, axis=axis)[-k:]
+    if sort:
+        # sort according to values in A
+        # argsort is always from lowest to highest, so reverse
+        ind = ind[np.argsort(A[ind], axis=axis)][::-1]
+
+    return ind
+
+
+def get_closest_vectors_cosine(labels, all_vectors, query_vector, n=5):
+    """
+    Arguments
+    ---------
+    labels: list of labels such that labels[i] corrseponds to all_vectors[i]
+    all_vectors: N x H
+    query_vector: 1 X H
+    n: int number of closest labels to return
+
+    Returns
+    -------
+    Labels of top `n` closest vectors wrt cosine similarity
+    """
+    assert len(labels) == all_vectors.shape[0]
+    query_vector = query_vector.reshape(1, all_vectors.shape[1])
+    sim = cosine_similarity(query_vector, all_vectors)
+    topk = argtopk(sim[0], k=n, sort=True)
+    return list(np.asarray(labels)[topk])
 
 def get_closest_vectors(labels, all_vectors, query_vector, n=5, sparse=False):
     if sparse:
