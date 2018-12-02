@@ -371,9 +371,9 @@ download_model(MODEL_OBJECTS_S3_PATH + lsa_embedding_2d_name, lsa_embedding_2d_p
 download_model(MODEL_OBJECTS_S3_PATH + fasttext_embedding_name, fasttext_embedding_path)
 download_model(MODEL_OBJECTS_S3_PATH + fasttext_2d_embedding_name, fasttext_2d_embedding_path)
 if not os.environ.get('IS_HEROKU') and os.environ.get('LOAD_TFIDF'):
-    download_model(MODEL_OBJECTS_S3_PATH + lsa_IR_model_object_name, lsa_IR_model_object_path)
+    # download_model(MODEL_OBJECTS_S3_PATH + lsa_IR_model_object_name, lsa_IR_model_object_path)
+    download_model(MODEL_OBJECTS_S3_PATH + tfidf_IR_model_object_name, tfidf_IR_model_object_path)
 download_model(MODEL_OBJECTS_S3_PATH + lsa_info_object_name, lsa_info_object_path)
-download_model(MODEL_OBJECTS_S3_PATH + tfidf_IR_model_object_name, tfidf_IR_model_object_path)
 download_model(MODEL_OBJECTS_S3_PATH + doc2vec_embedding_name, doc2vec_embedding_path)
 download_model(MODEL_OBJECTS_S3_PATH + doc2vec_embedding_2d_name, doc2vec_embedding_2d_path)
 
