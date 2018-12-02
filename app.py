@@ -31,7 +31,7 @@ def i2():
 
 @app.route("/charts")
 def charts():
-    return send_from_directory('public/html', 'all-charts.html')
+    return render_template('charts.html')
 
 @app.route("/paper-search-page")
 def paper_search_page():
@@ -409,3 +409,4 @@ if __name__ == '__main__':
     print('Server has started up at time: {}'.format(datetime.datetime.now().
                                                      strftime("%I:%M%p on %B %d, %Y")))
     app.run(host='0.0.0.0', debug=True, use_reloader=True, port=80)  # 5000
+    # app.run(host='0.0.0.0', debug=True, use_reloader=True, port=5000)  # 5000

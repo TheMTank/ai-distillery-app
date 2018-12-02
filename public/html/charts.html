@@ -1,9 +1,6 @@
-<!--{% extends "layouts/post_page_layout.html" %}-->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+{% extends "layouts/post_page_layout.html" %}
+
+{% block content %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
 
     <title>All Charts</title>
@@ -13,21 +10,23 @@
             margin-bottom: 40px;
             margin-top: 40px;
         }
+
+        #ai-distillery-title {
+            text-align: center;
+        }
     </style>
-</head>
-<body>
+
 
 <div id="content-wrapper">
       <div class="inner clearfix">
-          <!--todo add top common header -->
           <!--todo have a header to jump between charts -->
         <section id="main-content">
-          <h1 id="ai-distillery">AI Distillery charts</h1>
+          <h1 id="ai-distillery-title">AI Distillery charts</h1>
             <div>
                 <h1 class="chart-heading">Number of papers released on arxiv over time</h1>
                 <canvas id="myChart" width="1000" height="400"></canvas>
 
-                <h1 class="chart-heading">The number of mentions of GAN over time since 2014</h1>
+                <h1 class="chart-heading">The number of mentions of "GAN" in titles over time since 2014</h1>
                 <canvas id="GANChart" width="1000" height="400"></canvas>
 
                 <h1 class="chart-heading">Most cited papers according to semantic scholar from 2014+ in our arxiv set</h1>
@@ -42,11 +41,11 @@
 
         </section>
       </div>
-    <a href="/" style="position: absolute; top: 0; right: 0;">Go Back</a>
 </div>
+{% endblock %}
 
-</body>
-
+{% block javascript %}
+{{ super() }}
 <script>
 $( document ).ready(function() {
     var ctx = document.getElementById("myChart").getContext('2d');
@@ -144,7 +143,7 @@ $( document ).ready(function() {
                          "hoverBackgroundColor": "rgb(35, 20, 207)"}
                          ]
                    },
-         "options": {"scales":{"xAxes":[{"ticks":{"beginAtZero":false}}]},
+         "options": {"scales":{"xAxes":[{"ticks":{"stepSize": 1, "beginAtZero":false}}]},
                      "tooltips": {
                       callbacks: {
                         title: function(tooltipItem, data) {
@@ -159,4 +158,4 @@ $( document ).ready(function() {
 
 });
 </script>
-</html>
+{% endblock %}
