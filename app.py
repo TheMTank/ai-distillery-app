@@ -1,4 +1,5 @@
 import datetime
+import bz2
 import pickle
 import os
 import os.path
@@ -284,6 +285,7 @@ def get_closest_vectors(labels, all_vectors, query_vector, n=5, sparse=False):
 def get_model_obj(model_object_path):
     print('Loading embeddings at path: {}'.format(model_object_path))
     with open(model_object_path, 'rb') as handle:
+    # with bz2.BZ2File(model_object_path, 'rb') as handle:
         model_obj = pickle.load(handle, encoding='latin1')
         # labels = model_obj['labels']
         # embeddings = model_obj['embeddings']
@@ -344,7 +346,7 @@ lsa_embedding_name = 'lsa-100.pkl' # 'lsa-300.pkl' # seems too big
 lsa_embedding_2d_name = 'lsa-2.pkl'
 lsa_info_object_name = 'LSA_info_object_54797.pkl'
 lsa_IR_model_object_name = 'lsa-tfidf-pipeline-50k-feats-400-dim.pkl'
-tfidf_IR_model_object_name = 'tfidf-50k-feats-IR-object.pkl' #'tfidf-10k-feats-IR-object.pkl' #'tfidf-25k-feats-IR-object.pkl' #'tfidf-50k-feats-IR-object.pkl'  #'tfidf-200k-feats-IR-object.pkl'
+tfidf_IR_model_object_name = 'tfidf-50k-feats-IR-object.pkl' #'tfidf-10k-feats-IR-object-bz2.pkl' # #'tfidf-10k-feats-IR-object.pkl' #'tfidf-25k-feats-IR-object.pkl' #'tfidf-50k-feats-IR-object.pkl'  #'tfidf-200k-feats-IR-object.pkl'
 doc2vec_embedding_name = 'type_doc2vec#dim_100#dataset_ArxivNov4#time_2018-11-14T02_10_25.587584' # 'doc2vec-300.pkl' # not right format
 doc2vec_embedding_2d_name = 'type_doc2vec#dim_2#dataset_ArxivNov4#time_2018-11-14T02_10_25.587584'
 
@@ -368,9 +370,10 @@ download_model(MODEL_OBJECTS_S3_PATH + lsa_embedding_name, lsa_embedding_path)
 download_model(MODEL_OBJECTS_S3_PATH + lsa_embedding_2d_name, lsa_embedding_2d_path)
 download_model(MODEL_OBJECTS_S3_PATH + fasttext_embedding_name, fasttext_embedding_path)
 download_model(MODEL_OBJECTS_S3_PATH + fasttext_2d_embedding_name, fasttext_2d_embedding_path)
-if not os.environ.get('IS_HEROKU'):
+if not os.environ.get('IS_HEROKU') and os.environ.get('LOAD_TFIDF'):
     download_model(MODEL_OBJECTS_S3_PATH + lsa_IR_model_object_name, lsa_IR_model_object_path)
 download_model(MODEL_OBJECTS_S3_PATH + lsa_info_object_name, lsa_info_object_path)
+download_model(MODEL_OBJECTS_S3_PATH + tfidf_IR_model_object_name, tfidf_IR_model_object_path)
 download_model(MODEL_OBJECTS_S3_PATH + doc2vec_embedding_name, doc2vec_embedding_path)
 download_model(MODEL_OBJECTS_S3_PATH + doc2vec_embedding_2d_name, doc2vec_embedding_2d_path)
 
@@ -401,7 +404,7 @@ lsa_embedding_model = Model(lsa_embedding_2d_path)
 doc2vec_embedding_model = Model(doc2vec_embedding_2d_path)
 
 # Load IR model objects for Information Retrieval
-if not os.environ.get('IS_HEROKU'):
+if not os.environ.get('IS_HEROKU') and os.environ.get('LOAD_TFIDF'):
     # lsa_IR_model = get_model_obj(lsa_IR_model_object_path)
     tfidf_IR_model = get_model_obj(tfidf_IR_model_object_path)
 
