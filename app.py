@@ -271,7 +271,7 @@ def compare():
 # --------------------
 # Helper functions
 # --------------------
-def argtopk(A, k=None, sort=True):
+def argtopk(A, k=None):
     """ Get the the top k elements (in sorted order)
     >>> A = np.asarray([5,4,3,6,7,8,9,0])
     >>> A[argtopk(A, 3)]
@@ -296,18 +296,15 @@ def argtopk(A, k=None, sort=True):
     axis = -1
     if k is None or k >= A.size:
         # if list is too short or k is None, return all in sort order
-        if sort:
-            return np.argsort(A, axis=axis)[::-1]
-        else:
-            return np.arange(A.shape[0])
+        return np.argsort(A, axis=axis)[::-1]
 
-    assert k > 0
+    # When k is not None, it should be > 0
+    assert k > 0, "Received k <= 0, please use argtopk(-A, k) instead"
     # now 0 < k < len(A)
     ind = np.argpartition(A, -k, axis=axis)[-k:]
-    if sort:
-        # sort according to values in A
-        # argsort is always from lowest to highest, so reverse
-        ind = ind[np.argsort(A[ind], axis=axis)][::-1]
+    # sort according to values in A
+    # argsort is always from lowest to highest, so reverse
+    ind = ind[np.argsort(A[ind], axis=axis)][::-1]
 
     return ind
 
@@ -315,8 +312,8 @@ def argtopk(A, k=None, sort=True):
 def get_closest_vectors(labels, all_vectors, query_vector, n=5,
                         cosine=True, **kwargs):
     """ Forwards to either euclid distance or cosine similarity """
-    # TODO `cosine` could be a global option instead of parameter
-    # or even configurable in the UI
+    # TODO `cosine` could be a global option instead of default argument or
+    # even configurable in the UI
     if cosine:
         return get_closest_vectors_cosine(labels, all_vectors, query_vector, n=n, **kwargs)
     else:
@@ -338,17 +335,22 @@ def get_closest_vectors_cosine(labels, all_vectors, query_vector, n=5):
     assert len(labels) == all_vectors.shape[0]
     query_vector = query_vector.reshape(1, all_vectors.shape[1])
     sim = cosine_similarity(query_vector, all_vectors)
-    topk = argtopk(sim[0], k=n, sort=True)
-    return list(np.asarray(labels)[topk])
+    topk = argtopk(sim[0], k=n)
+    return list(np.asarray(labels)[topk]), list(sim[topk]), topk
 
 def get_closest_vectors_euclid(labels, all_vectors, query_vector, n=5, sparse=False):
     if sparse:
         distances = euclidean_distances(all_vectors, query_vector).flatten()
     else:
         distances = np.linalg.norm(all_vectors - query_vector, axis=1)  # vectorised # todo try scikit and many more and put in notebook
+
+    # Top k of inverted distances is actually low k
+    # TODO: Make sure result of euclidean_distances / linalg norm is 1D
+    # topk = argtopk(-distances, n)
+    # faster than expensive full-sort
     sorted_idx = np.argsort(distances)
 
-    return list(np.array(labels)[sorted_idx][0:n]), list(distances[sorted_idx][0:n]), sorted_idx[0:n]
+    return list(np.array(labels)[sorted_idx][topk]), list(distances[sorted_idx][topk]), topk
 
 def get_model_obj(model_object_path):
     print('Loading embeddings at path: {}'.format(model_object_path))
