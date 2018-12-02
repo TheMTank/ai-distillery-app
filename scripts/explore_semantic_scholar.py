@@ -97,9 +97,45 @@ def get_most_cited_papers_over_time(all_paper_objs):
     print([x[1] for x in top_100 if int(x[3]) >= 2014])
     print([x[2] for x in top_100 if int(x[3]) >= 2014])
 
+def get_most_used_topics(all_paper_objs):
+    paper_citation_info = [{'title': paper['title'],
+                            'citations': len(paper['citations']),
+                            'influentialCitationCount': paper['influentialCitationCount'],
+                            'year': paper['year'],
+                            'topics': paper['topics']} for paper in all_paper_objs]
+
+    all_topics = []
+    for pci in paper_citation_info:
+        for topic in pci['topics']:
+            all_topics.append(topic['topic'])
+
+    c = Counter(all_topics)
+
+    top_100_topics = c.most_common(100)
+    for i in top_100_topics:
+        print(i)
+
+    labels = [x[0] for x in top_100_topics]
+    data = [x[1] for x in top_100_topics]
+    print(labels)
+    print(data)
+
+    num_topics_altogether = len(c)
+    top_all_topics = c.most_common(num_topics_altogether)
+    for i in top_all_topics:
+        print(i)
+
+    labels = [x[0] for x in top_all_topics]
+    data = [x[1] for x in top_all_topics]
+    print(labels)
+    print(data)
+
+    print('Number of topics: {}'.format(num_topics_altogether))
+
 # get_most_cited_papers(all_paper_objs)
 # get_all_unique_author_counts(all_paper_objs)
-get_most_cited_papers_over_time(all_paper_objs)
+# get_most_cited_papers_over_time(all_paper_objs)
+get_most_used_topics(all_paper_objs)
 
 
 
