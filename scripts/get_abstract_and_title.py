@@ -64,6 +64,8 @@ lsa_abstracts = [full_paper_id_to_abstract.get(full_paper_id, 'Not found') for f
 print(len(lsa_abstracts))
 print(len(lsa_ids))
 
+with open('../data/full_paper_id_to_abstract_dict.pkl', 'wb') as f:
+    pickle.dump(full_paper_id_to_abstract, f)
 
 path_to_LSA_info_object = '../data/paper_embeddings/LSA_info_object_{}.pkl'.format(len(lsa_abstracts))
 with open(path_to_LSA_info_object, 'wb') as f:
