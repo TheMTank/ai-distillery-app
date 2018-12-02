@@ -5,37 +5,70 @@
 
     <title>All Charts</title>
     <style>
+
         .chart-heading {
             text-align: center;
             margin-bottom: 40px;
-            margin-top: 40px;
+            /*margin-top: 40px;*/
+            padding-top: 50px;
         }
 
         #ai-distillery-title {
             text-align: center;
+            margin-top: 30px;
+        }
+
+        .back-to-navigation-box {
+            position: fixed;
+            top: 54px;
+            right: 0px;
+            z-index: 1000;
+            background-color: blue;
         }
     </style>
 
 
 <div id="content-wrapper">
       <div class="inner clearfix">
-          <!--todo have a header to jump between charts -->
+          <div class="back-to-navigation-box">
+              <a href="#navigation-heading">Navigation</a>
+          </div>
         <section id="main-content">
           <h1 id="ai-distillery-title">AI Distillery charts</h1>
-            <div>
-                <h1 class="chart-heading">Number of papers released on arxiv over time</h1>
-                <canvas id="myChart" width="1000" height="400"></canvas>
+            <p>
+                <h3 id="notes" class="chart-heading">Notes</h3>
+                <ul>
+                    <li>Shown results are only for papers from the beginning of 2014 onwards</li>
+                    <li>Shown results are only for papers from arxiv.org that we found in the areas of cs.[CV|CL|LG|AI|NE] or stat.ML (some might still be missing in the crawling process)</li>
+                </ul>
 
-                <h1 class="chart-heading">The number of mentions of "GAN" in titles over time since 2014</h1>
+                <h3 id="navigation-heading" class="chart-heading">Navigation/Table of Contents</h3>
+                <ul>
+                    <li><a href="#num-arxiv-papers-heading">Number of papers released on arxiv over time</a></li>
+                    <li><a href="#GANChart-heading">The number of mentions of "GAN" in titles over time since 2014</a></li>
+                    <li><a href="#top-n-topics-heading">Top topics from 2014 onwards</a></li>
+                    <li><a href="#most-cited-papers-heading">Top 100 cited papers according to semantic scholar from 2014+ in our arxiv set</a></li>
+                    <li><a href="#most-cited-papers-over-time-heading">Top 100 cited papers over time</a></li>
+                    <li><a href="#top-n-authors-heading">Authors who have published the most papers from 2014+</a></li>
+                </ul>
+            </p>
+            <div>
+                <h1 id="num-arxiv-papers-heading" class="chart-heading">Number of papers released on arxiv over time</h1>
+                <canvas id="num-arxiv-papers" width="1000" height="400"></canvas>
+
+                <h1 id="GANChart-heading" class="chart-heading">The number of mentions of "GAN" in titles over time since 2014</h1>
                 <canvas id="GANChart" width="1000" height="400"></canvas>
 
-                <h1 class="chart-heading">Most cited papers according to semantic scholar from 2014+ in our arxiv set</h1>
+                <h1 id="top-n-topics-heading" class="chart-heading">Top topics from 2014 onwards</h1>
+                <canvas id="top-n-topics" width="1000" height="1000"></canvas>
+
+                <h1 id="most-cited-papers-heading" class="chart-heading">Top 100 cited papers according to semantic scholar from 2014+ in our arxiv set</h1>
                 <canvas id="most-cited-papers" width="1000" height="1000"></canvas>
 
-                <h1 class="chart-heading">Top cited papers over time</h1>
+                <h1 id="most-cited-papers-over-time-heading" class="chart-heading">Top 100 cited papers over time</h1>
                 <canvas id="top-cited-papers-over-time" width="600" height="500"></canvas>
 
-                <h1 class="chart-heading">Authors who have published the most papers from 2014+</h1>
+                <h1 id="top-n-authors-heading" class="chart-heading">Authors who have published the most papers from 2014+</h1>
                 <canvas id="top-n-authors" width="1000" height="1000"></canvas>
             </div>
 
@@ -48,13 +81,13 @@
 {{ super() }}
 <script>
 $( document ).ready(function() {
-    var ctx = document.getElementById("myChart").getContext('2d');
+    var ctx = document.getElementById("num-arxiv-papers").getContext('2d');
     /* TODO: have vertical line underneath closest point like in google charts but also indicates you can hover */
 
     /*new Chart(document.getElementById("chartjs-0"),{"type":"line","data":{"labels":["January","February","March","April","May","June","July"],
     "datasets":[{"label":"My First Dataset","data":[65,59,80,81,56,55,40],"fill":false,"borderColor":"rgb(75, 192, 192)","lineTension":0.1}]},"options":{}});*/
 
-    var ctx = document.getElementById("myChart").getContext('2d');
+    var ctx = document.getElementById("num-arxiv-papers").getContext('2d');
       var myLineChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -155,6 +188,23 @@ $( document ).ready(function() {
                       }
                     }
                     }});
+
+    var top_100_topics_labels = ['Algorithm', 'Artificial neural network', 'Experiment', 'Deep learning', 'Machine learning', 'Convolutional neural network', 'Mathematical optimization', 'Computation', 'Benchmark (computing)', 'Computer vision', 'Sparse matrix', 'Baseline (configuration management)', 'Sensor', 'Approximation algorithm', 'Simulation', 'Reinforcement learning', 'Recurrent neural network', 'Loss function', 'Cluster analysis', 'Pixel', 'Sampling (signal processing)', 'End-to-end principle', 'Supervised learning', 'Nonlinear system', 'Time complexity', 'Optimization problem', 'Gradient', 'Synthetic intelligence', 'Scalability', 'Unsupervised learning', 'Silo (dataset)', 'Natural language processing', 'Neural Network Simulation', 'Long short-term memory', 'Neural Networks', 'Numerical analysis', 'Iteration', 'Interaction', 'Map', 'Semiconductor industry', 'Approximation', 'Text corpus', 'Markov chain', 'Convolution', 'Numerous', 'Test set', 'Artificial intelligence', 'Encoder', 'Biological Neural Networks', 'Iterative method', 'High- and low-level', 'Object detection', 'Computational complexity theory', 'Algorithmic efficiency', 'Autoencoder', 'Variational principle', 'Ground truth', 'Feature vector', 'Real-time clock', 'Software propagation', 'Random neural network', 'Feature learning', 'Network architecture', 'MNIST database', 'Support vector machine', 'Generative model', 'Statistical classification', 'Requirement', 'Time series', 'Inference', 'Programming paradigm', 'Synthetic data', 'Relevance', 'Language model', 'Image resolution', 'Bayesian network', 'Embedded system', 'ImageNet', 'Feature extraction', 'Coefficient', 'Noise reduction', 'Database', 'Stochastic gradient descent', 'Robot', 'Gradient descent', 'Semi-supervised learning', 'Graphics processing unit', 'Natural language', 'Speech recognition', 'Performance', 'Polynomial', 'Parsing', 'Kernel (operating system)', 'Convex optimization', 'Word embedding', 'Autonomous robot', 'Generative adversarial networks', 'Randomness', 'Question answering', 'Image segmentation']
+    var top_100_topics_values = [11893, 10321, 8956, 6723, 6276, 5359, 5250, 4127, 3827, 3273, 3001, 2341, 2185, 2104, 2092, 2066, 2040, 1992, 1985, 1937, 1912, 1892, 1818, 1759, 1720, 1595, 1586, 1577, 1511, 1505, 1416, 1344, 1343, 1324, 1322, 1320, 1262, 1259, 1259, 1229, 1175, 1161, 1136, 1045, 1045, 1043, 1021, 1020, 1005, 1000, 976, 961, 957, 957, 930, 926, 921, 898, 897, 856, 841, 832, 832, 823, 818, 818, 811, 804, 799, 793, 785, 773, 773, 752, 740, 739, 738, 735, 726, 723, 720, 716, 713, 707, 702, 702, 692, 690, 676, 671, 671, 671, 669, 668, 667, 661, 659, 648, 639, 638]
+
+    new Chart(document.getElementById("top-n-topics"),
+        {"type":"horizontalBar",
+         "data": {"labels":top_100_topics_labels,
+                  "datasets":[
+                        {"label":"Top Semantic Scholar topics from papers 2014 onwards",
+                         "data":top_100_topics_values,
+                         "fill":false,
+                         "backgroundColor": background_colours,
+                         "borderWidth":1,
+                         "hoverBackgroundColor": "rgb(35, 20, 207)"}
+                         ]
+                   },
+         "options":{"scales":{"xAxes":[{"ticks":{"beginAtZero":true}}]}}});
 
 });
 </script>
