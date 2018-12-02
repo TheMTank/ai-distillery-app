@@ -14,7 +14,8 @@ p {
 }
 
 a {
-  color: #fed136;
+  color: #f0b000;
+  font-weight: bold;
 }
 
 a:hover {

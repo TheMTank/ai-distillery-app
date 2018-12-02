@@ -23,8 +23,7 @@ app = Flask(__name__, static_folder='public', static_url_path='', template_folde
 
 @app.route("/")
 def root():
-    # return render_template('index.html')
-    return send_from_directory('public/html', 'index.html')
+    return render_template('index.html')
 
 @app.route("/i2")
 def i2():
@@ -177,7 +176,8 @@ def search_papers():
         model = lsa_IR_model
         # features = doc_lsa_features
     else:
-        labels = ['embedding_type not found']
+        return jsonify(['embedding_type not found', '', '', ''])
+        # labels = ['embedding_type not found']
 
     preprocessed_query = query.lower()
     print('Searching for query: {}'.format(preprocessed_query))
