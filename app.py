@@ -65,6 +65,10 @@ def send_js(path):
 def send_styles(path):
     return send_from_directory('public/styles', path)
 
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'public/images'), 'favicon.ico', mimetype='image/vnd.microsoft.icon')
+
 # --------------------
 # All other routes
 # --------------------
