@@ -699,3 +699,9 @@ ul.social-buttons li a:active, ul.social-buttons li a:focus, ul.social-buttons l
 .row-title-subtitle-cont {
     margin-top: 35px;
 }
+
+.hover-gif {
+    width: 100%;
+    height: 190px;
+    border: 1px solid black;
+}
