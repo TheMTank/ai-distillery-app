@@ -702,7 +702,7 @@ ul.social-buttons li a:active, ul.social-buttons li a:focus, ul.social-buttons l
 
 .hover-gif {
     height: 190px;
-    border: 2px solid black;
+    border: 1px solid black;
     margin-left: auto;
     margin-right: auto;
     width: 90%;
