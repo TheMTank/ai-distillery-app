@@ -56,20 +56,26 @@
         {% endraw %}
         <div class="row justify-content-center align-items-center">
                 <div class="col col-sm-12 col-md-12">
-                <div data-embedding-type="paper" id="input-form">
-                  <div class="form-group">
-                    <label for="exampleInputEmail1">Paper Title</label>
-                    <input type="text" class="form-control input-lg search-box-papers" id="search-box">
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleSelect1">Select Embedding</label>
-                    <select class="form-control" id="embedding-type">
-                        <!--<option value="lsa" selected>LSA</option>-->
-                        <option value="tfidf">TFIDF</option>
-                    </select>
-                  </div>
-                  <button type="submit" id="submit-btn" class="btn btn-primary">Submit</button>
-                </div>
+                 <div data-embedding-type="paper" id="input-form">
+                        <form class="form-inline" onsubmit="return false;">
+
+                            <div class="input-group mb-2 col-md-8">
+                                <input type="text" class="form-control search-box-papers" id="search-box"
+                                       placeholder="Deep learning to represent sub-grid processes in climate models">
+                            </div>
+                            <div class="input-group mb-2 col-md-2">
+                                <select class="form-control" id="embedding-type">
+                                    <!--<option value="lsa" selected>LSA</option>-->
+                                    <option value="tfidf" selected>TFIDF</option>
+                                </select>
+                            </div>
+                            <div class="input-group mb-2 col-md-2">
+                                <button type="submit" id="submit-btn" class="btn btn-primary">Submit</button>
+                            </div>
+
+                        </form>
+
+                    </div>
             </div>
         </div>
         <hr>
