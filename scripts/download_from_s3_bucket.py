@@ -1,15 +1,17 @@
 import os
+import logging
 import boto3
 import botocore
 
 DEFAULT_BUCKET_NAME = 'ai-distillery'
 def download_file_from_s3(key, output_path, bucket_name=DEFAULT_BUCKET_NAME):
+    logger = logging.getLogger()
     s3 = boto3.resource('s3',
                         aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
                         aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY_ID'])
 
     try:
-        print('Attempting to download file from S3 at {} and saving file to local path: {}'.format(
+        logger.info('Attempting to download file from S3 at {} and saving file to local path: {}'.format(
             key, output_path
         ))
         s3.Bucket(bucket_name).download_file(key, output_path)

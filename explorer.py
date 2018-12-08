@@ -5,13 +5,14 @@ Heavily adapted from: https://github.com/dominiek/word2vec-explorer
 import math
 import gensim
 import pickle
-# import cPickle
+import logging
+
 import numpy as np
-# from tsne import bh_sne
 from sklearn.manifold import TSNE
 from sklearn.cluster import KMeans
 from scipy.spatial.distance import cosine
 
+logger = logging.getLogger()
 
 class Exploration():
 
@@ -28,14 +29,14 @@ class Exploration():
 
     def reduce(self):
         if not self.already_2D:
-            print('Performing tSNE reduction ' +
+            logger.info('Performing tSNE reduction ' +
                   'on {} vectors'.format(len(self.vectors)))
             self.reduction = TSNE(n_components=2, verbose=1).fit_transform(
                 np.array(self.vectors, dtype=np.float64))  # slower than below
             # replaced below tsne with scikit's above
             # self.reduction = bh_sne(np.array(self.vectors, dtype=np.float64))
         else:
-            print('Already 2D, no TSNE needed')
+            logger.info('Already 2D, no TSNE needed')
             self.reduction = np.array(self.vectors, dtype=np.float64)
 
 
@@ -113,7 +114,7 @@ class Model(object):
 
     def __init__(self, filename):
         with open(filename, 'rb') as handle:
-            print('Attempting to open file at: ', filename)
+            logger.info('Attempting to open file at: {}'.format(filename))
             embeddings_object = pickle.load(handle, encoding='latin1')
             self.vocab = embeddings_object['labels']
             self.embeddings_array = embeddings_object['embeddings']
@@ -145,10 +146,10 @@ class Model(object):
         return {'labels': labels, 'comparison': matrix}
 
     def explore(self, query, limit=1000):
-        print('Model#explore query={}, limit={}'.format(query, limit))
+        logger.info('Model#explore query={}, limit={}'.format(query, limit))
         exploration = Exploration(query, already_2D=self.already_2D)
         if len(query):
-            print('Finding')
+            logger.info('Finding most similar vectors')
             positive, negative = self._parse_query(query)
             exploration.parsed_query['positive'] = positive
             exploration.parsed_query['negative'] = negative
@@ -156,9 +157,9 @@ class Model(object):
             exploration.labels = labels
             exploration.vectors = vectors
             exploration.distances = distances
-            print('first n labels and distances', labels[0:3], distances[0:3])
+            logger.info('first n labels and distances', labels[0:3], distances[0:3])
         else:
-            print('Showing all vectors')
+            logger.info('Showing all vectors')
             exploration.labels, exploration.vectors, sample_rate = self._all_vectors(limit)
             exploration.stats['sample_rate'] = sample_rate
         # exploration.stats['vocab_size'] = len(self.model.wv.vocab)
@@ -167,7 +168,7 @@ class Model(object):
         return exploration
 
     def _most_similar_vectors(self, positive, negative, limit):
-        print('Model#_most_similar_vectors' +
+        logger.info('Model#_most_similar_vectors' +
               'positive={}, negative={}, limit={}'.format(positive, negative, limit))
         # results_from_model1 = self.model1.most_similar(positive=positive, negative=negative, topn=limit)
         results = get_closest_vectors(self.vocab, self.embeddings_array, self.embeddings_dict[positive[0]], n=limit)
@@ -201,7 +202,7 @@ class Model(object):
             sample = int(math.ceil(len(self.vocab) / limit))
         # sample_rate = float(limit) / len(self.model.wv.vocab)
         sample_rate = float(limit) / len(self.vocab)
-        print('Model#_most_similar_vectors' +
+        logger.info('Model#_most_similar_vectors' +
               'sample={}, sample_rate={}, limit={}'.format(sample, sample_rate, limit))
         labels = []
         vectors = []
