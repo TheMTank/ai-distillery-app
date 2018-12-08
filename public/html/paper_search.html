@@ -81,6 +81,11 @@
         <hr>
         <div class="row text-center">
             <div class="col-md-12">
+                <div class="loading-icon-holder">
+                    <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                    <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                    <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                </div>
                 <div class="content-placeholder">
                 </div>
             </div>
@@ -104,7 +109,7 @@
 
         var searchPapers = function(searchTerm, embeddingType) {
             $.get(searchRoute, {'query': searchTerm, 'embedding_type': embeddingType}, function(data) {
-                console.log(data);
+                $loading.hide();
                 if (data == 'Word not found') {
                     tableData = [{'distance': -1, 'label': 'Word not found in embedding labels'}]
                 }
@@ -144,6 +149,12 @@
             var embeddingType = $("#embedding-type").val();
             searchPapers(searchTerm, embeddingType);
         });
+
+        var $loading = $('.loading-icon-holder').hide();
+        $(document)
+          .ajaxStart(function () {
+            $loading.show();
+          })
 
         // typeahead setup
         /*var currentPagesEmbeddingOptions = higherLevelEmbeddingType == 'word' ? ['gensim'] : ['lsa', 'doc2vec'];
