@@ -12,7 +12,7 @@ from sklearn.manifold import TSNE
 from sklearn.cluster import KMeans
 from scipy.spatial.distance import cosine
 
-logger = logging.getLogger()
+logger = logging.getLogger(__name__) # todo get logger from other file
 
 class Exploration():
 
@@ -32,12 +32,12 @@ class Exploration():
             logger.info('Performing tSNE reduction ' +
                   'on {} vectors'.format(len(self.vectors)))
             self.reduction = TSNE(n_components=2, verbose=1).fit_transform(
-                np.array(self.vectors, dtype=np.float64))  # slower than below
+                np.array(self.vectors, dtype=np.float32))  # slower than below
             # replaced below tsne with scikit's above
             # self.reduction = bh_sne(np.array(self.vectors, dtype=np.float64))
         else:
             logger.info('Already 2D, no TSNE needed')
-            self.reduction = np.array(self.vectors, dtype=np.float64)
+            self.reduction = np.array(self.vectors, dtype=np.float32)
 
 
     def cluster(self, num_clusters=30):
@@ -95,7 +95,7 @@ def get_closest_vectors(labels, all_vectors, vector_to_compare, n=5):
     distances = np.linalg.norm(all_vectors - vector_to_compare, axis=1) # vectorised
     sorted_idx = np.argsort(distances)  # [::-1]
 
-    return list(zip(list(np.array(labels)[sorted_idx][0:n]), [x.item() for x in list(distances[sorted_idx][0:n])]))
+    return list(zip(list(np.array(labels)[sorted_idx][0:n]), [x.item() for x in list(distances[sorted_idx][0:n])])) # todo might be a bit slow
 
 
 class Model(object):
@@ -157,7 +157,7 @@ class Model(object):
             exploration.labels = labels
             exploration.vectors = vectors
             exploration.distances = distances
-            logger.info('first n labels and distances', labels[0:3], distances[0:3])
+            logger.info('first n labels and distances: {}. {}'.format(labels[0:3], distances[0:3]))
         else:
             logger.info('Showing all vectors')
             exploration.labels, exploration.vectors, sample_rate = self._all_vectors(limit)
@@ -171,6 +171,7 @@ class Model(object):
         logger.info('Model#_most_similar_vectors' +
               'positive={}, negative={}, limit={}'.format(positive, negative, limit))
         # results_from_model1 = self.model1.most_similar(positive=positive, negative=negative, topn=limit)
+        # todo make sure isn't lowercase and paper has 'and' in title and this might split it up into a non-existing vector
         results = get_closest_vectors(self.vocab, self.embeddings_array, self.embeddings_dict[positive[0]], n=limit)
 
         labels = []
