@@ -1,18 +1,17 @@
-<!doctype html>
-<html lang="en">
-    {% block head %}
-    <title>Paper Embedding Visualisation</title>
-    {% include "layouts/min_import.html" %}
-    <link rel="stylesheet" href="/styles/bootstrap.min.css" />
-    <link rel="stylesheet" href="/styles/app.css?v=1">
-{% endblock %}
+{% extends "layouts/post_page_layout.html" %}
 
-  <body>
+{% set title_page = 'Paper Embedding Visualisation' %}
+
+{% block content %}
+    {% include "layouts/min_import.html" %}
+    <link rel="stylesheet" href="/styles/app.css?v=1">
+
     <div id="main" class="app-container"></div>
     <script src="/js/core_paper.js"></script>
 
+{% endblock %}
 
-  </body>
-</html>
+{% block footer %}
+{% endblock %}
 
 

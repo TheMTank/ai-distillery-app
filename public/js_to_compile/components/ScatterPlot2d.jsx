@@ -24,7 +24,7 @@ export default React.createClass({
     let viewOptions = this.state.viewOptions
     let scatterClasses = 'scatter-plot-2d'
     if (viewOptions.showLabels) scatterClasses += ' show-labels'
-    this._updateD3 && this._updateD3()
+    this._updateD3// && this._updateD3()
     return (
       <div className='scatter-plot-2d-container'>
         <div className='view-options'>
@@ -199,7 +199,7 @@ export default React.createClass({
       let labels = this.state.labels
       let viewOptions = this.state.viewOptions
 
-      console.log(`ScatterPlot2d update, dataset.length=${dataset.length}`)
+      console.log('ScatterPlot2d update, dataset.length=${dataset.length}') // todo why happen 10 times?
 
       xScale.domain([d3.min(dataset, (d) => d[0]), d3.max(dataset, (d) => d[0])])
       yScale.domain([d3.min(dataset, (d) => d[1]), d3.max(dataset, (d) => d[1])])
