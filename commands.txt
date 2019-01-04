@@ -1,3 +1,6 @@
 nohup sudo -E /home/benfduffy/miniconda3/bin/python -u app.py &> output_log.txt&
 sudo /home/benfduffy/miniconda3/bin/gunicorn -b 0.0.0.0:80 -w 4 app:app
 nohup sudo -E /home/benfduffy/miniconda3/bin/gunicorn -b 0.0.0.0:80 -w 4 app:app &> output_log.txt&
+nohup sudo -E /home/benfduffy/miniconda3/bin/gunicorn -b 0.0.0.0:80 -w 4 --certfile /etc/letsencrypt/live/www.ai-distllery.io/cert.pem --keyfile /etc/letsencrypt/live/www.ai-distllery.io/privkey.pem app:app &> output_log.txt&
+sudo pkill -f app.py
+sudo pkill -f gunicorn
