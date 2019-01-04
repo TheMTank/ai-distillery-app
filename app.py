@@ -8,6 +8,8 @@ import os.path
 from sklearn.metrics.pairwise import euclidean_distances
 import numpy as np
 from flask import Flask, request, send_from_directory, jsonify, render_template
+from flask_sslify import SSLify
+
 
 from explorer import Model
 from scripts.download_from_s3_bucket import download_file_from_s3
@@ -25,6 +27,7 @@ STATIC_DIR = os.path.dirname(os.path.realpath(__file__)) + '/public'
 CACHE = {}
 
 app = Flask(__name__, static_folder='public', static_url_path='', template_folder="public/html")
+sslify = SSLify(app) # if prod
 
 # --------------------
 # Routes to all HTML pages
@@ -423,6 +426,6 @@ if not os.environ.get('IS_HEROKU') and os.environ.get('LOAD_TFIDF'):
 
 if __name__ == '__main__':
     logger.info('Server has started up at time: {}'.format(datetime.datetime.now().
-                                                     strftime("%I:%M%p on %B %d, %Y")))
+                                                    strftime("%I:%M%p on %B %d, %Y")))
     app.run(host='0.0.0.0', port=80)  # 5000
     # app.run(host='0.0.0.0', debug=True, use_reloader=True, port=5000)  # 5000
