@@ -8,6 +8,8 @@ import os.path
 from sklearn.metrics.pairwise import euclidean_distances
 import numpy as np
 from flask import Flask, request, send_from_directory, jsonify, render_template
+from flask_sslify import SSLify
+
 
 from explorer import Model
 from scripts.download_from_s3_bucket import download_file_from_s3
@@ -25,6 +27,7 @@ STATIC_DIR = os.path.dirname(os.path.realpath(__file__)) + '/public'
 CACHE = {}
 
 app = Flask(__name__, static_folder='public', static_url_path='', template_folder="public/html")
+sslify = SSLify(app) # if prod
 
 # --------------------
 # Routes to all HTML pages
