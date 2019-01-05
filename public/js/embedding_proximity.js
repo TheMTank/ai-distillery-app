@@ -2,6 +2,7 @@ $(function () {
     var tableData, context;
 
     var getSimilarEmbeddings = function(searchTerm, embeddingType) {
+        $loading.show();
         $.get(embeddingProximityRoute, {'input_str': searchTerm, 'type': embeddingType}, function(data) {
             $loading.hide();
             if (data.length == 1) {
@@ -15,6 +16,7 @@ $(function () {
                 'selectedWord': searchTerm
             }
             fillTable(context);
+            $loading.hide();
         }, "json")
     }
 
@@ -47,13 +49,6 @@ $(function () {
     });
 
     var $loading = $('.loading-icon-holder').hide();
-    $(document)
-      .ajaxStart(function () {
-        $loading.show();
-      })
-//      .ajaxStop(function () {
-//        $loading.hide();
-//      });
 
     // typeahead setup
     var currentPagesEmbeddingOptions = higherLevelEmbeddingType == 'word' ? ['gensim'] : ['lsa', 'doc2vec'];
@@ -86,9 +81,9 @@ $(function () {
         console.log($(this).val())
         currentEmbeddingSelected = $(this).val()
         $( "#search-box" ).autocomplete('option', {'source': function(request, response) {
-                        var results = $.ui.autocomplete.filter(typeahead_labels[currentEmbeddingSelected], request.term);
+            var results = $.ui.autocomplete.filter(typeahead_labels[currentEmbeddingSelected], request.term);
 
-                        response(results.slice(0, 15));
-                  }})
+            response(results.slice(0, 15));
+        }})
     });
 });
