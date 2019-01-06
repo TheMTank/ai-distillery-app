@@ -9,7 +9,8 @@ from sklearn.metrics.pairwise import euclidean_distances
 import numpy as np
 from flask import Flask, request, send_from_directory, jsonify, render_template
 from flask_sslify import SSLify
-
+import whoosh.index as index
+from whoosh.qparser import QueryParser
 
 from explorer import Model
 from scripts.download_from_s3_bucket import download_file_from_s3
@@ -182,33 +183,20 @@ def get_embedding_labels():
 @app.route("/search-papers")
 def search_papers():
     query = request.args.get('query', '')
-    selected_embedding = request.args.get('type', 'tfidf')
+    num_results = 20  # todo query param or add pagination
 
-    if selected_embedding == 'tfidf':
-        # features = doc_tfidf_features
-        model = tfidf_IR_model
-    elif selected_embedding == 'lsa':
-        model = lsa_IR_model
-        # features = doc_lsa_features
-    else:
-        return jsonify(['embedding_type not found', '', '', ''])
-        # labels = ['embedding_type not found']
+    with whoosh_ix.searcher() as searcher:
+        query = QueryParser("full_text", whoosh_ix.schema).parse(query)
+        results = searcher.search(query, limit=num_results)
+        print('Num results: {}'.format(len(results)))
 
-    preprocessed_query = query.lower()
-    logger.info('Searching for query: {}'.format(preprocessed_query))
-    query_feats = model['model'].transform([preprocessed_query])#.toarray()
-
-    closest_papers_titles, distances, sorted_indices = get_closest_vectors(model['titles'],
-                                                                           model['feats'],
-                                                                           query_feats, n=100,
-                                                                           sparse=True)
-
-    logger.info('Closest paper titles top 5: {}'.format(closest_papers_titles[0:5]))
-    top_paper_ids = np.array(model['ids'])[sorted_indices]
-    top_paper_abstracts = np.array(model['abstracts'])[sorted_indices]
-
-    response_obj = [{'title': title, 'paper_id': paper_id, 'abstract': abstract, 'distance': round(distance, 4)} for title,
-                        paper_id, abstract, distance in zip(closest_papers_titles, top_paper_ids, top_paper_abstracts, distances)]
+        response_obj = [{'paper_id': result['paper_id'],
+                         'title': result['title'],
+                         'abstract': result['abstract'],
+                         'authors': result['authors'],
+                         'date': result['date'],
+                         'distance': round(results.top_n[idx][0], 4)
+                         } for idx, result in enumerate(results[0:num_results])]
 
     return jsonify(response_obj)
 
@@ -361,8 +349,6 @@ fasttext_2d_embedding_name = 'type_fasttext#dim_2#dataset_ArxivNov4th#time_2018-
 lsa_embedding_name = 'lsa-100.pkl' # 'lsa-300.pkl' # seems too big
 lsa_embedding_2d_name = 'lsa-2.pkl'
 lsa_info_object_name = 'LSA_info_object_54797.pkl'
-lsa_IR_model_object_name = 'lsa-tfidf-pipeline-50k-feats-400-dim.pkl'
-tfidf_IR_model_object_name = 'tfidf-50k-feats-IR-object.pkl' #'tfidf-10k-feats-IR-object-bz2.pkl' # #'tfidf-10k-feats-IR-object.pkl' #'tfidf-25k-feats-IR-object.pkl' #'tfidf-50k-feats-IR-object.pkl'  #'tfidf-200k-feats-IR-object.pkl'
 doc2vec_embedding_name = 'type_doc2vec#dim_100#dataset_ArxivNov4#time_2018-11-14T02_10_25.587584' # 'doc2vec-300.pkl' # not right format
 doc2vec_embedding_2d_name = 'type_doc2vec#dim_2#dataset_ArxivNov4#time_2018-11-14T02_10_25.587584'
 
@@ -373,8 +359,6 @@ fasttext_2d_embedding_path = 'data/word_embeddings/' + fasttext_2d_embedding_nam
 lsa_embedding_path = 'data/paper_embeddings/' + lsa_embedding_name
 lsa_embedding_2d_path = 'data/paper_embeddings/' + lsa_embedding_2d_name
 lsa_info_object_path = 'data/paper_embeddings/' + lsa_info_object_name
-lsa_IR_model_object_path = 'data/models/' + lsa_IR_model_object_name
-tfidf_IR_model_object_path = 'data/models/' + tfidf_IR_model_object_name
 doc2vec_embedding_path = 'data/paper_embeddings/' + doc2vec_embedding_name
 doc2vec_embedding_2d_path = 'data/paper_embeddings/' + doc2vec_embedding_2d_name
 
@@ -386,9 +370,6 @@ download_model(MODEL_OBJECTS_S3_PATH + lsa_embedding_name, lsa_embedding_path)
 download_model(MODEL_OBJECTS_S3_PATH + lsa_embedding_2d_name, lsa_embedding_2d_path)
 download_model(MODEL_OBJECTS_S3_PATH + fasttext_embedding_name, fasttext_embedding_path)
 download_model(MODEL_OBJECTS_S3_PATH + fasttext_2d_embedding_name, fasttext_2d_embedding_path)
-if not os.environ.get('IS_HEROKU') and os.environ.get('LOAD_TFIDF'):
-    # download_model(MODEL_OBJECTS_S3_PATH + lsa_IR_model_object_name, lsa_IR_model_object_path)
-    download_model(MODEL_OBJECTS_S3_PATH + tfidf_IR_model_object_name, tfidf_IR_model_object_path)
 download_model(MODEL_OBJECTS_S3_PATH + lsa_info_object_name, lsa_info_object_path)
 download_model(MODEL_OBJECTS_S3_PATH + doc2vec_embedding_name, doc2vec_embedding_path)
 download_model(MODEL_OBJECTS_S3_PATH + doc2vec_embedding_2d_name, doc2vec_embedding_2d_path)
@@ -419,10 +400,8 @@ lsa_embedding_model = Model(lsa_embedding_2d_path)
 # Load doc2vec model (2d TSNE-precomputed) into word2vec-explorer visualisation
 doc2vec_embedding_model = Model(doc2vec_embedding_2d_path)
 
-# Load IR model objects for Information Retrieval
-if not os.environ.get('IS_HEROKU') and os.environ.get('LOAD_TFIDF'):
-    # lsa_IR_model = get_model_obj(lsa_IR_model_object_path)
-    tfidf_IR_model = get_model_obj(tfidf_IR_model_object_path)
+# Open previously created index at directory
+whoosh_ix = index.open_dir("whoosh_indexdir_5k")
 
 if __name__ == '__main__':
     logger.info('Server has started up at time: {}'.format(datetime.datetime.now().
