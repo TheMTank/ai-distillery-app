@@ -28,7 +28,7 @@ STATIC_DIR = os.path.dirname(os.path.realpath(__file__)) + '/public'
 CACHE = {}
 
 app = Flask(__name__, static_folder='public', static_url_path='', template_folder="public/html")
-sslify = SSLify(app) # if prod
+# sslify = SSLify(app) # if prod
 
 # --------------------
 # Routes to all HTML pages
@@ -401,7 +401,7 @@ lsa_embedding_model = Model(lsa_embedding_2d_path)
 doc2vec_embedding_model = Model(doc2vec_embedding_2d_path)
 
 # Open previously created index at directory
-whoosh_ix = index.open_dir("whoosh_indexdir_5k")
+whoosh_ix = index.open_dir("whoosh_indexdir")
 
 if __name__ == '__main__':
     logger.info('Server has started up at time: {}'.format(datetime.datetime.now().
