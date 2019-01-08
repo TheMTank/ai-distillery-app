@@ -30,15 +30,13 @@
 
 {% endblock %}
 
-{% block  content %}
-
-
+{% block content %}
     <!-- Header -->
     <header class="masthead">
       <div class="container">
         <div class="intro-text">
-          <div class="intro-lead-in">Automatically modelling and distilling knowledge within AI!</div>
           <div class="intro-heading text-uppercase">AI Distillery</div>
+          <div class="intro-lead-in">Automatically modelling and distilling knowledge within AI!</div>
             <p>Created by <a href="http://www.themtank.org">The M Tank</a></p>
           <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="#vision">Tell Me More</a>
         </div>
@@ -321,16 +319,10 @@
                 <div class="modal-body">
                   <!-- Project Details Go Here -->
                   <h2 class="text-uppercase">Paper Search</h2>
-                  <p class="item-intro text-muted">Search for papers with free-text. Just input a keyword and get the top matched papers.</p>
+                  <p class="item-intro text-muted">Search for papers with free-text. Just input a keyword and get the top matched papers. Similar in functionality to arxiv-sanity.</p>
                   <a href="/paper-search-page">
                     <img class="img-fluid d-block mx-auto" src="/images/paper-search.gif" alt="">
                   </a>
-                  <p></p>
-                  <!--<ul class="list-inline">-->
-                    <!--<li>Date: January 2017</li>-->
-                    <!--<li>Client: Threads</li>-->
-                    <!--<li>Category: Illustration</li>-->
-                  <!--</ul>-->
                   <button class="btn btn-primary" data-dismiss="modal" type="button">
                     <i class="fas fa-times"></i>
                     Close</button>
@@ -357,17 +349,12 @@
                 <div class="modal-body">
                   <!-- Project Details Go Here -->
                   <h2 class="text-uppercase">Word Embedding Proximity</h2>
-                  <p class="item-intro text-muted">Search for similar words using a word as input. Search is done in a vector space where words are represented by vectors. We currently use two
+                  <p class="item-intro text-muted">Search for similar words using a any word found within the corpus as input (typeahead helps). Search is done in a vector space where words are represented by vectors. We currently use two
                   embedding methods: Word2Vec and FastText.</p>
                   <a href="/word-embedding-proximity-page">
                     <img class="img-fluid d-block mx-auto" src="/images/AI-distillery-word-proximity-gif.gif" alt="">
                   </a>
-                  <p>Check out our Word Embeddings</p>
-                  <!--<ul class="list-inline">-->
-                    <!--<li>Date: January 2017</li>-->
-                    <!--<li>Client: Explore</li>-->
-                    <!--<li>Category: Graphic Design</li>-->
-                  <!--</ul>-->
+                  <p>Check out our Word Embeddings within and compare between the types</p>
                   <button class="btn btn-primary" data-dismiss="modal" type="button">
                     <i class="fas fa-times"></i>
                     Close</button>
@@ -395,16 +382,10 @@
                   <!-- Project Details Go Here -->
                   <h2 class="text-uppercase">Paper Embedding Proximity</h2>
                   <p class="item-intro text-muted">Search for similar embeddings to the searched paper (with help from a typeahead and random selection to help you choose).
-                      No room for misspellings, paper title has to be exact, hence the typeahead is necessary.</p>
+                      No room for misspellings (but case doesn't matter), paper title has to be exact, hence the typeahead is necessary.</p>
                   <a href="/paper-embedding-proximity-page">
                     <img class="img-fluid d-block mx-auto" src="/images/paper-proximity-search.gif" alt="">
                   </a>
-                    <!--<p>Use this area to describe your project.</p>-->
-                  <!--<ul class="list-inline">-->
-                    <!--<li>Date: January 2017</li>-->
-                    <!--<li>Client: Finish</li>-->
-                    <!--<li>Category: Identity</li>-->
-                  <!--</ul>-->
                   <button class="btn btn-primary" data-dismiss="modal" type="button">
                     <i class="fas fa-times"></i>
                     Close</button>
@@ -435,12 +416,9 @@
                   <a href="/word-embedding-viz">
                     <img class="img-fluid d-block mx-auto" src="/images/word2vecexplorer-on-heroku.png" alt="">
                   </a>
-                  <!--<p>Use this area to describe your project.</p>-->
-                  <!--<ul class="list-inline">-->
-                    <!--<li>Date: January 2017</li>-->
-                    <!--<li>Client: Lines</li>-->
-                    <!--<li>Category: Branding</li>-->
-                  <!--</ul>-->
+                  <p>The left side allows the user to query a specific embedding by it's label, the number of vectors, number of clusters and embedding type.
+                    <br>The right side side allows the user to choose specific papers and see the cluster centroids of K-means.
+                  </p>
                   <button class="btn btn-primary" data-dismiss="modal" type="button">
                     <i class="fas fa-times"></i>
                     Close</button>
@@ -468,16 +446,13 @@
                   <!-- Project Details Go Here -->
                   <h2 class="text-uppercase">Paper Embedding Visualisation</h2>
                   <p class="item-intro text-muted">Search the T-SNE space of paper embeddings and find that similar papers lie close in this space.
-                  You can explore spaces created with two different methods: Doc2Vec and Latent Semantic Analysis (LSA) </p>
+                  You can explore these spaces created from two different methods: Doc2Vec and Latent Semantic Analysis (LSA) </p>
                   <a href="/paper-embedding-viz">
                     <img class="img-fluid d-block mx-auto" src="/images/paper_embedding_viz_resized_bad_aspect_ratio.png" alt="">
                   </a>
-                  <!--<p>Use this area to describe your project.</p>-->
-                  <!--<ul class="list-inline">-->
-                    <!--<li>Date: January 2017</li>-->
-                    <!--<li>Client: Southwest</li>-->
-                    <!--<li>Category: Website Design</li>-->
-                  <!--</ul>-->
+                  <p>The left column within the tool allows the user to query a specific embedding by it's label, the number of vectors, number of clusters and embedding type.
+                    <br>The right side side allows the user to choose specific embeddings and see the cluster centroids of K-means.
+                  </p>
                   <button class="btn btn-primary" data-dismiss="modal" type="button">
                     <i class="fas fa-times"></i>
                     Close</button>
@@ -509,12 +484,15 @@
                   <a href="/charts">
                     <img class="img-fluid d-block mx-auto" src="/images/AI-Distillery-charts-page.png" alt="">
                   </a>
-                  <!--<p>Use this area to describe your project. </p>-->
-                  <!--<ul class="list-inline">-->
-                    <!--<li>Date: January 2017</li>-->
-                    <!--<li>Client: Window</li>-->
-                    <!--<li>Category: Photography</li>-->
-                  <!--</ul>-->
+                  <p>These charts include:</p>
+                  <ul>
+                    <li>Number of papers released on arxiv over time</li>
+                    <li>The number of mentions of "GAN" in titles over time since 2014</li>
+                    <li>Top topics from 2014 onwards</li>
+                    <li>Top 100 cited papers according to semantic scholar from 2014+ (in our arxiv dataset)</li>
+                    <li>Top 100 cited papers over time</li>
+                    <li>Authors who have published the most papers from 2014+</li>
+                  </ul>
                   <button class="btn btn-primary" data-dismiss="modal" type="button">
                     <i class="fas fa-times"></i>
                     Close</button>
