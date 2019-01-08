@@ -3,3 +3,4 @@ gunicorn
 numpy
 gensim
 scikit-learn
+Whoosh
