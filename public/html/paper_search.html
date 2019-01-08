@@ -33,7 +33,8 @@
                                       <button class="btn btn-primary btn-sm" type="button"
                                             data-toggle="collapse" data-target="#accordion{{@index}}"
                                             aria-expanded="false" aria-controls="accordion{{@index}}">
-                                        Abstract</button>
+                                        {{this.paper_id}} Abstract</button>
+
                                       <a type="button" href="https://arxiv.org/abs/{{this.paper_id}}" target="_blank" class="btn btn-success btn-sm">Paper Page</a>
                                       <a type="button" href="https://arxiv.org/pdf/{{this.paper_id}}.pdf" target="_blank" class="btn btn-danger btn-sm">PDF</a>
                                     </div>
@@ -74,6 +75,7 @@
         <div class="row text-center">
             <div class="col-md-12">
                 <div class="loading-icon-holder">
+                    <h3>Searching for results with query: <span id="query-loading-text"></span></h3>
                     <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
                     <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
                     <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
@@ -92,8 +94,12 @@
     $(function () {
         var searchRoute = '/search-papers'
         var tableData, context;
+        var searching = false;
 
         var searchPapers = function(searchTerm, embeddingType) {
+            searching = true;
+            $('#submit-btn').css('color', '#696969');
+            $('#query-loading-text').text(searchTerm)
             $loading.show();
             $.get(searchRoute, {'query': searchTerm, 'embedding_type': embeddingType}, function(data) {
                 $loading.hide();
@@ -109,6 +115,8 @@
                 }
                 fillTable(context);
                 $loading.hide();
+                searching = false;
+                $('#submit-btn').css('color', '#fff');
             }, "json")
         }
 
@@ -135,14 +143,10 @@
         $('#submit-btn').click(function (data) {
             var searchTerm = $('#search-box').val();
             var embeddingType = $("#embedding-type").val();
-            searchPapers(searchTerm, embeddingType);
+            if (searching === false && searchTerm) searchPapers(searchTerm, embeddingType);
         });
 
         var $loading = $('.loading-icon-holder').hide();
-        /*$(document)
-          .ajaxStart(function () {
-            $loading.show();
-          })*/
     });
 
 </script>
