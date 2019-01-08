@@ -134,12 +134,13 @@ def get_paper_embedding_proximity():
     input_str = request.args.get('input_str')
     selected_embedding = request.args.get('type')
 
-    input_str_clean = input_str.lower().strip()
+    # make sure lower and only 1 whitespace between words
+    input_str_clean = ' '.join(input_str.lower().strip().split())
 
     logger.info('Inputted string: {}.\nInputted string clean: {}. Embedding type: {}'.format(input_str, input_str_clean, selected_embedding))
 
     if selected_embedding == 'lsa':
-        lsa_labels_lowercase = [x.lower().strip() for x in lsa_labels]
+        lsa_labels_lowercase = [x.lower() for x in lsa_labels]  # todo don't do every time?
         if input_str_clean in lsa_labels_lowercase:
             logger.info('Labels most similar to: {}'.format(input_str))
             similar_papers, distances, sorted_indices = get_closest_vectors(lsa_labels, lsa_embeddings,
@@ -151,12 +152,12 @@ def get_paper_embedding_proximity():
         else:
             response = ['Paper not found']
     elif selected_embedding == 'doc2vec':
-        doc2vec_labels_lowercase = [x.lower().strip() for x in doc2vec_labels]
+        doc2vec_labels_lowercase = [x.lower() for x in doc2vec_labels]
         if input_str_clean in doc2vec_labels_lowercase:
             logger.info('Labels most similar to: {}'.format(input_str))
             similar_words, distances, sorted_idx = get_closest_vectors(doc2vec_labels, doc2vec_embeddings,
                                                            doc2vec_label_to_embeddings[input_str], n=n)
-            response = [{'label': word, 'distance': round(float(dist), 5)} for word, dist in
+            response = [{'label': label, 'distance': round(float(dist), 5)} for label, dist in
                         zip(similar_words, distances)]
             logger.info(response)
         else:
@@ -286,32 +287,12 @@ def get_closest_vectors(labels, all_vectors, query_vector, n=5, sparse=False):
 
     return list(np.array(labels)[sorted_idx][0:n]), list(distances[sorted_idx][0:n]), sorted_idx[0:n]
 
-def get_model_obj(model_object_path):
-    logger.info('Loading embeddings at path: {}'.format(model_object_path))
-    with open(model_object_path, 'rb') as handle:
-    # with bz2.BZ2File(model_object_path, 'rb') as handle:
-        model_obj = pickle.load(handle, encoding='latin1')
-        # labels = model_obj['labels']
-        # embeddings = model_obj['embeddings']
-        # label_to_embeddings = {label: embeddings[idx] for idx, label in
-        #                        enumerate(labels)}
-        logger.info('Num ids: {}'.format(len(model_obj['ids'])))
-        logger.info('Num titles: {}'.format(len(model_obj['titles'])))
-        logger.info('feats shape: {}'.format(model_obj['feats'].shape))
-        logger.info('Model: {}'.format(model_obj['model']))
-        if model_obj.get('abstracts'):
-            logger.info('Abstract shape: {}'.format(len(model_obj['abstracts'])))
-        model_obj['model'].input = 'content'
-        #model_obj['feats'] = model_obj['feats'].toarray()
-        #model_obj['model'].named_steps.tfidf_vectorizer.input = 'content'
-
-        return model_obj
-
 def get_embedding_objs(embedding_path):
     logger.info('Loading embeddings at path: {}'.format(embedding_path))
     with open(embedding_path, 'rb') as handle:
         embedding_obj = pickle.load(handle, encoding='latin1')
         labels = embedding_obj['labels']
+        labels = [' '.join(x.strip().split()) for x in labels]
         embeddings = embedding_obj['embeddings']
         label_to_embeddings = {label: embeddings[idx] for idx, label in
                                       enumerate(labels)}
@@ -338,13 +319,13 @@ def download_model(key, output_path):
 # fastText word embeddings
 # LSA paper paper embeddings (2d + 100d + 300d)
 # doc2vec paper embeddings (2d + 100d)
+# Whoosh paper index
 # ------------------
 
 # Download all models if they don't already exist (download_model() checks)
 gensim_embedding_name = 'type_word2vec#dim_100#dataset_ArxivNov4#time_2018-11-13T07_17_46.600182'
 gensim_2d_embeddings_name = 'type_word2vec#dim_2#dataset_ArxivNov4#time_2018-11-13T07_17_46.600182'
-# fasttext_embedding_name = 'type_fasttext#dim_300#dataset_ArxivNov4th#time_2018-11-23T04_35_16.470276'
-fasttext_embedding_name = 'type_fasttext#dim_100#dataset_ArxivNov4th#time_2018-11-22T01_00_16.104601'
+fasttext_embedding_name = 'type_fasttext#dim_100#dataset_ArxivNov4th#time_2018-11-22T01_00_16.104601' #'type_fasttext#dim_300#dataset_ArxivNov4th#time_2018-11-23T04_35_16.470276'
 fasttext_2d_embedding_name = 'type_fasttext#dim_2#dataset_ArxivNov4th#time_2018-11-22T01_00_16.104601'
 lsa_embedding_name = 'lsa-100.pkl' # 'lsa-300.pkl' # seems too big
 lsa_embedding_2d_name = 'lsa-2.pkl'
@@ -406,5 +387,5 @@ whoosh_ix = index.open_dir("whoosh_indexdir")
 if __name__ == '__main__':
     logger.info('Server has started up at time: {}'.format(datetime.datetime.now().
                                                      strftime("%I:%M%p on %B %d, %Y")))
-    app.run(host='0.0.0.0', port=8080)  # 5000
+    app.run(host='0.0.0.0', port=8080)
     # app.run(host='0.0.0.0', debug=True, use_reloader=True, port=5000)  # 5000
