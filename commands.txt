@@ -7,5 +7,7 @@ sudo pkill -f gunicorn
 tail -f output_log.txt
 
 hertzner
+source activate server
 gunicorn -b 0.0.0.0:80 -w 4 app:app
+gunicorn -b 0.0.0.0:80 -w 4 --worker-class gevent app:app
 nohup gunicorn -b 0.0.0.0:80 -w 4 app:app &> output_log.txt&
