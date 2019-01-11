@@ -160,4 +160,5 @@ div.tooltip {
 
 .list-group-item {
     z-index: 100;
+    cursor: pointer;
 }

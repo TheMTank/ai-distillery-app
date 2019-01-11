@@ -8,7 +8,7 @@ import os.path
 from sklearn.metrics.pairwise import euclidean_distances
 import numpy as np
 from flask import Flask, request, send_from_directory, jsonify, render_template
-from flask_sslify import SSLify
+# from flask_sslify import SSLify
 import whoosh.index as index
 from whoosh.qparser import QueryParser
 
