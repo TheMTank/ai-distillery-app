@@ -8,6 +8,7 @@ Linked with experimental and Data Science work done on another repo by us at [ht
 ### Frameworks within web app
 
 - Python 3.7 + numpy + sklearn + gensim
-- Gunicorn + Flask (gevent)
+- Gunicorn + Flask (gevent) + Jinja2
 - [Whoosh](https://whoosh.readthedocs.io/en/latest/) for Paper search
 - ReactJS + D3.js for the embedding visualisation
+- ChartJS for Charts and additional insights
