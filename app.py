@@ -95,8 +95,7 @@ def get_word_embedding_proximity():
 
     input_str = input_str.lower()
 
-    # inputted_word = inputted_word.replace(' ', '_') # todo probably keep
-    # fuzzy match similar ones!!!!! and show
+    # fuzzy match similar ones!!!!! and show todo?
 
     logger.info('Inputted string: {}. Embedding type: {}'.format(input_str, selected_word_embedding))
 
@@ -184,7 +183,7 @@ def get_embedding_labels():
 @app.route("/search-papers")
 def search_papers():
     query = request.args.get('query', '')
-    num_results = 20  # todo query param or add pagination
+    num_results = 30  # todo query param or add pagination
 
     with whoosh_ix.searcher() as searcher:
         query = QueryParser("full_text", whoosh_ix.schema).parse(query)
@@ -210,6 +209,8 @@ def explore():
     num_clusters = request.args.get('num_clusters', '30')
     embedding_type = request.args.get('embedding_type', 'gensim')
 
+    query = query.strip().lower()
+
     if embedding_type == 'gensim':
         embedding_model = gensim_embedding_model
     elif embedding_type == 'fasttext':
@@ -221,7 +222,7 @@ def explore():
     else:
         embedding_model = gensim_embedding_model  # default model so it doesn't crash
 
-    logger.info('Embedding type: {}. embedding_model: {}'.format(embedding_type, embedding_model))
+    logger.info('Query: {}. Embedding type: {}. embedding_model: {}'.format(query, embedding_type, embedding_model))
 
     cache_key = '-'.join([query, limit, enable_clustering, num_clusters, embedding_type])
     result = CACHE.get(cache_key, {})
@@ -264,10 +265,7 @@ def compare():
     logger.info('Embedding type: {}. embedding_model: {}'.format(embedding_type, embedding_model))
 
     try:
-        # for i in range(len(queries)):
-        #     queries[i] = queries[i].strip().lower()
-        #       if embedding_model is word_embedding_model:
-        #       queries[i] = queries[i].replace(' ', '_')
+        queries = [query.strip().lower() for query in queries]
         result = embedding_model.compare(queries, limit=int(limit))
         return jsonify({'result': result})
     except KeyError:
