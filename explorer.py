@@ -3,7 +3,7 @@ Heavily adapted from: https://github.com/dominiek/word2vec-explorer
 """
 
 import math
-import gensim
+import gensim  # not used but tool used to be only based around gensim. Keeping for historical purposes and possible option to take gensim too.
 import pickle
 import logging
 
