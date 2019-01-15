@@ -100,8 +100,7 @@ def get_word_embedding_proximity():
     logger.info('Inputted string: {}. Embedding type: {}'.format(input_str, selected_word_embedding))
 
     if selected_word_embedding == 'gensim':
-        gensim_labels_lowercase_strip = [x.lower().strip() for x in gensim_labels]
-        if input_str in gensim_labels_lowercase_strip:
+        if input_str in gensim_labels_lowercase:
             logger.info('Words most similar to: {}'.format(input_str))
             similar_words, distances, sorted_idx = get_closest_vectors(gensim_labels, gensim_embeddings,
                                                            gensim_label_to_embeddings[input_str], n=n)
@@ -111,8 +110,7 @@ def get_word_embedding_proximity():
         else:
             response = ['Word not found']
     elif selected_word_embedding == 'fasttext':
-        fasttext_labels_lowercase_strip = [x.lower().strip() for x in fasttext_labels]
-        if input_str in fasttext_labels_lowercase_strip:
+        if input_str in fasttext_labels_lowercase:
             logger.info('Words most similar to: {}'.format(input_str))
             similar_words, distances, sorted_idx = get_closest_vectors(fasttext_labels, fasttext_embeddings,
                                                            fasttext_label_to_embeddings[input_str], n=n)
@@ -134,12 +132,11 @@ def get_paper_embedding_proximity():
     selected_embedding = request.args.get('type')
 
     # make sure lower and only 1 whitespace between words
-    input_str_clean = ' '.join(input_str.lower().strip().split())
+    input_str_clean = ' '.join(input_str.strip().lower().split())
 
     logger.info('Inputted string: {}.\nInputted string clean: {}. Embedding type: {}'.format(input_str, input_str_clean, selected_embedding))
 
     if selected_embedding == 'lsa':
-        lsa_labels_lowercase = [x.lower() for x in lsa_labels]  # todo don't do every time?
         if input_str_clean in lsa_labels_lowercase:
             logger.info('Labels most similar to: {}'.format(input_str))
             similar_papers, distances, sorted_indices = get_closest_vectors(lsa_labels, lsa_embeddings,
@@ -151,7 +148,6 @@ def get_paper_embedding_proximity():
         else:
             response = ['Paper not found']
     elif selected_embedding == 'doc2vec':
-        doc2vec_labels_lowercase = [x.lower() for x in doc2vec_labels]
         if input_str_clean in doc2vec_labels_lowercase:
             logger.info('Labels most similar to: {}'.format(input_str))
             similar_words, distances, sorted_idx = get_closest_vectors(doc2vec_labels, doc2vec_embeddings,
@@ -291,12 +287,13 @@ def get_embedding_objs(embedding_path):
         embedding_obj = pickle.load(handle, encoding='latin1')
         labels = embedding_obj['labels']
         labels = [' '.join(x.strip().split()) for x in labels]
+        labels_lowercase = [x.lower().strip() for x in labels]
         embeddings = embedding_obj['embeddings']
         label_to_embeddings = {label: embeddings[idx] for idx, label in
-                                      enumerate(labels)}
+                                      enumerate(labels_lowercase)}
         logger.info('Num vectors: {}'.format(len(labels)))
 
-        return labels, embeddings, label_to_embeddings
+        return labels, labels_lowercase, embeddings, label_to_embeddings
 
 def download_model(key, output_path):
     """
@@ -355,20 +352,20 @@ download_model(MODEL_OBJECTS_S3_PATH + doc2vec_embedding_2d_name, doc2vec_embedd
 
 # Loading models into embedding objects and Explorer objects
 # Load all word embeddings
-gensim_labels, gensim_embeddings, gensim_label_to_embeddings = get_embedding_objs(gensim_embedding_path)
+gensim_labels, gensim_labels_lowercase, gensim_embeddings, gensim_label_to_embeddings = get_embedding_objs(gensim_embedding_path)
 
 # Load gensim 2d embedding model into word2vec-explorer visualisation
 gensim_embedding_model = Model(gensim_2d_embeddings_path)
 
 # fast_text_embedding_path = 'data/word_embeddings/fast_text_vectors.pkl'
-fasttext_labels, fasttext_embeddings, fasttext_label_to_embeddings = get_embedding_objs(fasttext_embedding_path)
+fasttext_labels, fasttext_labels_lowercase, fasttext_embeddings, fasttext_label_to_embeddings = get_embedding_objs(fasttext_embedding_path)
 
 # Load fastText 2d embedding model into word2vec-explorer visualisation
 fasttext_embedding_model = Model(fasttext_2d_embedding_path)
 
 # Load paper embeddings
-lsa_labels, lsa_embeddings, lsa_label_to_embeddings = get_embedding_objs(lsa_embedding_path)
-doc2vec_labels, doc2vec_embeddings, doc2vec_label_to_embeddings = get_embedding_objs(doc2vec_embedding_path)
+lsa_labels, lsa_labels_lowercase, lsa_embeddings, lsa_label_to_embeddings = get_embedding_objs(lsa_embedding_path)
+doc2vec_labels, doc2vec_labels_lowercase, doc2vec_embeddings, doc2vec_label_to_embeddings = get_embedding_objs(doc2vec_embedding_path)
 with open(lsa_info_object_path, 'rb') as f:
     lsa_info_object = pickle.load(f)
 lsa_ids, lsa_abstracts = lsa_info_object['ids'], lsa_info_object['abstracts']
