@@ -45,7 +45,7 @@ $(function () {
         var embeddingType = $("#embedding-type").val();
 //        $('#search-box').autocomplete('close');
         getSimilarEmbeddings(searchTerm, embeddingType);
-        $('#search-box').autocomplete('close');
+        if ($('#search-box').hasClass('ui-autocomplete')) $('#search-box').autocomplete('close');
     });
 
     var $loading = $('.loading-icon-holder').hide();
