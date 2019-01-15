@@ -93,7 +93,7 @@ def get_word_embedding_proximity():
     input_str = request.args.get('input_str')
     selected_word_embedding = request.args.get('type')
 
-    input_str = input_str.lower()
+    input_str = input_str.lower().strip()
 
     # fuzzy match similar ones!!!!! and show todo?
 
@@ -143,7 +143,7 @@ def get_paper_embedding_proximity():
         if input_str_clean in lsa_labels_lowercase:
             logger.info('Labels most similar to: {}'.format(input_str))
             similar_papers, distances, sorted_indices = get_closest_vectors(lsa_labels, lsa_embeddings,
-                                                           lsa_label_to_embeddings[input_str], n=n)
+                                                           lsa_label_to_embeddings[input_str_clean], n=n)
             response = [{'label': label, 'distance': round(float(dist), 5),
                          'id': lsa_ids[sorted_idx], 'abstract': lsa_abstracts[sorted_idx]
                          } for label, dist, sorted_idx in zip(similar_papers, distances, sorted_indices)]
@@ -155,7 +155,7 @@ def get_paper_embedding_proximity():
         if input_str_clean in doc2vec_labels_lowercase:
             logger.info('Labels most similar to: {}'.format(input_str))
             similar_words, distances, sorted_idx = get_closest_vectors(doc2vec_labels, doc2vec_embeddings,
-                                                           doc2vec_label_to_embeddings[input_str], n=n)
+                                                           doc2vec_label_to_embeddings[input_str_clean], n=n)
             response = [{'label': label, 'distance': round(float(dist), 5)} for label, dist in
                         zip(similar_words, distances)]
             logger.info(response)
@@ -194,7 +194,7 @@ def search_papers():
                          'title': result['title'],
                          'abstract': result['abstract'],
                          'authors': result['authors'],
-                         'date': result['date'],
+                         'date': result['date'].strftime('%d %b %Y'),
                          'distance': round(results.top_n[idx][0], 4)
                          } for idx, result in enumerate(results[0:num_results])]
 
@@ -232,7 +232,7 @@ def explore():
         exploration = embedding_model.explore(query, limit=int(limit))
         exploration.reduce()
         if len(enable_clustering):
-            if (len(num_clusters)):
+            if len(num_clusters):
                 num_clusters = int(num_clusters)
             exploration.cluster(num_clusters=num_clusters)
         result = exploration.serialize()
