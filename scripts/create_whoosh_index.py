@@ -37,7 +37,6 @@ full_paper_id_to_authors = {get_full_paper_id(doc['id']): [x['name'] for x in do
 print('{}, {}, {}, {}'.format(len(full_paper_id_to_title), len(full_paper_id_to_abstract),
                               len(full_paper_id_to_date), len(full_paper_id_to_authors)))
 
-
 all_papers_full_text = []
 for fp in all_papers_txt_file_paths:
     with open(fp) as f:
@@ -45,10 +44,19 @@ for fp in all_papers_txt_file_paths:
         all_papers_full_text.append(content)
 
 all_papers_full_paper_ids = [x.split('/')[-1].split('.pdf')[0] for x in all_papers_txt_file_paths]
-all_paper_titles = [full_paper_id_to_title.get(full_paper_id, 'Not found') for full_paper_id in all_papers_full_paper_ids]
-all_papers_abstracts = [full_paper_id_to_abstract.get(full_paper_id, 'Not found') for full_paper_id in all_papers_full_paper_ids]
-all_papers_authors = [full_paper_id_to_authors.get(full_paper_id, 'Not found') for full_paper_id in all_papers_full_paper_ids]
-all_papers_date = [full_paper_id_to_date.get(full_paper_id, 'Not found') for full_paper_id in all_papers_full_paper_ids]
+# there are 6k+ txt files without an entry in the database, but there is ALWAYS another version
+# So only store the papers we have in the database
+all_papers_full_paper_ids = [x for x in all_papers_full_paper_ids if x in full_paper_id_to_title]
+all_paper_titles = [full_paper_id_to_title[full_paper_id] for full_paper_id in all_papers_full_paper_ids]
+all_papers_abstracts = [full_paper_id_to_abstract[full_paper_id] for full_paper_id in all_papers_full_paper_ids]
+all_papers_authors = [full_paper_id_to_authors[full_paper_id] for full_paper_id in all_papers_full_paper_ids]
+all_papers_date = [full_paper_id_to_date[full_paper_id] for full_paper_id in all_papers_full_paper_ids]
+
+db_paper_ids_not_in_text_ids = [x for x in list(full_paper_id_to_title.keys()) if x not in all_papers_full_paper_ids]
+text_ids_not_in_db_paper_ids = [x for x in all_papers_full_paper_ids if x not in full_paper_id_to_title]
+
+print('db_paper_ids_not_in_text_ids len: {}. text_ids_not_in_db_paper_ids len: {}'.format(len(db_paper_ids_not_in_text_ids),
+                                                                                          len(text_ids_not_in_db_paper_ids)))
 
 # Create schema, index
 schema = Schema(paper_id=ID(stored=True), title=TEXT(stored=True), abstract=TEXT(stored=True),
@@ -61,7 +69,6 @@ for idx, (paper_id, title, abstract, full_text, authors, date) in enumerate(zip(
     if idx % 10 == 0:
         print('Adding document {}/{}'.format(idx, len(all_paper_titles)))
     writer.add_document(paper_id=paper_id, title=title, abstract=abstract, full_text=full_text,
-                        authors=authors, date=datetime.strptime(db['1804.03131']['published'].split('T')[0], '%Y-%m-%d'))
-    # todo 54797 or 59k?
+                        authors=authors, date=datetime.strptime(date.split('T')[0], '%Y-%m-%d'))
 
 writer.commit()
