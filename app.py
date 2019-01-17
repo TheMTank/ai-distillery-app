@@ -200,7 +200,7 @@ def search_papers():
 def explore():
     query = request.args.get('query', '')
     limit = request.args.get('limit', '1000')
-    limit = str(min(int(2500), int(limit)))
+    limit = str(min(int(5000), int(limit)))
     enable_clustering = 'True'
     num_clusters = request.args.get('num_clusters', '30')
     embedding_type = request.args.get('embedding_type', 'gensim')

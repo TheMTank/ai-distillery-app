@@ -19,6 +19,7 @@
                     <thead class="thead-dark">
                         <tr>
                             <th scope="col">Similar papers</th>
+                            <th scope="col">Date</th>
                             <th scope="col">Options</th>
                             <th scope="col">Score</th>
                         </tr>
@@ -28,6 +29,7 @@
                         {{#each top_words}}
                             <tr>
                                 <td>{{this.title}}</td>
+                                <td>{{this.date}}</td>
                                 <td>
                                     <div class="btn-group" role="group">
                                       <button class="btn btn-primary btn-sm" type="button"
@@ -109,6 +111,7 @@
                 else {
                     tableData = data;
                 }
+                console.log(data);
                 context = {
                     'top_words': tableData,
                     'selectedWord': searchTerm
@@ -150,6 +153,7 @@
     });
 
 </script>
+<!--Above is duplicating a lot in below file but some slightly different functionality-->
 <!--<script src="/js/embedding_proximity.js"></script>-->
 
 {% endblock %}
