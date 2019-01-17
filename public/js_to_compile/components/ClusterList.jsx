@@ -19,7 +19,7 @@ export default React.createClass({
       let label = data.labels[closestNodeId]
       let numClusters = data.clusters.filter((cluster) => cluster === i).length
       let badgeStyle = {backgroundColor: color(i)}
-      itemsHtml.push(<a className={className} key={i} onClick={this._onClick} data-index={i}><span className='badge' style={badgeStyle}>{numClusters}</span>{label}</a>)
+      itemsHtml.push(<a className={className} key={i} onClick={this._onClick} data-index={i}><span className='badge' style={badgeStyle}>{numClusters}</span><i className='title-holder'>{label}</i></a>)
     }
     return (
       <div className='cluster-list panel panel-default'>
@@ -33,5 +33,6 @@ export default React.createClass({
   _onClick (e) {
     var index = parseInt($(e.target).attr('data-index'), 10)
     this.setState({selected: index})
+    //this.props.this.refs.plot.turnOffCheckbox()
   }
 })
