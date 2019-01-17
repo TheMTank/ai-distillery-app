@@ -37,16 +37,18 @@ full_paper_id_to_authors = {get_full_paper_id(doc['id']): [x['name'] for x in do
 print('{}, {}, {}, {}'.format(len(full_paper_id_to_title), len(full_paper_id_to_abstract),
                               len(full_paper_id_to_date), len(full_paper_id_to_authors)))
 
+all_papers_full_paper_ids_and_paths = [(x, x.split('/')[-1].split('.pdf')[0]) for x in all_papers_txt_file_paths]
+# there are 6k+ txt files without an entry in the database, but there is ALWAYS another version
+# So only store the papers we have in the database
+all_papers_full_paper_ids_and_paths = [x for x in all_papers_full_paper_ids_and_paths if x[1] in full_paper_id_to_title]
+
 all_papers_full_text = []
-for fp in all_papers_txt_file_paths:
+for fp, paper_id in all_papers_full_paper_ids_and_paths:
     with open(fp) as f:
         content = f.read()
         all_papers_full_text.append(content)
 
-all_papers_full_paper_ids = [x.split('/')[-1].split('.pdf')[0] for x in all_papers_txt_file_paths]
-# there are 6k+ txt files without an entry in the database, but there is ALWAYS another version
-# So only store the papers we have in the database
-all_papers_full_paper_ids = [x for x in all_papers_full_paper_ids if x in full_paper_id_to_title]
+all_papers_full_paper_ids = [x[1] for x in all_papers_full_paper_ids_and_paths]
 all_paper_titles = [full_paper_id_to_title[full_paper_id] for full_paper_id in all_papers_full_paper_ids]
 all_papers_abstracts = [full_paper_id_to_abstract[full_paper_id] for full_paper_id in all_papers_full_paper_ids]
 all_papers_authors = [full_paper_id_to_authors[full_paper_id] for full_paper_id in all_papers_full_paper_ids]
@@ -64,7 +66,8 @@ schema = Schema(paper_id=ID(stored=True), title=TEXT(stored=True), abstract=TEXT
 ix = create_in("../whoosh_indexdir", schema)
 writer = ix.writer()
 
-for idx, (paper_id, title, abstract, full_text, authors, date) in enumerate(zip(all_papers_full_paper_ids, all_paper_titles, all_papers_abstracts,
+for idx, (paper_id, title, abstract, full_text, authors, date) in \
+        enumerate(zip(all_papers_full_paper_ids, all_paper_titles, all_papers_abstracts,
                     all_papers_full_text, all_papers_authors, all_papers_date)):
     if idx % 10 == 0:
         print('Adding document {}/{}'.format(idx, len(all_paper_titles)))
