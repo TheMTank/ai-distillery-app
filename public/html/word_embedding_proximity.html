@@ -1,18 +1,20 @@
 {% extends "layouts/post_page_layout.html" %}
 
+{% set title_page = 'Word Embedding Proximity' %}
+
 {% block content %}
     <section id="services">
       <div class="container">
         <div class="row row-title-subtitle-cont">
           <div class="col-lg-12 text-center">
             <h2 class="section-heading text-uppercase">Word Proximity</h2>
-            <h3 class="section-subheading text-muted">Search For Similar Words Using FastText and Word2Vec</h3>
+            <h3 class="section-subheading text-muted">Search for similar words using a word as input. Search is done in a vector space where words are represented by vectors. We currently use two
+                  embedding methods: Word2Vec and FastText.</h3>
           </div>
         </div>
         {% raw %}
         <div class="row text-center">
             <script id="address-template" type="text/x-handlebars-template">
-                <h3>Words similar to: <b>{{selectedWord}}</b></h3>
                 <table class="similar-words table-striped table paperFontSize">
                     <thead class="thead-dark">
                         <tr>
@@ -21,10 +23,9 @@
                         </tr>
                     </thead>
                     <tbody>
-
                         {{#each top_words}}
                             <tr>
-                                <td>{{this.label}}</td>
+                                <td><h7>{{this.label}}</h7></td>
                                 <td>{{this.distance}}</td>
                             </tr>
                         {{/each}}
@@ -38,26 +39,34 @@
         <div class="row justify-content-center align-items-center">
                 <div class="col col-sm-12 col-md-12">
                 <div data-embedding-type="word" id="input-form">
-                  <div class="form-group">
-                    <label for="exampleInputEmail1">Word</label>
-                      <input type="text" name="word" value="RNN" id="search-box"
-                             class="form-control input-lg">
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleSelect1">Select Embedding</label>
-                    <select class="form-control" id="embedding-type">
-                        <option value="gensim" selected>Gensim</option>
-                        <option value="fasttext" selected>fastText</option>
-                    </select>
-                  </div>
-                  <button type="submit" id="submit-btn" class="btn btn-primary">Submit</button>
+                    <form class="form-inline" onsubmit="return false;">
+                        <div class="col-md-2"></div>
+                         <div class="input-group mb-2 col-md-3">
+                             <input type="text" name="word" value="RNN" id="search-box"
+                                 class="form-control">
+                         </div>
+                        <div class="input-group mb-2 col-md-3">
+                        <select class="form-control" id="embedding-type">
+                            <option value="gensim" selected>Word2Vec</option>
+                            <option value="fasttext">FastText</option>
+                        </select>
+                        </div>
+                        <div class="input-group mb-2 col-md-3">
+                            <button type="submit" id="submit-btn" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-        <hr>
         <div class="row text-center">
             <div class="col-md-12">
+                <div class="loading-icon-holder">
+                    <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                    <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                    <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                </div>
                 <div class="content-placeholder">
+
                 </div>
             </div>
         </div>

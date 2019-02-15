@@ -10,7 +10,7 @@ export default React.createClass({
       clusters: this.props.clusters,
       labels: this.props.labels,
       viewOptions: {
-        showLabels: this.props.showLabels || localStorage.scatter2dShowLabels
+        showLabels: false //this.props.showLabels || localStorage.scatter2dShowLabels
       }
     }
   },
@@ -23,8 +23,10 @@ export default React.createClass({
   render () {
     let viewOptions = this.state.viewOptions
     let scatterClasses = 'scatter-plot-2d'
-    if (viewOptions.showLabels) scatterClasses += ' show-labels'
-    this._updateD3 && this._updateD3()
+    if (viewOptions.showLabels) {
+        scatterClasses += ' show-labels'
+    }
+    this._updateD3 && this._updateD3()  // needs to be done twice, otherwise doesn't work
     return (
       <div className='scatter-plot-2d-container'>
         <div className='view-options'>
@@ -92,7 +94,7 @@ export default React.createClass({
     var padding = 20
     var labelNodes = null
 
-    console.log(`ScatterPlot2d width=${width}, height=${height}, dataset.length=${dataset.length}`)
+    //console.log(`ScatterPlot2d width=${width}, height=${height}, dataset.length=${dataset.length}`)
 
     var div = d3.select("body").append("div")
     .attr("class", "tooltip")
@@ -199,7 +201,7 @@ export default React.createClass({
       let labels = this.state.labels
       let viewOptions = this.state.viewOptions
 
-      console.log(`ScatterPlot2d update, dataset.length=${dataset.length}`)
+      console.log('ScatterPlot2d update, dataset.length=${dataset.length}') // todo why happen 10 times?
 
       xScale.domain([d3.min(dataset, (d) => d[0]), d3.max(dataset, (d) => d[0])])
       yScale.domain([d3.min(dataset, (d) => d[1]), d3.max(dataset, (d) => d[1])])
@@ -230,6 +232,11 @@ export default React.createClass({
         .attr('cy', (d) => yScale(d[1]))
         .attr('fill', (d, i) => colors(clusters ? clusters[i] : 0))
         .attr('r', this._nodeRadius())
+
+        /*nodes.filter(function(d, i) {
+            return labels[i].name == "An LP-based hyperparameter optimization model for language modeling";
+          })
+          .style("fill", "red")*/
 
       // Render new nodes
       nodes

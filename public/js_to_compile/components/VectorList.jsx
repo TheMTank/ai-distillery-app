@@ -20,7 +20,8 @@ export default React.createClass({
         let distance = Math.round(data.distances[i] * 100) / 100
         badgeHtml = <span className='badge' title={data.distances[i]}>{distance}</span>
       }
-      itemsHtml.push(<a href='#' className={className} key={i} onClick={this._onClick} data-index={i}>{badgeHtml}{labels[i]}</a>)
+      //itemsHtml.push(<a href='#' className={className} key={i} onClick={this._onClick} data-index={i}>{badgeHtml}{labels[i]}</a>)
+      itemsHtml.push(<a href='#' className={className} key={i} onClick={this._onClick} data-index={i}>{badgeHtml}<i className='title-holder'>{labels[i]}</i></a>)
     }
     return (
       <div className='vector-list panel panel-default'>
@@ -33,7 +34,8 @@ export default React.createClass({
   },
   _onClick (e) {
     e && e.preventDefault()
-    var query = $(e.target).text()
+    //var query = $(e.target).text()
+    var query = $(e.target).children('.title-holder').text()
     var index = parseInt($(e.target).attr('data-index'), 10)
     this.setState({selected: query})
     this.props.onSelect && this.props.onSelect({query, index})

@@ -1,24 +1,27 @@
 {% extends "layouts/post_page_layout.html" %}
 
+{% set title_page = 'Paper Search' %}
+
 {% block content %}
     <section id="services">
       <div class="container">
         <div class="row  row-title-subtitle-cont">
           <div class="col-lg-12 text-center">
             <h2 class="section-heading text-uppercase">Paper Search</h2>
-            <h3 class="section-subheading text-muted">Free-text search over the Arxiv Dataset using TFIDF</h3>
+            <h3 class="section-subheading text-muted">Free-text search over the Arxiv Dataset</h3>
           </div>
         </div>
         {% raw %}
         <div class="row text-center">
             <script id="address-template" type="text/x-handlebars-template">
-                <h3>Papers similar to <b>{{selectedWord}}</b></h3>
+                <h3>Search results from query: <b>{{selectedWord}}</b></h3>
                 <table class="similar-words table-striped table paperFontSize">
                     <thead class="thead-dark">
                         <tr>
                             <th scope="col">Similar papers</th>
+                            <th scope="col">Date</th>
                             <th scope="col">Options</th>
-                            <th scope="col">Distance</th>
+                            <th scope="col">Score</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -26,24 +29,27 @@
                         {{#each top_words}}
                             <tr>
                                 <td>{{this.title}}</td>
+                                <td>{{this.date}}</td>
                                 <td>
                                     <div class="btn-group" role="group">
                                       <button class="btn btn-primary btn-sm" type="button"
                                             data-toggle="collapse" data-target="#accordion{{@index}}"
                                             aria-expanded="false" aria-controls="accordion{{@index}}">
-                                        Abstract</button>
+                                        {{this.paper_id}} Abstract</button>
+
                                       <a type="button" href="https://arxiv.org/abs/{{this.paper_id}}" target="_blank" class="btn btn-success btn-sm">Paper Page</a>
                                       <a type="button" href="https://arxiv.org/pdf/{{this.paper_id}}.pdf" target="_blank" class="btn btn-danger btn-sm">PDF</a>
                                     </div>
 
                                 </td>
                                 <td>{{this.distance}}</td>
-                            </tr>
-                            <tr id="accordion{{@index}}" class="collapse">
+                                <tr id="accordion{{@index}}" class="collapse">
                                     <td colspan="3">
                                         {{this.abstract}}
                                     </td>
+                                </tr>
                             </tr>
+
                         {{/each}}
 
                     </tbody>
@@ -54,25 +60,28 @@
         {% endraw %}
         <div class="row justify-content-center align-items-center">
                 <div class="col col-sm-12 col-md-12">
-                <div data-embedding-type="paper" id="input-form">
-                  <div class="form-group">
-                    <label for="exampleInputEmail1">Paper Title</label>
-                    <input type="text" class="form-control input-lg search-box-papers" id="search-box">
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleSelect1">Select Embedding</label>
-                    <select class="form-control" id="embedding-type">
-                        <!--<option value="lsa" selected>LSA</option>-->
-                        <option value="tfidf">TFIDF</option>
-                    </select>
-                  </div>
-                  <button type="submit" id="submit-btn" class="btn btn-primary">Submit</button>
-                </div>
+                 <div data-embedding-type="paper" id="input-form">
+                        <form class="form-inline" onsubmit="return false;">
+                            <div class="input-group mb-2 col-md-10">
+                                <input type="text" class="form-control search-box-papers" id="search-box">
+                            </div>
+                            <div class="input-group mb-2 col-md-2">
+                                <button type="submit" id="submit-btn" class="btn btn-primary">Submit</button>
+                            </div>
+                        </form>
+
+                    </div>
             </div>
         </div>
         <hr>
         <div class="row text-center">
             <div class="col-md-12">
+                <div class="loading-icon-holder">
+                    <h3>Searching for results with query: <span id="query-loading-text"></span></h3>
+                    <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                    <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                    <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                </div>
                 <div class="content-placeholder">
                 </div>
             </div>
@@ -84,30 +93,33 @@
 
 {% block javascript %}
 <script>
-    /*$(function () {
-        // global variables different between word and paper embedding page. Avoids dangerous caching
-        higherLevelEmbeddingType = $('#input-form').data('embedding-type');
-        embeddingProximityRoute = '/' + higherLevelEmbeddingType + '-embedding-proximity';
-    })*/
-
     $(function () {
         var searchRoute = '/search-papers'
         var tableData, context;
+        var searching = false;
 
         var searchPapers = function(searchTerm, embeddingType) {
+            searching = true;
+            $('#submit-btn').css('color', '#696969');
+            $('#query-loading-text').text(searchTerm)
+            $loading.show();
             $.get(searchRoute, {'query': searchTerm, 'embedding_type': embeddingType}, function(data) {
-                console.log(data);
+                $loading.hide();
                 if (data == 'Word not found') {
                     tableData = [{'distance': -1, 'label': 'Word not found in embedding labels'}]
                 }
                 else {
                     tableData = data;
                 }
+                console.log(data);
                 context = {
                     'top_words': tableData,
                     'selectedWord': searchTerm
                 }
                 fillTable(context);
+                $loading.hide();
+                searching = false;
+                $('#submit-btn').css('color', '#fff');
             }, "json")
         }
 
@@ -134,48 +146,14 @@
         $('#submit-btn').click(function (data) {
             var searchTerm = $('#search-box').val();
             var embeddingType = $("#embedding-type").val();
-            searchPapers(searchTerm, embeddingType);
+            if (searching === false && searchTerm) searchPapers(searchTerm, embeddingType);
         });
 
-        // typeahead setup
-        /*var currentPagesEmbeddingOptions = higherLevelEmbeddingType == 'word' ? ['gensim'] : ['lsa', 'doc2vec'];
-        //var typeahead_data_to_get = currentPagesEmbeddingOptions // fasttext
-        var typeahead_labels = {}
-
-        for (let i = 0; i < currentPagesEmbeddingOptions.length; i++) {
-            $.get( "get-embedding-labels", {'embedding_type': currentPagesEmbeddingOptions[i]}, function( data ) {
-              var labels = data
-              typeahead_labels[currentPagesEmbeddingOptions[i]] = labels
-              console.log(typeahead_labels);
-              if (i == 0) { // first one should be default
-                  currentEmbeddingSelected = currentPagesEmbeddingOptions[i];
-                  $('#search-box').val(typeahead_labels[currentPagesEmbeddingOptions[i]][Math.floor(Math.random() * typeahead_labels[currentPagesEmbeddingOptions[i]].length)]);
-                  $("#search-box").autocomplete({
-                      //source: typeahead_labels['gensim'], // for all
-                      source: function(request, response) {
-                            var results = $.ui.autocomplete.filter(typeahead_labels[currentPagesEmbeddingOptions[i]], request.term);
-
-                            response(results.slice(0, 20));
-                      },
-                      minLength: 2
-                  });
-              }
-            });
-        }*/
-
-        // if select embedding changes, get other typeahead and replace source
-        /*$('#embedding-type').change(function() {
-            console.log($(this).val())
-            currentEmbeddingSelected = $(this).val()
-            $( "#search-box" ).autocomplete('option', {'source': function(request, response) {
-                            var results = $.ui.autocomplete.filter(typeahead_labels[currentEmbeddingSelected], request.term);
-
-                            response(results.slice(0, 20));
-                      }})
-        });*/
+        var $loading = $('.loading-icon-holder').hide();
     });
 
 </script>
+<!--Above is duplicating a lot in below file but some slightly different functionality-->
 <!--<script src="/js/embedding_proximity.js"></script>-->
 
 {% endblock %}

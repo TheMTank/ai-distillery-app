@@ -1,529 +1,248 @@
-{% extends "layouts/general_page_layout.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>AI Distillery</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <style>
+    /* Remove the navbar's default margin-bottom and rounded borders */
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+
+    /* Add a gray background color and some padding to the footer */
+    footer {
+      background-color: #f2f2f2;
+      padding: 25px;
+    }
 
 
-{% block navbar %}
+.container {
+}
 
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
-      <div class="container">
-        <a class="navbar-brand js-scroll-trigger" href="#page-top">AI Distillery</a>
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-          Menu
-          <i class="fas fa-bars"></i>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-          <ul class="navbar-nav text-uppercase ml-auto">
-            <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#services">Services</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#portfolio">Usecases</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#team">Team</a>
-            </li>
-          </ul>
+.image {
+  opacity: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: .5s ease;
+  backface-visibility: hidden;
+}
+
+.middle {
+  transition: .5s ease;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.container:hover .image {
+  opacity: 0.3;
+}
+
+.container:hover .middle {
+  opacity: 1;
+}
+
+.text {
+  /*background-color: #4CAF50;
+  color: white;*/
+
+      color: #d02727;
+    font-size: 16px;
+    font-weight: bolder;
+  font-size: 16px;
+  padding: 16px 32px;
+}
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">AI Distillery</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Home</a></li>
+        <li><a href="#word-header">Work</a></li>
+        <li><a href="#about-header">About</a></li>
+        <!--<li><a href="/gallery">Gallery</a></li>-->
+        <li><a href="#contact-header">Contact</a></li>
+      </ul>
+      <!--<ul class="nav navbar-nav navbar-right">-->
+        <!--<li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>-->
+      <!--</ul>-->
+    </div>
+  </div>
+</nav>
+
+<div class="jumbotron" style="padding-bottom: 0px;">
+  <div class="container text-center">
+    <h1>AI Distillery</h1>
+    <p>Automatically modelling and distilling knowledge within AI</p>
+    <p style="padding-top: 20px;"><strong>The M Tank</strong><br>Organisation Website: <a href="http://www.themtank.org">www.themtank.org</a></p>
+  </div>
+</div>
+
+<div id="word-header" class="container-fluid bg-3 text-center">
+      <h3>Some of our work</h3><br>
+      <div class="row">
+        <div class="col-sm-4 container">
+            <a href="/word-embedding-proximity-page">
+                <p>Search for similar Word Embeddings</p>
+                <img src="/images/ai-distillery-word-embedding-proximity.png" class="img-responsive image" style="width:100%" alt="Image">
+                <div class="middle">
+                    <div class="text">Search for similar Word Embeddings</div>
+                </div>
+            </a>
         </div>
-      </div>
-    </nav>
-
-{% endblock %}
-
-{% block  content %}
-
-
-    <!-- Header -->
-    <header class="masthead">
-      <div class="container">
-        <div class="intro-text">
-          <div class="intro-lead-in">Automatically modelling and distilling knowledge within AI!</div>
-          <div class="intro-heading text-uppercase">AI Distillery</div>
-          <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="#services">Tell Me More</a>
+        <div class="col-sm-4 container">
+            <a href="/word-embedding-viz">
+                <p>Word Embedding Visualisation</p>
+                <img src="/images/word2vecexplorer-on-heroku.png" class="img-responsive image" style="width:100%" alt="Image">
+                <div class="middle">
+                    <div class="text">Word Embedding Visualisation</div>
+                </div>
+            </a>
         </div>
-      </div>
-    </header>
+        <div class="col-sm-4 container">
+            <a href="/paper-search-page">
+                <p>Search for papers with free text</p>
+                <img src="/images/stack-cap.png" class="img-responsive image" style="width:100%" alt="Image">
+                <div class="middle">
+                    <div class="text">Search for papers with free text</div>
+                </div>
+            </a>
+        </div>
 
-    <!-- Services -->
-    <section id="services">
-      <div class="container">
+
+      </div>
         <div class="row">
-          <div class="col-lg-12 text-center">
-            <h2 class="section-heading text-uppercase">Services</h2>
-            <h3 class="section-subheading text-muted">What we are doing and our vision</h3>
-          </div>
+            <div class="col-sm-4 container">
+                <a href="/paper-embedding-proximity-page">
+                    <p>Search for similar Paper Embeddings</p>
+
+                    <img src="/images/ai-distillery-paper-embeddings-lip-reading.png" class="img-responsive image" style="width:100%" alt="Image">
+                    <div class="middle">
+                        <div class="text">Search for similar Paper Embeddings</div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-sm-4 container">
+                <a href="/paper-embedding-viz">
+                    <p>Paper Embedding Visualisation</p>
+                    <img src="/images/paper_embedding_viz_resized_bad_aspect_ratio.png" class="img-responsive image" style="width:100%" alt="Image">
+                    <div class="middle">
+                        <div class="text">Paper Embedding Visualisation</div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-sm-4 container">
+            <a href="/charts">
+                <p>Charts</p>
+                <img src="/images/AI-Distillery-charts-page.png" class="img-responsive image" style="width:100%" alt="Image">
+                <div class="middle">
+                    <div class="text">Charts</div>
+                </div>
+            </a>
         </div>
-        <div class="row text-center">
-          <div class="col-md-4">
-            <span class="fa-stack fa-4x">
-              <i class="fas fa-circle fa-stack-2x text-primary"></i>
-              <i class="fas fa-project-diagram fa-stack-1x fa-inverse"></i>
-            </span>
-            <h4 class="service-heading">Modeling AI Knowledge</h4>
-            <p class="text-muted">Handling AI knowledge is becoming increasingly difficult due to the large amount of paper published
-            on open access platforms like arXiv.org. Effectively modeling data is necessary in order to allow people to access and explore information freely.</p>
-          </div>
-          <div class="col-md-4">
-            <span class="fa-stack fa-4x">
-              <i class="fas fa-circle fa-stack-2x text-primary"></i>
-              <i class="fas fa-chart-bar fa-stack-1x fa-inverse"></i>
-            </span>
-            <h4 class="service-heading">Automatically Extracting Knowledge from Data</h4>
-            <p class="text-muted">Due to the large amount of data knowledge extraction cannot be a manual process:
-                we employ automatic techniques to extract information from papers and to analyze it.
+    </div>
+
+    <div id="about-header" class="container-fluid bg-3 text-center">
+     <h3>What we intend to do</h3>
+        <p>Automatically model and distil knowledge within AI.<br>
+            In other words, summarise the arxiv/research firehose.<br>
+            Map, categorise, quantify, qualify, filter, search, browse, reduce, digest, compress,
+            summarise and model all knowledge within ML/DL/RL/AI/DS/CV/NLP/CS/Stats. <br>
+            Always for the community.
+        </p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6 text-left">
+            <p><strong>Other related goals</strong>:
+                <ul>
+                    <li>
+                        Have an automatically updated web page and dashboard for showing any of the relevant
+                        insights and visualisations we want for the world to see.
+                    </li>
+                    <li>
+                        Information Retrieval: Help researchers find what they are looking for and help the community
+                    </li>
+                    <li>
+                        Show what is currently trending within AI. Predict future trends.
+                    </li>
+                    <li>
+                        Show how a specific field or the general field of AI evolves over time.
+                    </li>
+                </ul>
             </p>
-          </div>
-          <div class="col-md-4">
-            <span class="fa-stack fa-4x">
-              <i class="fas fa-circle fa-stack-2x text-primary"></i>
-              <i class="fas fa-users fa-stack-1x fa-inverse"></i>
-            </span>
-            <h4 class="service-heading">Sharing Knowledge with the Community</h4>
-            <p class="text-muted">We extract knowledge and we give free access to it to the community.
-            Everybody should be able to access to this data and to use it. Even a novice with little understanding of AI
-            should be given access to AI knowledge.</p>
-          </div>
         </div>
-      </div>
-    </section>
-
-    <!-- Portfolio Grid -->
-    <section class="bg-light" id="portfolio">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-12 text-center">
-            <h2 class="section-heading text-uppercase">Usecases</h2>
-            <h3 class="section-subheading text-muted">Some of our work</h3>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-4 col-sm-6 portfolio-item">
-            <a class="portfolio-link" data-toggle="modal" href="#portfolioModal1">
-              <div class="portfolio-hover">
-                <div class="portfolio-hover-content">
-                  <i class="fas fa-plus fa-3x"></i>
-                </div>
-              </div>
-              <img class="img-fluid" src="/images/ai-distillery-paper-embeddings-lip-reading.png" alt="">
-            </a>
-            <div class="portfolio-caption">
-              <h4>Paper Search and Exploration</h4>
-              <!--<p class="text-muted">Illustration</p>-->
-              <div class="btn-group" role="group" aria-label="Basic example">
-                  <a type="button" data-toggle="modal" href="#portfolioModal1" class="portfolio-link btn btn-primary">Know More
-                      </a>
-                  <a type="button" href="/paper-search-page" class="btn btn-success">Open</a>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 col-sm-6 portfolio-item">
-           <a class="portfolio-link" data-toggle="modal" href="#portfolioModal2">
-              <div class="portfolio-hover">
-                <div class="portfolio-hover-content">
-                  <i class="fas fa-plus fa-3x"></i>
-                </div>
-              </div>
-              <img class="img-fluid" src="/images/ai-distillery-word-embedding-proximity.png" alt="">
-            </a>
-            <div class="portfolio-caption">
-              <h4>Word Embedding Proximity</h4>
-              <!--<p class="text-muted">Graphic Design</p>-->
-              <div class="btn-group" role="group" aria-label="Basic example">
-                  <a type="button" data-toggle="modal" href="#portfolioModal2" class="portfolio-link btn btn-primary">Know More
-                      </a>
-                  <a type="button" href="/word-embedding-proximity-page" class="btn btn-success">Open</a>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 col-sm-6 portfolio-item">
-            <a class="portfolio-link" data-toggle="modal" href="#portfolioModal3">
-              <div class="portfolio-hover">
-                <div class="portfolio-hover-content">
-                  <i class="fas fa-plus fa-3x"></i>
-                </div>
-              </div>
-              <img class="img-fluid" src="/images/ai-distillery-paper-embeddings-lip-reading.png" alt="">
-            </a>
-            <div class="portfolio-caption">
-              <h4>Paper Embedding Proximity</h4>
-              <!--<p class="text-muted">Identity</p>-->
-              <div class="btn-group" role="group" aria-label="Basic example">
-                   <a type="button" data-toggle="modal" href="#portfolioModal3" class="portfolio-link btn btn-primary">Know More</a>
-                  <a type="button" href="/paper-embedding-proximity-page" class="btn btn-success">Open</a>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 col-sm-6 portfolio-item">
-            <a class="portfolio-link" data-toggle="modal" href="#portfolioModal4">
-              <div class="portfolio-hover">
-                <div class="portfolio-hover-content">
-                  <i class="fas fa-plus fa-3x"></i>
-                </div>
-              </div>
-              <img class="img-fluid" src="/images/word2vecexplorer-on-heroku.png" alt="">
-            </a>
-            <div class="portfolio-caption">
-              <h4>Word Embedding Visualization</h4>
-              <!--<p class="text-muted">Branding</p>-->
-              <div class="btn-group" role="group" aria-label="Basic example">
-                   <a type="button" data-toggle="modal" href="#portfolioModal4" class="portfolio-link btn btn-primary">Know More</a>
-                  <a type="button" href="/word-embedding-viz" class="btn btn-success">Open</a>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 col-sm-6 portfolio-item">
-            <a class="portfolio-link" data-toggle="modal" href="#portfolioModal5">
-              <div class="portfolio-hover">
-                <div class="portfolio-hover-content">
-                  <i class="fas fa-plus fa-3x"></i>
-                </div>
-              </div>
-              <img class="img-fluid" src="/images/paper_embedding_viz_resized_bad_aspect_ratio.png" alt="">
-            </a>
-            <div class="portfolio-caption">
-              <h4>Paper Embedding Visualization</h4>
-              <!--<p class="text-muted">Data</p>-->
-              <div class="btn-group" role="group" aria-label="Basic example">
-                   <a type="button" data-toggle="modal" href="#portfolioModal5" class="portfolio-link btn btn-primary">Know More</a>
-                  <a type="button" href="/paper-embedding-viz" class="btn btn-success">Open</a>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 col-sm-6 portfolio-item">
-            <a class="portfolio-link" data-toggle="modal" href="#portfolioModal6">
-              <div class="portfolio-hover">
-                <div class="portfolio-hover-content">
-                  <i class="fas fa-plus fa-3x"></i>
-                </div>
-              </div>
-              <img class="img-fluid" src="/images/AI-Distillery-charts-page.png" alt="">
-            </a>
-            <div class="portfolio-caption">
-              <h4>Charts and Additional Insights</h4>
-              <!--<p class="text-muted">Photography</p>-->
-              <div class="btn-group" role="group" aria-label="Basic example">
-                   <a type="button" data-toggle="modal" href="#portfolioModal6" class="portfolio-link btn btn-primary">Know More</a>
-                  <a type="button" href="/charts" class="btn btn-success">Open</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Team -->
-    <section class="bg-light" id="team">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-12 text-center">
-            <h2 class="section-heading text-uppercase">The AI Distillery team</h2>
-            <!--<h3 class="section-subheading text-muted"></h3>-->
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-4">
-            <div class="team-member">
-              <img class="mx-auto rounded-circle" src="/images/team/ben.png" alt="">
-              <h4>Ben Duffy</h4>
-              <p class="text-muted">Researcher</p>
-              <ul class="list-inline social-buttons">
-                <li class="list-inline-item">
-                  <a href="https://twitter.com/beduffy1">
-                    <i class="fab fa-twitter"></i>
-                  </a>
-                </li>
-                <li class="list-inline-item">
-                  <a href="https://www.linkedin.com/in/ben-duffy">
-                    <i class="fab fa-linkedin-in"></i>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="col-sm-4">
-            <div class="team-member">
-              <img class="mx-auto rounded-circle" src="/images/team/lukas.png" alt="">
-              <h4>Lukas Galke</h4>
-              <p class="text-muted">Researcher</p>
-              <ul class="list-inline social-buttons">
-                <li class="list-inline-item">
-                  <a href="https://twitter.com/_lpag">
-                    <i class="fab fa-twitter"></i>
-                  </a>
-                </li>
-                <li class="list-inline-item">
-                  <a href=https://www.linkedin.com/in/lukas-galke-8086b0155/">
-                    <i class="fab fa-linkedin-in"></i>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="col-sm-4">
-            <div class="team-member">
-              <img class="mx-auto rounded-circle" src="/images/team/fede.png" alt="">
-              <h4>Federico Bianchi</h4>
-              <p class="text-muted">Researcher</p>
-              <ul class="list-inline social-buttons">
-                <li class="list-inline-item">
-                  <a href="https://twitter.com/fb_vinid">
-                    <i class="fab fa-twitter"></i>
-                  </a>
-                </li>
-                <li class="list-inline-item">
-                  <a href="https://www.linkedin.com/in/federico-bianchi-3b7998121/">
-                    <i class="fab fa-linkedin-in"></i>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-lg-8 mx-auto text-center">
-            <p class="large text-muted">Combined, we have the expertise required to fulfill this project's goal.
-              Expertise within Natural Language Processing (NLP), Information Retrieval (IR), Web Development and visualisation.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-
-    <!-- Portfolio Modals -->
-
-    <!-- Modal 1 -->
-    <div class="portfolio-modal modal fade" id="portfolioModal1" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="close-modal" data-dismiss="modal">
-            <div class="lr">
-              <div class="rl"></div>
-            </div>
-          </div>
-          <div class="container">
-            <div class="row">
-              <div class="col-lg-8 mx-auto">
-                <div class="modal-body">
-                  <!-- Project Details Go Here -->
-                  <h2 class="text-uppercase">Paper Search and Exploration</h2>
-                  <p class="item-intro text-muted">Search for any free-text and find the most relevant papers to the query</p>
-                  <a href="/paper-search-page">
-                    <img class="img-fluid d-block mx-auto" src="/images/ai-distillery-paper-embeddings-lip-reading.png" alt="">
-                  </a>
-                  <p></p>
-                  <!--<ul class="list-inline">-->
-                    <!--<li>Date: January 2017</li>-->
-                    <!--<li>Client: Threads</li>-->
-                    <!--<li>Category: Illustration</li>-->
-                  <!--</ul>-->
-                  <button class="btn btn-primary" data-dismiss="modal" type="button">
-                    <i class="fas fa-times"></i>
-                    Close Project</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+        <div class="col-md-3"></div>
     </div>
 
-    <!-- Modal 2 -->
-    <div class="portfolio-modal modal fade" id="portfolioModal2" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="close-modal" data-dismiss="modal">
-            <div class="lr">
-              <div class="rl"></div>
-            </div>
-          </div>
-          <div class="container">
-            <div class="row">
-              <div class="col-lg-8 mx-auto">
-                <div class="modal-body">
-                  <!-- Project Details Go Here -->
-                  <h2 class="text-uppercase">Word Embedding Proximity</h2>
-                  <p class="item-intro text-muted">Search for similar word embeddings to an exact word found in the labels for gensim or fasttext</p>
-                  <a href="/word-embedding-proximity-page">
-                    <img class="img-fluid d-block mx-auto" src="/images/ai-distillery-word-embedding-proximity.png" alt="">
-                  </a>
-                  <p>Check out our Word Embeddings</p>
-                  <!--<ul class="list-inline">-->
-                    <!--<li>Date: January 2017</li>-->
-                    <!--<li>Client: Explore</li>-->
-                    <!--<li>Category: Graphic Design</li>-->
-                  <!--</ul>-->
-                  <button class="btn btn-primary" data-dismiss="modal" type="button">
-                    <i class="fas fa-times"></i>
-                    Close Project</button>
-                </div>
-              </div>
-            </div>
-          </div>
+    <div class="row">
+        <div id="contact-header" class="container-fluid bg-3 text-center">
+            <h3>Contact</h3>
+            <a href="mailto:info@themtank.com" style="font-size: 24px;">info@themtank.com</a>
         </div>
-      </div>
     </div>
 
-    <!-- Modal 3 -->
-    <div class="portfolio-modal modal fade" id="portfolioModal3" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="close-modal" data-dismiss="modal">
-            <div class="lr">
-              <div class="rl"></div>
-            </div>
-          </div>
-          <div class="container">
-            <div class="row">
-              <div class="col-lg-8 mx-auto">
-                <div class="modal-body">
-                  <!-- Project Details Go Here -->
-                  <h2 class="text-uppercase">Paper Embedding Proximity</h2>
-                  <p class="item-intro text-muted">Search for similar embeddings to the searched paper (with help from a typeahead and random selection to help you choose).
-                      No room for misspellings, paper title has to be exact, hence the typeahead is necessary.</p>
-                  <a href="/paper-embedding-proximity-page">
-                    <img class="img-fluid d-block mx-auto" src="/images/ai-distillery-paper-embeddings-lip-reading.png" alt="">
-                  </a>
-                    <!--<p>Use this area to describe your project.</p>-->
-                  <!--<ul class="list-inline">-->
-                    <!--<li>Date: January 2017</li>-->
-                    <!--<li>Client: Finish</li>-->
-                    <!--<li>Category: Identity</li>-->
-                  <!--</ul>-->
-                  <button class="btn btn-primary" data-dismiss="modal" type="button">
-                    <i class="fas fa-times"></i>
-                    Close Project</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+        <!--<div class="col-sm-3">-->
+          <!--<p>Some text..</p>-->
+          <!--<img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image">-->
+        <!--</div>-->
+        <!--<div class="col-sm-3">-->
+          <!--<p>Some text..</p>-->
+          <!--<img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image">-->
+        <!--</div>-->
 
-    <!-- Modal 4 -->
-    <div class="portfolio-modal modal fade" id="portfolioModal4" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="close-modal" data-dismiss="modal">
-            <div class="lr">
-              <div class="rl"></div>
-            </div>
-          </div>
-          <div class="container">
-            <div class="row">
-              <div class="col-lg-8 mx-auto">
-                <div class="modal-body">
-                  <!-- Project Details Go Here -->
-                  <h2 class="text-uppercase">Word Embedding Visualisation</h2>
-                  <p class="item-intro text-muted">Explore through the TSNE reduced embedding space of fastText or gensim</p>
-                  <a href="/word-embedding-viz">
-                    <img class="img-fluid d-block mx-auto" src="/images/word2vecexplorer-on-heroku.png" alt="">
-                  </a>
-                  <!--<p>Use this area to describe your project.</p>-->
-                  <!--<ul class="list-inline">-->
-                    <!--<li>Date: January 2017</li>-->
-                    <!--<li>Client: Lines</li>-->
-                    <!--<li>Category: Branding</li>-->
-                  <!--</ul>-->
-                  <button class="btn btn-primary" data-dismiss="modal" type="button">
-                    <i class="fas fa-times"></i>
-                    Close Project</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+</div>
+<br>
 
-    <!-- Modal 5 -->
-    <div class="portfolio-modal modal fade" id="portfolioModal5" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="close-modal" data-dismiss="modal">
-            <div class="lr">
-              <div class="rl"></div>
-            </div>
-          </div>
-          <div class="container">
-            <div class="row">
-              <div class="col-lg-8 mx-auto">
-                <div class="modal-body">
-                  <!-- Project Details Go Here -->
-                  <h2 class="text-uppercase">Paper Embedding Visualisation</h2>
-                  <p class="item-intro text-muted">Search the T-SNE space of paper embeddings and find that similar papers lie close in this space</p>
-                  <a href="/paper-embedding-viz">
-                    <img class="img-fluid d-block mx-auto" src="/images/paper_embedding_viz_resized_bad_aspect_ratio.png" alt="">
-                  </a>
-                  <!--<p>Use this area to describe your project.</p>-->
-                  <!--<ul class="list-inline">-->
-                    <!--<li>Date: January 2017</li>-->
-                    <!--<li>Client: Southwest</li>-->
-                    <!--<li>Category: Website Design</li>-->
-                  <!--</ul>-->
-                  <button class="btn btn-primary" data-dismiss="modal" type="button">
-                    <i class="fas fa-times"></i>
-                    Close Project</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+<!--<div class="container-fluid bg-3 text-center">-->
+  <!--<div class="row">-->
+    <!--<div class="col-sm-3">-->
+      <!--<p>Some text..</p>-->
+      <!--<img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image">-->
+    <!--</div>-->
+    <!--<div class="col-sm-3">-->
+      <!--<p>Some text..</p>-->
+      <!--<img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image">-->
+    <!--</div>-->
+    <!--<div class="col-sm-3">-->
+      <!--<p>Some text..</p>-->
+      <!--<img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image">-->
+    <!--</div>-->
+    <!--<div class="col-sm-3">-->
+      <!--<p>Some text..</p>-->
+      <!--<img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image">-->
+    <!--</div>-->
+  <!--</div>-->
+<!--</div>-->
 
-    <!-- Modal 6 -->
-    <div class="portfolio-modal modal fade" id="portfolioModal6" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="close-modal" data-dismiss="modal">
-            <div class="lr">
-              <div class="rl"></div>
-            </div>
-          </div>
-          <div class="container">
-            <div class="row">
-              <div class="col-lg-8 mx-auto">
-                <div class="modal-body">
-                  <!-- Project Details Go Here -->
-                  <h2 class="text-uppercase">Charts</h2>
-                  <p class="item-intro text-muted">Random charts and insights we created along our journey</p>
-                  <a href="/charts">
-                    <img class="img-fluid d-block mx-auto" src="/images/AI-Distillery-charts-page.png" alt="">
-                  </a>
-                  <!--<p>Use this area to describe your project. </p>-->
-                  <!--<ul class="list-inline">-->
-                    <!--<li>Date: January 2017</li>-->
-                    <!--<li>Client: Window</li>-->
-                    <!--<li>Category: Photography</li>-->
-                  <!--</ul>-->
-                  <button class="btn btn-primary" data-dismiss="modal" type="button">
-                    <i class="fas fa-times"></i>
-                    Close Project</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-{% endblock %}
+<br>
+<!--<br>-->
 
-{% block javascript %}
-    {{ super() }}
+<!--<footer class="container-fluid text-center">-->
+  <!--<p>Footer Text</p>-->
+<!--</footer>-->
 
-    <!-- Bootstrap core JavaScript -->
-    <script src="/vendor/jquery/jquery.min.js"></script>
-    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Plugin JavaScript -->
-    <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
-
-    <!-- Contact form JavaScript -->
-    <script src="/js/jqBootstrapValidation.js"></script>
-    <script src="/js/contact_me.js"></script>
-
-    <!-- Custom scripts for this template -->
-    <script src="/js/agency.min.js"></script>
-
-{% endblock %}
+</body>
+</html>

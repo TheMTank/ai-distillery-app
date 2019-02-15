@@ -2,8 +2,9 @@ $(function () {
     var tableData, context;
 
     var getSimilarEmbeddings = function(searchTerm, embeddingType) {
+        $loading.show();
         $.get(embeddingProximityRoute, {'input_str': searchTerm, 'type': embeddingType}, function(data) {
-            console.log(data);
+            $loading.hide();
             if (data.length == 1) {
                 tableData = [{'distance': -1, 'label': data[0]}] //'Word not found in embedding labels'}]
             }
@@ -15,6 +16,7 @@ $(function () {
                 'selectedWord': searchTerm
             }
             fillTable(context);
+            $loading.hide();
         }, "json")
     }
 
@@ -41,8 +43,12 @@ $(function () {
     $('#submit-btn').click(function (data) {
         var searchTerm = $('#search-box').val();
         var embeddingType = $("#embedding-type").val();
+//        $('#search-box').autocomplete('close');
         getSimilarEmbeddings(searchTerm, embeddingType);
+        if ($('#search-box').hasClass('ui-autocomplete')) $('#search-box').autocomplete('close');
     });
+
+    var $loading = $('.loading-icon-holder').hide();
 
     // typeahead setup
     var currentPagesEmbeddingOptions = higherLevelEmbeddingType == 'word' ? ['gensim'] : ['lsa', 'doc2vec'];
@@ -62,7 +68,7 @@ $(function () {
                   source: function(request, response) {
                         var results = $.ui.autocomplete.filter(typeahead_labels[currentPagesEmbeddingOptions[i]], request.term);
 
-                        response(results.slice(0, 20));
+                        response(results.slice(0, 15));
                   },
                   minLength: 2
               });
@@ -75,9 +81,9 @@ $(function () {
         console.log($(this).val())
         currentEmbeddingSelected = $(this).val()
         $( "#search-box" ).autocomplete('option', {'source': function(request, response) {
-                        var results = $.ui.autocomplete.filter(typeahead_labels[currentEmbeddingSelected], request.term);
+            var results = $.ui.autocomplete.filter(typeahead_labels[currentEmbeddingSelected], request.term);
 
-                        response(results.slice(0, 20));
-                  }})
+            response(results.slice(0, 15));
+        }})
     });
 });

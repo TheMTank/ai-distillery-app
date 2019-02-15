@@ -1,24 +1,13 @@
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
+    <title>{{ title_page }}</title>
 
-
-    <title>AI Distillery</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#fed136">
 
     <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
     <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
@@ -29,9 +18,9 @@
     <!--<link href="/styles/agency.min.css" rel="stylesheet">-->
     <link href="/styles/agency.css" rel="stylesheet">
 
-    {% include "layouts/min_import.html" %}
-    <!-- Custom scripts for this template -->
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 
+    {% include "layouts/min_import.html" %}
 
 
 <body id="page-top">
@@ -56,11 +45,11 @@
                   <i class="fab fa-twitter"></i>
                 </a>
               </li>
-              <!--<li class="list-inline-item">-->
-                <!--<a href="#">-->
-                  <!--<i class="fab fa-facebook-f"></i>-->
-                <!--</a>-->
-              <!--</li>-->
+              <li class="list-inline-item">
+                <a href="https://github.com/TheMTank/ai-distillery">
+                  <i class="fab fa-github"></i>
+                </a>
+              </li>
               <!--<li class="list-inline-item">-->
                 <!--<a href="#">-->
                   <!--<i class="fab fa-linkedin-in"></i>-->
@@ -83,6 +72,10 @@
     </footer>
 {% endblock %}
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 {% block javascript %}
 

@@ -151,3 +151,14 @@ div.tooltip {
     border-radius: 8px;
     pointer-events: none;
 }
+
+/* new */
+.title-holder {
+    z-index: -100;
+    pointer-events: none;
+}
+
+.list-group-item {
+    z-index: 100;
+    cursor: pointer;
+}
