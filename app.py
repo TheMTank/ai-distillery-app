@@ -15,6 +15,7 @@ from whoosh.qparser import QueryParser
 from explorer import Model
 from scripts.download_from_s3_bucket import download_file_from_s3
 
+from utilities import search
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -181,20 +182,28 @@ def search_papers():
     query = request.args.get('query', '')
     num_results = 30  # todo query param or add pagination
 
-    with whoosh_ix.searcher() as searcher:
-        query = QueryParser("full_text", whoosh_ix.schema).parse(query)
-        results = searcher.search(query, limit=num_results)
-        print('Num results: {}'.format(len(results)))
+    data = search.elastic_search_papers(query, num_results)
 
-        response_obj = [{'paper_id': result['paper_id'],
-                         'title': result['title'],
-                         'abstract': result['abstract'],
-                         'authors': result['authors'],
-                         'date': result['date'].strftime('%d %b %Y'),
-                         'distance': round(results.top_n[idx][0], 4)
-                         } for idx, result in enumerate(results[0:num_results])]
+    return jsonify(data)
 
-    return jsonify(response_obj)
+#@app.route("/search-papers")
+# def search_papers():
+#     query = request.args.get('query', '')
+#     num_results = 30  # todo query param or add pagination
+#     with whoosh_ix.searcher() as searcher:
+#         query = QueryParser("full_text", whoosh_ix.schema).parse(query)
+#         results = searcher.search(query, limit=num_results)
+#         print('Num results: {}'.format(len(results)))
+#
+#         response_obj = [{'paper_id': result['paper_id'],
+#                          'title': result['title'],
+#                          'abstract': result['abstract'],
+#                          'authors': result['authors'],
+#                          'date': result['date'].strftime('%d %b %Y'),
+#                          'distance': round(results.top_n[idx][0], 4)
+#                          } for idx, result in enumerate(results[0:num_results])]
+#
+#     return jsonify(response_obj)
 
 @app.route("/api/explore")
 def explore():
@@ -377,7 +386,7 @@ lsa_embedding_model = Model(lsa_embedding_2d_path)
 doc2vec_embedding_model = Model(doc2vec_embedding_2d_path)
 
 # Open previously created index at directory
-whoosh_ix = index.open_dir("whoosh_indexdir")
+#whoosh_ix = index.open_dir("whoosh_indexdir")
 
 if __name__ == '__main__':
     logger.info('Server has started up at time: {}'.format(datetime.datetime.now().
