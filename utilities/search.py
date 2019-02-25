@@ -6,10 +6,12 @@ def elastic_search_papers(query, num_results=10):
     response = client.search(terminate_after=num_results,
         index="arxiv_papers",
         body={
-                "query" : {
-                    "term" : { "title" : query }
+            "query": {
+                "match": {
+                    "title": query
                 }
             }
+        }
     )
     response_obj = []
     for hit in response['hits']['hits']:
