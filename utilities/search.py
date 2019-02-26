@@ -7,8 +7,17 @@ def elastic_search_papers(query, num_results=10):
         index="arxiv_papers",
         body={
             "query": {
-                "match": {
-                    "title": query
+                "bool": {
+                    "should": [
+                        {"match": {
+                            "title": query
+                        }},
+                        {"match": {
+                            "full_text": query
+                        }},
+                        {"match": {
+                            "abstract": query
+                        }}]
                 }
             }
         }
