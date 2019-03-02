@@ -3,6 +3,6 @@ gunicorn
 numpy
 gensim
 scikit-learn
-Whoosh
+elasticsearch
 greenlet
 gevent

@@ -1,6 +1,9 @@
-from elasticsearch_dsl import Document, Date, Integer, Keyword, Text
+from elasticsearch_dsl import Document, Date, Keyword, Text
 
 class Paper(Document):
+    """
+    Paper object inside elasticserach
+    """
     title = Text(analyzer='snowball', fields={'raw': Keyword()})
     abstract = Text(analyzer='snowball')
     full_text = Text(analyzer='snowball')
