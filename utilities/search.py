@@ -1,10 +1,12 @@
 from elasticsearch import Elasticsearch
 
-def elastic_search_papers(query, num_results=10):
+def elastic_search_papers(query, num_results=10, from_result=0):
     client = Elasticsearch()
 
-    response = client.search(terminate_after=num_results,
+    response = client.search(
         index="arxiv_papers",
+        from_=from_result,
+        size=num_results,
         body={
             "query": {
                 "bool": {

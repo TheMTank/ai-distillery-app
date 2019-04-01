@@ -180,7 +180,7 @@ def get_embedding_labels():
 @app.route("/search-papers")
 def search_papers():
     query = request.args.get('query', '')
-    num_results = 30  # todo query param or add pagination
+    num_results = request.args.get('num_results', 10)  # todo add pagination
 
     data = search.elastic_search_papers(query, num_results)
 
