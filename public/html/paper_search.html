@@ -86,22 +86,18 @@
     </div>
     {% endraw %}
     <div class="row justify-content-center align-items-center">
-            <div class="col col-sm-12 col-md-12">
-                <div data-embedding-type="paper" id="input-form">
-                    <form class="form-inline" onsubmit="return false;">
-                        <div class="input-group mb-2 col-md-8">
-                            <input type="text" class="form-control search-box-papers" id="search-box">
-                        </div>
-                        <div class="input-group mb-2 col-md-2">
-                            <button type="submit" id="submit-btn" class="btn btn-primary">Submit</button>
-                        </div>
-                        <div class="input-group mb-2 col-md-2">
-                            <label>Num papers to return:</label>
-                            <input id='num-papers-to-return' type="number" value="10" style="width: 100%;">
-                        </div>
+        <div class="col col-sm-12 col-md-12">
+            <div data-embedding-type="paper" id="input-form">
+                <form class="form-inline" onsubmit="return false;">
+                    <div class="input-group mb-2 col-md-10">
+                        <input type="text" class="form-control search-box-papers" id="search-box">
+                    </div>
+                    <div class="input-group mb-2 col-md-2">
+                        <button type="submit" id="submit-btn" class="btn btn-primary">Submit</button>
+                    </div>
 
-                    </form>
-                </div>
+                </form>
+            </div>
         </div>
     </div>
     <hr>
@@ -143,12 +139,11 @@
         var searchPapers = function(searchTerm) {
             $('#see-more-button').show();
             pageNo = 0;
-            numPapersToShow = parseInt($('#num-papers-to-return').val());
             searching = true;
             $('#submit-btn').css('color', '#696969');
             $('#query-loading-text').text(searchTerm)
             $loading.show();
-            $.get(searchRoute, {'query': searchTerm, 'num_results': numPapersToShow}, function(data) {
+            $.get(searchRoute, {'query': searchTerm, 'num_results': resultsPerPage}, function(data) {
                 $loading.hide();
                 if (data == 'Word not found') {
                     tableData = [{'distance': -1, 'label': 'Word not found in embedding labels'}]
