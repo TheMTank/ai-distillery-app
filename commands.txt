@@ -11,6 +11,7 @@ nohup gunicorn -b 0.0.0.0:80 -w 9 --worker-class gevent app:app &> output_log.tx
 nohup gunicorn -b 0.0.0.0:80 -w 4 app:app &> output_log.txt&
 
 # with nginx on hertzner (proper way)
+sudo service nginx start
 nohup gunicorn -b 0.0.0.0:5000 -w 9 --worker-class gevent app:app &> output_log.txt&
 
 # for all. How to kill and check logs

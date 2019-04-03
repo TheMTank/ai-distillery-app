@@ -180,9 +180,10 @@ def get_embedding_labels():
 @app.route("/search-papers")
 def search_papers():
     query = request.args.get('query', '')
-    num_results = request.args.get('num_results', 10)  # todo add pagination
+    num_results = request.args.get('num_results', 10)
+    from_ = request.args.get('from_', 0)
 
-    data = search.elastic_search_papers(query, num_results)
+    data = search.elastic_search_papers(query, num_results, from_result=from_)
 
     return jsonify(data)
 
