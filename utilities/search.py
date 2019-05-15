@@ -3,6 +3,11 @@ from elasticsearch import Elasticsearch
 def elastic_search_papers(query, num_results=10):
     client = Elasticsearch()
 
+    # "content": {
+    #     "query": "Elasticsearch",
+    #     "boost": 3
+    # }
+
     response = client.search(terminate_after=num_results,
         index="arxiv_papers",
         body={
@@ -10,14 +15,26 @@ def elastic_search_papers(query, num_results=10):
                 "bool": {
                     "should": [
                         {"match": {
-                            "title": query
-                        }},
-                        {"match": {
-                            "full_text": query
-                        }},
-                        {"match": {
-                            "abstract": query
-                        }}]
+                            "title": {
+                                "query" : query,
+                                "boost": 5
+                                }
+                        }
+                        },
+                        {"match":  {
+                            "full_text": {
+                                "query" : query,
+                                "boost": 1
+                                }
+                        }
+                        },
+                        {"match":  {
+                            "abstract": {
+                                "query" : query,
+                                "boost": 2
+                                }
+                        }
+                        }]
                 }
             }
         }
