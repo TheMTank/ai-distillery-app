@@ -8,31 +8,39 @@ def elastic_search_papers(query, num_results=10, twitter_popularity=False, from_
             from_=from_result,
             size=num_results,
             body={
-                "sort" : [
-                 {"twitter_popularity" : {"order" : "desc"}}
-                ],
-                "query": {
-                    "bool": {
-                        "should": [
-                            {"match": {
-                                "title": query
-                            }},
-                            {"match": {
-                                "full_text": query
-                            }},
-                            {"match": {
-                                "abstract": query
-                            }}],
-                			"must": [{
-                				"range": {
-                					"twitter_popularity": {
-                						"gte": 2
-                					}
-                				}
-                			}]
-                    }
-                }
-            }
+	"sort": [{
+		"twitter_popularity": {
+			"order": "desc"
+		}
+	}],
+	"query": {
+		"bool": {
+			"should": [{
+					"match": {
+						"title": query
+					}
+				},
+				{
+					"match": {
+						"full_text": query
+					}
+				},
+				{
+					"match": {
+						"abstract": query
+					}
+				}
+			],
+			"must": [{
+				"range": {
+					"twitter_popularity": {
+						"gte": 2
+					}
+				}
+			}]
+		}
+	}
+}
         )
     else:
         response = client.search(
