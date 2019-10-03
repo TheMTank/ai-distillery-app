@@ -1,29 +1,58 @@
 from elasticsearch import Elasticsearch
 
-def elastic_search_papers(query, num_results=10, from_result=0):
+def elastic_search_papers(query, num_results=10, twitter_popularity=False, from_result=0):
     client = Elasticsearch()
 
-    response = client.search(
-        index="arxiv_papers",
-        from_=from_result,
-        size=num_results,
-        body={
-            "query": {
-                "bool": {
-                    "should": [
-                        {"match": {
-                            "title": query
-                        }},
-                        {"match": {
-                            "full_text": query
-                        }},
-                        {"match": {
-                            "abstract": query
-                        }}]
+    if twitter_popularity:
+        response = client.search(
+            index="arxiv_papers",
+            from_=from_result,
+            size=num_results,
+            body={
+                "query": {
+                    "bool": {
+                        "should": [
+                            {"match": {
+                                "title": query
+                            }},
+                            {"match": {
+                                "full_text": query
+                            }},
+                            {"match": {
+                                "abstract": query
+                            }}],
+                            "range" : {
+                             "twitter_popularity" : {
+                                "gte" : 1
+                             }
+                        }
+                    }
                 }
             }
-        }
-    )
+        )
+    else:
+
+        response = client.search(
+            index="arxiv_papers",
+            from_=from_result,
+            size=num_results,
+            body={
+                "query": {
+                    "bool": {
+                        "should": [
+                            {"match": {
+                                "title": query
+                            }},
+                            {"match": {
+                                "full_text": query
+                            }},
+                            {"match": {
+                                "abstract": query
+                            }}]
+                    }
+                }
+            }
+        )
     response_obj = []
     for hit in response['hits']['hits']:
         data = {'paper_id': hit['_id'],

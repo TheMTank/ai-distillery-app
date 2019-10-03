@@ -9,8 +9,6 @@ from sklearn.metrics.pairwise import euclidean_distances
 import numpy as np
 from flask import Flask, request, send_from_directory, jsonify, render_template
 # from flask_sslify import SSLify
-import whoosh.index as index
-from whoosh.qparser import QueryParser
 
 from explorer import Model
 from scripts.download_from_s3_bucket import download_file_from_s3
@@ -182,8 +180,8 @@ def search_papers():
     query = request.args.get('query', '')
     num_results = request.args.get('num_results', 10)
     from_ = request.args.get('from_', 0)
-
-    data = search.elastic_search_papers(query, num_results, from_result=from_)
+    twitter_popularity = request.args.get('defaultCheck1', False)
+    data = search.elastic_search_papers(query, num_results, twitter_popularity, from_result=from_)
 
     return jsonify(data)
 
