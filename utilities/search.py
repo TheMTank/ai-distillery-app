@@ -8,6 +8,9 @@ def elastic_search_papers(query, num_results=10, twitter_popularity=False, from_
             from_=from_result,
             size=num_results,
             body={
+                "sort" : [
+                 {"twitter_popularity" : {"order" : "desc"}}
+                ],
                 "query": {
                     "bool": {
                         "should": [
