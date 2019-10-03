@@ -2,7 +2,7 @@ from elasticsearch import Elasticsearch
 
 def elastic_search_papers(query, num_results=10, twitter_popularity=False, from_result=0):
     client = Elasticsearch()
-
+    print("aaa", twitter_popularity)
     if twitter_popularity:
         response = client.search(
             index="arxiv_papers",

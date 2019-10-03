@@ -148,6 +148,7 @@
             $('#submit-btn').css('color', '#696969');
             $('#query-loading-text').text(searchTerm)
             $loading.show();
+
             $.get(searchRoute, {'query': searchTerm, 'num_results': resultsPerPage,
             'twitter_popularity' : document.getElementById('defaultCheck1').checked}, function(data) {
                 $loading.hide();

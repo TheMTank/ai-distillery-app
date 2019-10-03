@@ -180,7 +180,7 @@ def search_papers():
     query = request.args.get('query', '')
     num_results = request.args.get('num_results', 10)
     from_ = request.args.get('from_', 0)
-    twitter_popularity = request.args.get('defaultCheck1', False)
+    twitter_popularity = request.args.get('twitter_popularity', False)
     data = search.elastic_search_papers(query, num_results, twitter_popularity, from_result=from_)
 
     return jsonify(data)
