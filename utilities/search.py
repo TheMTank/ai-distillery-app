@@ -8,39 +8,39 @@ def elastic_search_papers(query, num_results=10, twitter_popularity=False, from_
             from_=from_result,
             size=num_results,
             body={
-	"sort": [{
-		"twitter_popularity": {
-			"order": "desc"
-		}
-	}],
-	"query": {
-		"bool": {
-			"should": [{
-					"match": {
-						"title": query
-					}
-				},
-				{
-					"match": {
-						"full_text": query
-					}
-				},
-				{
-					"match": {
-						"abstract": query
-					}
-				}
-			],
-			"must": [{
-				"range": {
-					"twitter_popularity": {
-						"gte": 2
-					}
-				}
-			}]
-		}
-	}
-}
+                	"sort": [{
+                		"twitter_popularity": {
+                			"order": "desc"
+                		}
+                	}],
+                	"query": {
+                		"bool": {
+                			"should": [{
+                					"match": {
+                						"title": query
+                					}
+                				},
+                				{
+                					"match": {
+                						"full_text": query
+                					}
+                				},
+                				{
+                					"match": {
+                						"abstract": query
+                					}
+                				}
+                			],
+                			"must": [{
+                				"range": {
+                					"twitter_popularity": {
+                						"gte": 2
+                					}
+                				}
+                			}]
+                		}
+                	}
+                }
         )
     else:
         response = client.search(
@@ -71,7 +71,7 @@ def elastic_search_papers(query, num_results=10, twitter_popularity=False, from_
          'abstract': hit['_source']['abstract'],
          'authors': hit['_source']['authors'],
          'date': hit['_source']['date'],
-         'distance': round(hit['_score'], 4)
+         'distance': hit["_source"]["twitter_popularity"] if twitter_popularity == "true" else round(hit['_score'], 4)
          }
         response_obj.append(data)
 
