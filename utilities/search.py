@@ -2,7 +2,6 @@ from elasticsearch import Elasticsearch
 
 def elastic_search_papers(query, num_results=10, twitter_popularity=False, from_result=0):
     client = Elasticsearch()
-
     if twitter_popularity == "true":
         response = client.search(
             index="arxiv_papers",
@@ -21,11 +20,13 @@ def elastic_search_papers(query, num_results=10, twitter_popularity=False, from_
                             {"match": {
                                 "abstract": query
                             }}],
-                            "range" : {
-                             "twitter_popularity" : {
-                                "gte" : 1
-                             }
-                        }
+                			"must": [{
+                				"range": {
+                					"twitter_popularity": {
+                						"gte": 2
+                					}
+                				}
+                			}]
                     }
                 }
             }
