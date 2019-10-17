@@ -68,7 +68,6 @@ def elastic_search_papers(query, num_results=10, twitter_popularity=False, from_
                 }
             }
         )
-    return response['hits']['hits']
     response_obj = []
     for hit in response['hits']['hits']:
         data = {'paper_id': hit['_id'],
