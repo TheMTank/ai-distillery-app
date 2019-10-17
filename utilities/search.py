@@ -8,8 +8,14 @@ def elastic_search_papers(query, num_results=10, twitter_popularity=False, from_
             from_=from_result,
             size=num_results,
             body={
-                   "query":{
+                   "query":
+                       {
                       "bool":{
+                          "must": {
+                              "exists": {
+                                  "field": "twitter_popularity"
+                              }
+                          },
                          "should":[
                             {
                                "match":{
@@ -31,7 +37,7 @@ def elastic_search_papers(query, num_results=10, twitter_popularity=False, from_
                             {
                                "range":{
                                   "twitter_popularity":{
-                                     "lte":2
+                                     "lte": 2
                                   }
                                }
                             }
@@ -62,6 +68,7 @@ def elastic_search_papers(query, num_results=10, twitter_popularity=False, from_
                 }
             }
         )
+    return response['hits']['hits']
     response_obj = []
     for hit in response['hits']['hits']:
         data = {'paper_id': hit['_id'],
@@ -72,6 +79,4 @@ def elastic_search_papers(query, num_results=10, twitter_popularity=False, from_
          'distance': hit["_source"]["twitter_popularity"] if twitter_popularity == "true" else round(hit['_score'], 4)
          }
         response_obj.append(data)
-
-
     return response_obj
