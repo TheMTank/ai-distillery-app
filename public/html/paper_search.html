@@ -186,14 +186,14 @@
 
         var searchExtraPapersPage = function(searchTerm) {
             pageNo += 1;
-            $.get(searchRoute, {'query': searchTerm, 'num_results': resultsPerPage, 'from_': pageNo * resultsPerPage}, function(data) {
+            $.get(searchRoute, {'query': searchTerm, 'num_results': resultsPerPage, 'from_': pageNo * resultsPerPage, 'twitter_popularity' : document.getElementById('defaultCheck1').checked}, function(data) {
                 tableData = data;
                 console.log(data);
                 context = {
                     'top_words': tableData,
                     'selectedWord': searchTerm
                 }
-                appendTable(context);
+                appendTable(context);  // todo why are the scores still messed up?
             }, "json")
         }
 
