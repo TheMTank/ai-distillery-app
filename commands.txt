@@ -3,18 +3,13 @@ nohup sudo -E /home/benfduffy/miniconda3/bin/python -u app.py &> output_log.txt&
 sudo /home/benfduffy/miniconda3/bin/gunicorn -b 0.0.0.0:80 -w 4 app:app
 nohup sudo -E /home/benfduffy/miniconda3/bin/gunicorn -b 0.0.0.0:80 -w 4 app:app &> output_log.txt&
 
-# hertzner
-source activate server
-gunicorn -b 0.0.0.0:80 -w 4 app:app
-gunicorn -b 0.0.0.0:80 -w 4 --worker-class gevent app:app
-nohup gunicorn -b 0.0.0.0:80 -w 9 --worker-class gevent app:app &> output_log.txt&
-nohup gunicorn -b 0.0.0.0:80 -w 4 app:app &> output_log.txt&
-
 # with nginx on hertzner (proper way)
+source activate server
 sudo service nginx start
 nohup gunicorn -b 0.0.0.0:5000 -w 9 --worker-class gevent app:app &> output_log.txt&
 
 # for all. How to kill and check logs
+kill -9 `lsof -i:5000 -t`
 sudo pkill -f app.py
 sudo pkill -f gunicorn
 tail -f output_log.txt
