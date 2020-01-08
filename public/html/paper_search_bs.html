@@ -1,0 +1,1522 @@
+
+
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Papers With Code : the latest in machine learning</title>
+  <meta name="description" content="Papers With Code highlights trending ML research and the code to implement it." />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="theme-color" content="#21cbce"/>
+  <link rel="manifest" href="/static/manifest.web.d401922cf4bd.json">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/static/css/pwc.lib.2228dd427851.css" />
+  <link rel="stylesheet" href="/static/js/jquery-ui-1.12.1/jquery-ui.min.b423dd67c9da.css" />
+  <link rel="stylesheet" href="/static/css/style.ab083f95c122.css" />
+  <link rel="stylesheet" href="/static/css/emoji.dfe38df2b1a0.css" />
+  <link rel="stylesheet" href="/static/fonts/font-awesome/css/all.min.72b4c326cbef.css" />
+  
+
+  <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+  <script type="text/javascript" async
+          src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+  </script>
+
+  
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-121182717-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-121182717-1');
+    </script>
+    <script>
+    /**
+    * Function that captures a click on an outbound link in Analytics.
+    * This function takes a valid URL string as an argument, and uses that URL string
+    * as the event label. Setting the transport method to 'beacon' lets the hit be sent
+    * using 'navigator.sendBeacon' in browser that support it.
+    */
+    var captureOutboundLink = function(url) {
+        gtag('event', 'click', {
+            'event_category': 'outbound',
+            'event_label': url,
+
+        });
+    }
+    </script>
+    
+
+
+  <!-- Open Graph protocol metadata -->
+  <meta property="og:title" content="Papers With Code : the latest in machine learning">
+  <meta property="og:description" content="Papers With Code highlights trending ML research and the code to implement it.">
+  <meta property="og:image" content="https://paperswithcode.com/static/index.jpeg">
+  <meta property="og:url" content="https://paperswithcode.com/">
+  
+
+
+  <!-- Twitter metadata -->
+  
+  <meta name="twitter:card" content="summary_large_image">
+  
+  <meta name="twitter:site" content="@paperswithcode">
+  <meta name="twitter:creator" content="@paperswithcode">
+  <meta name="twitter:url" content="https://paperswithcode.com/">
+  <meta name="twitter:domain" content="paperswithcode.com">
+  <meta name="twitter:title" content="Papers With Code : the latest in machine learning">
+  <meta name="twitter:description" content="Papers With Code highlights trending ML research and the code to implement it.">
+  
+  <meta name="twitter:image:width" content="640">
+  <meta name="twitter:image:height" content="320">
+</head>
+<body>
+
+
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white header">
+  <div class="header-logo">
+    <a class="navbar-brand" href="/">
+      <ion-icon name="barcode"></ion-icon>
+    </a>
+  </div>
+
+
+  <div class="mobile-twitter">
+    <a href="https://twitter.com/paperswithcode">
+      <img src="/static/icons8-twitter-48.07f2def52776.png" style="height:30px;width:auto;position:relative;top:-1px;"></a>
+    </a>
+  </div>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse order-1" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item header-search">
+        <form action="/search" method="get" id="id_global_search_form">
+          <input type="text" name="q_meta" style="display:none" id="q_meta" />
+          <input id="id_global_search_input" name='q' class="global-search" type="search" placeholder='Search for papers, code and tasks'/>
+          <button type="submit" class="icon"><img width=20 src="/static/query_icon.445f2174d9b9.png"></button>
+        </form>
+      </li>
+
+      <li class="nav-item">
+        <div class="sign-up">
+          <a href="/sota"><button class="btn-primary" style="position:relative;top:10px"><i class="fas fa-chart-line"></i> Browse State-of-the-Art</button></a>
+        </div>
+      </li>
+
+      
+
+    </ul>
+    <div class="order-3">
+      <div class="navbar-nav">
+
+        <ul class="navbar-nav ml-auto navbar-subscribe">
+
+          
+
+          <li class="nav-item nav-link-right"><a class="nav-link-right nav-textual-link" href="https://twitter.com/paperswithcode">
+            <img src="/static/icons8-twitter-48.07f2def52776.png" class="navbar-twitter-icon"> Follow</a>
+          </li>
+
+          <li class="nav-item nav-link-right"><a class="nav-link-right nav-textual-link" href="https://join.slack.com/t/paperswithcode/shared_invite/enQtNzE2NDQyMTAxNDEzLTMxNmY2NTc4ZWYzZGJhZGRmZGFkNzVhNTI1OTZhYzFlZWZiZDQ0M2M5ZTkyYzNhZmZhZmRlMjkxNGQxZGEwZjA">
+            <img src="/static/slack-icon-min.fac6b299d18c.png" class="navbar-slack-icon"> Discuss</a>
+          </li>
+
+          <li class="nav-item nav-link-right"><a class="nav-link-right nav-textual-link" style="position:relative;top:1px" href="/trends">Trends</a></li>
+          <li class="nav-item nav-link-right"><a class="nav-link-right nav-textual-link" style="position:relative;top:1px" href="/about">About</a></li>
+
+          
+
+            
+
+            <li class="nav-item nav-link-right"><a class="nav-link-right nav-textual-link"  style="position:relative;top:1px" href="/accounts/login/?next=/">Log In/Register</a></li>
+
+          
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+</nav>
+
+<!-- Page modals -->
+<div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="emailModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="emailModalLabel">Get the weekly digest</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="" method="post">
+        <div class="modal-body">
+          <div class="modal-body-info-text">
+            You'll get the lates papers with code and state-of-the-art methods.  <br><br/>
+            <span class="text-muted">
+            Tip: you can also  <a href="https://twitter.com/paperswithcode">follow us on <i class="fab fa-twitter" style="color:#00aced"></i> Twitter</a>
+            </span>
+          </div>
+
+          <input type="hidden" name="csrfmiddlewaretoken" value="hzzJCKOide6zsh06ZJwIFJHODyGGp0zxjEFYLYpZmsh9sNey53N1tlXBtdWxxcet">
+          <input placeholder="Enter your email" type="email" class="form-control pwc-email" name="address" id="id_address" max_length="100" required>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Subscribe</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Login -->
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="loginModalLabel">Join the community</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="login-modal-message">
+        You need to <a href="/accounts/login/?next=/">log in</a> to edit.<br/>
+        You can <a href="/accounts/register?next=/">create a new account</a> if you don't have one.<br/><br/>
+        Or, discuss a change on <a href="https://join.slack.com/t/paperswithcode/shared_invite/enQtNTI3NDE2NjQ0ODM0LTdmNzNjODkwOGY0MjU4YzgzNDZhNGM1YWIzYmZhNzk5MTFkYWU4YWNjN2JjZDhlNjJiYjFkYjYwNjkzYzdiZDk"><i class="fab fa-slack"></i> Slack</a>.
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<div class="container">
+
+
+  <div class="container content content-buffer">
+
+    
+  
+
+  <div class="title">
+    <div class="row">
+      <div class="col-lg-6">
+        <h1 class="home-page-title">Trending Research</h1>
+      </div>
+      <div class="col-lg-6">
+        <div style="float: right;" class="btn-group btn-group-sm pull-right home-page-navigation" role="group" aria-label="Basic example">
+          
+            <a href="/" class="list-button-active">Trending</a>
+          
+
+          
+            <a href="./latest" class="list-button">Latest</a>
+          
+
+          
+            <a href="./greatest" class="list-button">Greatest</a>
+          
+
+          <span class="list-button-subscribe">
+            <a href="" class="list-button" data-toggle="modal" data-target="#emailModal"><i class="far fa-envelope"></i> Subscribe</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="infinite-container text-center">
+
+    
+        
+
+
+
+
+<div class="row infinite-item item">
+    <!-- 996140 -->
+    
+
+<div class="col-lg-3 item-image-col">
+    
+        
+            <a href="/paper/image-to-image-translation-with-conditional">
+                <div class="item-image" style="background-image: url('/media/thumbnails/papergithubrepo/pgr-0000996140-127ba05e.jpg');"> </div>
+            </a>
+        
+    
+</div>
+
+
+    <div class="col-lg-9 item-col">
+        <div class="row">
+            <div class="col-lg-9 item-content">
+                
+                    <h1><a href="/paper/image-to-image-translation-with-conditional">Image-to-Image Translation with Conditional Adversarial Networks</a></h1>
+                
+
+                <p class="author-section" style="padding-top:2px">
+                    
+                    <span class="item-conference-link">
+                        <a href="/conference/cvpr-2017-7">
+                            CVPR 2017
+                        </a>
+                    </span>
+                    
+
+                    
+                        
+                        • <a href="https://github.com/Mingtzge/2019-CCF-BDCI-OCR-MCZJ-OCR-IdentificationIDElement" onclick="captureOutboundLink('https://github.com/Mingtzge/2019-CCF-BDCI-OCR-MCZJ-OCR-IdentificationIDElement'); return true;" style="font-size:13px">Mingtzge/2019-CCF-BDCI-OCR-MCZJ-OCR-IdentificationIDElement</a>
+                        
+                        
+                        
+                            
+                              
+                            •  <img src="/static/frameworks/pytorch.eb01730bff28.png">
+                              
+                            
+                        
+                    
+
+                    <p class="item-strip-abstract">We investigate conditional adversarial networks as a general-purpose solution to image-to-image translation problems.</p>
+
+                    <div class="sota">
+    
+        
+            <p>
+                <a href="/sota/image-to-image-translation-on-cityscapes-1">
+                    <i class="em em-trophy"></i>
+                </a>
+                &nbsp;SOTA for
+                <a class="sota-task"
+                   href="/sota/image-to-image-translation-on-cityscapes-1">
+                    Image-to-Image Translation
+                    on Cityscapes Photo-to-Labels
+                </a>
+                
+                    
+                
+
+            </p>
+        
+    
+</div>
+
+
+                <p>
+                    
+                    <a href="/task/cross-view-image-to-image-translation"><span class="badge badge-primary">CROSS-VIEW IMAGE-TO-IMAGE TRANSLATION</span></a>
+                    
+                    <a href="/task/nuclear-segmentation"><span class="badge badge-primary">NUCLEAR SEGMENTATION</span></a>
+                    
+                </p>
+            </div>
+
+            <div class="col-lg-3 item-interact text-center">
+                <div class="entity-stars">
+                    
+                    <span class="badge badge-secondary"><ion-icon name="star"></ion-icon> 390</span>
+                    
+                </div>
+
+                
+                <div class="stars-accumulated text-center">
+                    2.67 stars / hour
+                </div>
+                
+
+                
+
+                <div class="entity" style="margin-bottom: 20px;">
+                    
+                    <a href="/paper/image-to-image-translation-with-conditional" class="badge badge-light">
+                        <ion-icon name="document"></ion-icon> Paper
+                    </a>
+                    
+                    <br/>
+
+                    
+                        
+                        <a href="/paper/image-to-image-translation-with-conditional#code" class="badge badge-dark">
+                            <ion-icon name="logo-github"></ion-icon> Code
+                        </a>
+                        
+                        <br/>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+        
+
+
+
+
+<div class="row infinite-item item">
+    <!-- 996141 -->
+    
+
+<div class="col-lg-3 item-image-col">
+    
+        
+            <a href="/paper/an-end-to-end-trainable-neural-network-for">
+                <div class="item-image" style="background-image: url('/media/thumbnails/papergithubrepo/pgr-0000996141-127ba05e.jpg');"> </div>
+            </a>
+        
+    
+</div>
+
+
+    <div class="col-lg-9 item-col">
+        <div class="row">
+            <div class="col-lg-9 item-content">
+                
+                    <h1><a href="/paper/an-end-to-end-trainable-neural-network-for">An End-to-End Trainable Neural Network for Image-based Sequence Recognition and Its Application to Scene Text Recognition</a></h1>
+                
+
+                <p class="author-section" style="padding-top:2px">
+                    
+                    <span class="author-name-text">21 Jul 2015</span>
+                    
+
+                    
+                        
+                        • <a href="https://github.com/Mingtzge/2019-CCF-BDCI-OCR-MCZJ-OCR-IdentificationIDElement" onclick="captureOutboundLink('https://github.com/Mingtzge/2019-CCF-BDCI-OCR-MCZJ-OCR-IdentificationIDElement'); return true;" style="font-size:13px">Mingtzge/2019-CCF-BDCI-OCR-MCZJ-OCR-IdentificationIDElement</a>
+                        
+                        
+                        
+                            
+                              
+                            •  <img src="/static/frameworks/pytorch.eb01730bff28.png">
+                              
+                            
+                        
+                    
+
+                    <p class="item-strip-abstract">In this paper, we investigate the problem of scene text recognition, which is among the most important and challenging tasks in image-based sequence recognition.</p>
+
+                    <div class="sota">
+    
+</div>
+
+
+                <p>
+                    
+                    <a href="/task/scene-text-recognition"><span class="badge badge-primary">SCENE TEXT RECOGNITION</span></a>
+                    
+                </p>
+            </div>
+
+            <div class="col-lg-3 item-interact text-center">
+                <div class="entity-stars">
+                    
+                    <span class="badge badge-secondary"><ion-icon name="star"></ion-icon> 390</span>
+                    
+                </div>
+
+                
+                <div class="stars-accumulated text-center">
+                    2.67 stars / hour
+                </div>
+                
+
+                
+
+                <div class="entity" style="margin-bottom: 20px;">
+                    
+                    <a href="/paper/an-end-to-end-trainable-neural-network-for" class="badge badge-light">
+                        <ion-icon name="document"></ion-icon> Paper
+                    </a>
+                    
+                    <br/>
+
+                    
+                        
+                        <a href="/paper/an-end-to-end-trainable-neural-network-for#code" class="badge badge-dark">
+                            <ion-icon name="logo-github"></ion-icon> Code
+                        </a>
+                        
+                        <br/>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+        
+
+
+
+
+<div class="row infinite-item item">
+    <!-- 925530 -->
+    
+
+<div class="col-lg-3 item-image-col">
+    
+        
+        <iframe width="100%" src="https://www.youtube.com/embed/Z1xvAZve9aE" frameborder="0"
+                allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        
+    
+</div>
+
+
+    <div class="col-lg-9 item-col">
+        <div class="row">
+            <div class="col-lg-9 item-content">
+                
+                    <h1><a href="/paper/difftaichi-differentiable-programming-for">DiffTaichi: Differentiable Programming for Physical Simulation</a></h1>
+                
+
+                <p class="author-section" style="padding-top:2px">
+                    
+                    <span class="author-name-text">1 Oct 2019</span>
+                    
+
+                    
+                        
+                        • <a href="https://github.com/yuanming-hu/difftaichi" onclick="captureOutboundLink('https://github.com/yuanming-hu/difftaichi'); return true;" style="font-size:13px">yuanming-hu/difftaichi</a>
+                        
+                        
+                        
+                            
+                              
+                            •  <img src="/static/frameworks/tf.3f40b19378d1.png">
+                              
+                            
+                        
+                    
+
+                    <p class="item-strip-abstract">We present DiffTaichi, a new differentiable programming language tailored for building high-performance differentiable physical simulators.</p>
+
+                    <div class="sota">
+    
+</div>
+
+
+                <p>
+                    
+                    <a href="/task/physical-simulations"><span class="badge badge-primary">PHYSICAL SIMULATIONS</span></a>
+                    
+                </p>
+            </div>
+
+            <div class="col-lg-3 item-interact text-center">
+                <div class="entity-stars">
+                    
+                    <span class="badge badge-secondary"><ion-icon name="star"></ion-icon> 289</span>
+                    
+                </div>
+
+                
+                <div class="stars-accumulated text-center">
+                    1.77 stars / hour
+                </div>
+                
+
+                
+
+                <div class="entity" style="margin-bottom: 20px;">
+                    
+                    <a href="/paper/difftaichi-differentiable-programming-for" class="badge badge-light">
+                        <ion-icon name="document"></ion-icon> Paper
+                    </a>
+                    
+                    <br/>
+
+                    
+                        
+                        <a href="/paper/difftaichi-differentiable-programming-for#code" class="badge badge-dark">
+                            <ion-icon name="logo-github"></ion-icon> Code
+                        </a>
+                        
+                        <br/>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+        
+
+
+
+
+<div class="row infinite-item item">
+    <!-- 659993 -->
+    
+
+<div class="col-lg-3 item-image-col">
+    
+        
+            <a href="/paper/class-balanced-grouping-and-sampling-for">
+                <div class="item-image" style="background-image: url('/media/thumbnails/papergithubrepo/pgr-0000659993-bfaa05da.jpg');"> </div>
+            </a>
+        
+    
+</div>
+
+
+    <div class="col-lg-9 item-col">
+        <div class="row">
+            <div class="col-lg-9 item-content">
+                
+                    <h1><a href="/paper/class-balanced-grouping-and-sampling-for">Class-balanced Grouping and Sampling for Point Cloud 3D Object Detection</a></h1>
+                
+
+                <p class="author-section" style="padding-top:2px">
+                    
+                    <span class="author-name-text">26 Aug 2019</span>
+                    
+
+                    
+                        
+                        • <a href="https://github.com/poodarchu/Class-balanced-Grouping-and-Sampling-for-Point-Cloud-3D-Object-Detection" onclick="captureOutboundLink('https://github.com/poodarchu/Class-balanced-Grouping-and-Sampling-for-Point-Cloud-3D-Object-Detection'); return true;" style="font-size:13px">poodarchu/Class-balanced-Grouping-and-Sampling-for-Point-Cloud-3D-Object-Detection</a>
+                        
+                        
+                        
+                            
+                              
+                            •  <img src="/static/frameworks/pytorch.eb01730bff28.png">
+                              
+                            
+                        
+                    
+
+                    <p class="item-strip-abstract">This report presents our method which wins the nuScenes3D Detection Challenge [17] held in Workshop on Autonomous Driving(WAD, CVPR 2019).</p>
+
+                    <div class="sota">
+    
+        
+            <p>
+                <a href="/sota/3d-object-detection-on-nuscenes">
+                    <i class="em em-trophy"></i>
+                </a>
+                &nbsp;SOTA for
+                <a class="sota-task"
+                   href="/sota/3d-object-detection-on-nuscenes">
+                    3D Object Detection
+                    on nuScenes
+                </a>
+                
+                    
+                
+
+            </p>
+        
+    
+</div>
+
+
+                <p>
+                    
+                    <a href="/task/3d-object-detection"><span class="badge badge-primary">3D OBJECT DETECTION</span></a>
+                    
+                    <a href="/task/autonomous-driving"><span class="badge badge-primary">AUTONOMOUS DRIVING</span></a>
+                    
+                </p>
+            </div>
+
+            <div class="col-lg-3 item-interact text-center">
+                <div class="entity-stars">
+                    
+                    <span class="badge badge-secondary"><ion-icon name="star"></ion-icon> 367</span>
+                    
+                </div>
+
+                
+                <div class="stars-accumulated text-center">
+                    1.73 stars / hour
+                </div>
+                
+
+                
+
+                <div class="entity" style="margin-bottom: 20px;">
+                    
+                    <a href="/paper/class-balanced-grouping-and-sampling-for" class="badge badge-light">
+                        <ion-icon name="document"></ion-icon> Paper
+                    </a>
+                    
+                    <br/>
+
+                    
+                        
+                        <a href="/paper/class-balanced-grouping-and-sampling-for#code" class="badge badge-dark">
+                            <ion-icon name="logo-github"></ion-icon> Code
+                        </a>
+                        
+                        <br/>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+        
+
+
+
+
+<div class="row infinite-item item">
+    <!-- 1011561 -->
+    
+
+<div class="col-lg-3 item-image-col">
+    
+        
+            <a href=https://github.com/mit-han-lab/once-for-all">
+                <div class="item-image" style="background-image: url('/media/thumbnails/papergithubrepo/pgr-0001011561-6311b776.jpg');"> </div>
+            </a>
+        
+    
+</div>
+
+
+    <div class="col-lg-9 item-col">
+        <div class="row">
+            <div class="col-lg-9 item-content">
+                
+                    <h1><a href="https://github.com/mit-han-lab/once-for-all" onclick="captureOutboundLink('https://github.com/mit-han-lab/once-for-all'); return true;">once-for-all</a></h1>
+                
+
+                <p class="author-section" style="padding-top:2px">
+                    
+                    <span class="author-name-text">26 Aug 2019</span>
+                    
+
+                    
+                        
+                        • <a href="https://github.com/mit-han-lab/once-for-all" onclick="captureOutboundLink('https://github.com/mit-han-lab/once-for-all'); return true;" style="font-size:13px">mit-han-lab/once-for-all</a>
+                        
+                        
+                        
+                            
+                              
+                            •  <img src="/static/frameworks/pytorch.eb01730bff28.png">
+                              
+                            
+                        
+                    
+
+                    <p class="item-strip-abstract">[ICLR 2020] Once for All: Train One Network and Specialize it for Efficient Deployment</p>
+
+                    <div class="sota">
+    
+</div>
+
+
+                <p>
+                    
+                    <a href="/task/architecture-search"><span class="badge badge-primary">NEURAL ARCHITECTURE SEARCH</span></a>
+                    
+                </p>
+            </div>
+
+            <div class="col-lg-3 item-interact text-center">
+                <div class="entity-stars">
+                    
+                    <span class="badge badge-secondary"><ion-icon name="star"></ion-icon> 109</span>
+                    
+                </div>
+
+                
+                <div class="stars-accumulated text-center">
+                    1.67 stars / hour
+                </div>
+                
+
+                
+
+                <div class="entity" style="margin-bottom: 20px;">
+                    
+                    <a href="/search?q=mit-han-lab/once-for-all" class="badge badge-light">
+                        <ion-icon name="document"></ion-icon> Paper
+                    </a>
+                    
+                    <br/>
+
+                    
+                        
+                        <a href="https://github.com/mit-han-lab/once-for-all"
+                            class="badge badge-dark"
+                            onclick="captureOutboundLink('https://github.com/mit-han-lab/once-for-all'); return true;">
+                            <ion-icon name="logo-github"></ion-icon> Code
+                        </a>
+                        
+                        <br/>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+        
+
+
+
+
+<div class="row infinite-item item">
+    <!-- 917380 -->
+    
+
+<div class="col-lg-3 item-image-col">
+    
+        
+            <a href="/paper/efficientdet-scalable-and-efficient-object">
+                <div class="item-image" style="background-image: url('/media/thumbnails/papergithubrepo/pgr-0000917380-099a9d4c.jpg');"> </div>
+            </a>
+        
+    
+</div>
+
+
+    <div class="col-lg-9 item-col">
+        <div class="row">
+            <div class="col-lg-9 item-content">
+                
+                    <h1><a href="/paper/efficientdet-scalable-and-efficient-object">EfficientDet: Scalable and Efficient Object Detection</a></h1>
+                
+
+                <p class="author-section" style="padding-top:2px">
+                    
+                    <span class="author-name-text">20 Nov 2019</span>
+                    
+
+                    
+                        
+                        • <a href="https://github.com/toandaominh1997/EfficientDet.Pytorch" onclick="captureOutboundLink('https://github.com/toandaominh1997/EfficientDet.Pytorch'); return true;" style="font-size:13px">toandaominh1997/EfficientDet.Pytorch</a>
+                        
+                        
+                        
+                            
+                              
+                            •  <img src="/static/frameworks/pytorch.eb01730bff28.png">
+                              
+                            
+                        
+                    
+
+                    <p class="item-strip-abstract">Model efficiency has become increasingly important in computer vision.</p>
+
+                    <div class="sota">
+    
+        
+            <p>
+                <a href="/sota/object-detection-on-coco-2017">
+                    <i class="em em-trophy"></i>
+                </a>
+                &nbsp;SOTA for
+                <a class="sota-task"
+                   href="/sota/object-detection-on-coco-2017">
+                    Object Detection
+                    on COCO 2017
+                </a>
+                
+                    (mAP metric
+                    )
+                
+
+            </p>
+        
+    
+</div>
+
+
+                <p>
+                    
+                    <a href="/task/object-detection"><span class="badge badge-primary">OBJECT DETECTION</span></a>
+                    
+                </p>
+            </div>
+
+            <div class="col-lg-3 item-interact text-center">
+                <div class="entity-stars">
+                    
+                    <span class="badge badge-secondary"><ion-icon name="star"></ion-icon> 610</span>
+                    
+                </div>
+
+                
+                <div class="stars-accumulated text-center">
+                    1.43 stars / hour
+                </div>
+                
+
+                
+
+                <div class="entity" style="margin-bottom: 20px;">
+                    
+                    <a href="/paper/efficientdet-scalable-and-efficient-object" class="badge badge-light">
+                        <ion-icon name="document"></ion-icon> Paper
+                    </a>
+                    
+                    <br/>
+
+                    
+                        
+                        <a href="/paper/efficientdet-scalable-and-efficient-object#code" class="badge badge-dark">
+                            <ion-icon name="logo-github"></ion-icon> Code
+                        </a>
+                        
+                        <br/>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+        
+
+
+
+
+<div class="row infinite-item item">
+    <!-- 975755 -->
+    
+
+<div class="col-lg-3 item-image-col">
+    
+        
+            <a href="https://github.com/benedekrozemberczki/karateclub">
+                <div class="item-image" style="background-image: url('/static/thumbs/177866.jpg');"> </div>
+            </a>
+        
+    
+</div>
+
+
+    <div class="col-lg-9 item-col">
+        <div class="row">
+            <div class="col-lg-9 item-content">
+                
+                    <h1><a href="https://github.com/benedekrozemberczki/karateclub" onclick="captureOutboundLink('https://github.com/benedekrozemberczki/karateclub'); return true;">karateclub</a></h1>
+                
+
+                <p class="author-section" style="padding-top:2px">
+                    
+                    <span class="item-conference-link">
+                        <a href="/conference/cikm-2019-12">
+                            CIKM 2019
+                        </a>
+                    </span>
+                    
+
+                    
+                        
+                        • <a href="https://github.com/benedekrozemberczki/karateclub" onclick="captureOutboundLink('https://github.com/benedekrozemberczki/karateclub'); return true;" style="font-size:13px">benedekrozemberczki/karateclub</a>
+                        
+                        
+                        
+                    
+
+                    <p class="item-strip-abstract">A general purpose community detection and network embedding library for research built on NetworkX.</p>
+
+                    <div class="sota">
+    
+</div>
+
+
+                <p>
+                    
+                    <a href="/task/community-detection"><span class="badge badge-primary">COMMUNITY DETECTION</span></a>
+                    
+                    <a href="/task/graph-clustering"><span class="badge badge-primary">GRAPH CLUSTERING</span></a>
+                    
+                    <a href="/task/network-embedding"><span class="badge badge-primary">NETWORK EMBEDDING</span></a>
+                    
+                    <a href="/task/node-classification"><span class="badge badge-primary">NODE CLASSIFICATION</span></a>
+                    
+                </p>
+            </div>
+
+            <div class="col-lg-3 item-interact text-center">
+                <div class="entity-stars">
+                    
+                    <span class="badge badge-secondary"><ion-icon name="star"></ion-icon> 136</span>
+                    
+                </div>
+
+                
+                <div class="stars-accumulated text-center">
+                    1.36 stars / hour
+                </div>
+                
+
+                
+
+                <div class="entity" style="margin-bottom: 20px;">
+                    
+                    <a href="/search?q=benedekrozemberczki/karateclub" class="badge badge-light">
+                        <ion-icon name="document"></ion-icon> Paper
+                    </a>
+                    
+                    <br/>
+
+                    
+                        
+                        <a href="https://github.com/benedekrozemberczki/karateclub"
+                            class="badge badge-dark"
+                            onclick="captureOutboundLink('https://github.com/benedekrozemberczki/karateclub'); return true;">
+                            <ion-icon name="logo-github"></ion-icon> Code
+                        </a>
+                        
+                        <br/>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+        
+
+
+
+
+<div class="row infinite-item item">
+    <!-- 816106 -->
+    
+
+<div class="col-lg-3 item-image-col">
+    
+        
+            <a href="/paper/slowfast-networks-for-video-recognition">
+                <div class="item-image" style="background-image: url('/media/thumbnails/papergithubrepo/pgr-0000816106-4b0636aa.gif');"> </div>
+            </a>
+        
+    
+</div>
+
+
+    <div class="col-lg-9 item-col">
+        <div class="row">
+            <div class="col-lg-9 item-content">
+                
+                    <h1><a href="/paper/slowfast-networks-for-video-recognition">SlowFast Networks for Video Recognition</a></h1>
+                
+
+                <p class="author-section" style="padding-top:2px">
+                    
+                    <span class="item-conference-link">
+                        <a href="/conference/iccv-2019-10">
+                            ICCV 2019
+                        </a>
+                    </span>
+                    
+
+                    
+                        
+                        • <a href="https://github.com/facebookresearch/SlowFast" onclick="captureOutboundLink('https://github.com/facebookresearch/SlowFast'); return true;" style="font-size:13px">facebookresearch/SlowFast</a>
+                        
+                        
+                        
+                            
+                              
+                            •  <img src="/static/frameworks/pytorch.eb01730bff28.png">
+                              
+                            
+                        
+                    
+
+                    <p class="item-strip-abstract">We present SlowFast networks for video recognition.</p>
+
+                    <div class="sota">
+    
+        
+            <p>
+                <a href="/sota/action-classification-on-charades">
+                    <img style="height:20px;width:35px;position:relative;top:1px;"
+                         src="https://paperswithcode.com/media/sota-thumbs/action-classification-on-charades-small_18079af5.png"/>
+                </a>
+                #2 best model for
+                <a href="/sota/action-classification-on-charades">
+                    Action Classification
+                    on Charades
+                </a>
+                
+                    
+                        (using extra training data)
+                    
+                
+            </p>
+        
+    
+</div>
+
+
+                <p>
+                    
+                    <a href="/task/action-classification"><span class="badge badge-primary">ACTION CLASSIFICATION</span></a>
+                    
+                    <a href="/task/action-detection"><span class="badge badge-primary">ACTION DETECTION</span></a>
+                    
+                    <a href="/task/video-recognition"><span class="badge badge-primary">VIDEO RECOGNITION</span></a>
+                    
+                </p>
+            </div>
+
+            <div class="col-lg-3 item-interact text-center">
+                <div class="entity-stars">
+                    
+                    <span class="badge badge-secondary"><ion-icon name="star"></ion-icon> 1,256</span>
+                    
+                </div>
+
+                
+                <div class="stars-accumulated text-center">
+                    1.32 stars / hour
+                </div>
+                
+
+                
+
+                <div class="entity" style="margin-bottom: 20px;">
+                    
+                    <a href="/paper/slowfast-networks-for-video-recognition" class="badge badge-light">
+                        <ion-icon name="document"></ion-icon> Paper
+                    </a>
+                    
+                    <br/>
+
+                    
+                        
+                        <a href="/paper/slowfast-networks-for-video-recognition#code" class="badge badge-dark">
+                            <ion-icon name="logo-github"></ion-icon> Code
+                        </a>
+                        
+                        <br/>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+        
+
+
+
+
+<div class="row infinite-item item">
+    <!-- 816107 -->
+    
+
+<div class="col-lg-3 item-image-col">
+    
+        
+            <a href="/paper/non-local-neural-networks">
+                <div class="item-image" style="background-image: url('/media/thumbnails/papergithubrepo/pgr-0000816107-4b0636aa.gif');"> </div>
+            </a>
+        
+    
+</div>
+
+
+    <div class="col-lg-9 item-col">
+        <div class="row">
+            <div class="col-lg-9 item-content">
+                
+                    <h1><a href="/paper/non-local-neural-networks">Non-local Neural Networks</a></h1>
+                
+
+                <p class="author-section" style="padding-top:2px">
+                    
+                    <span class="item-conference-link">
+                        <a href="/conference/cvpr-2018-6">
+                            CVPR 2018
+                        </a>
+                    </span>
+                    
+
+                    
+                        
+                        • <a href="https://github.com/facebookresearch/SlowFast" onclick="captureOutboundLink('https://github.com/facebookresearch/SlowFast'); return true;" style="font-size:13px">facebookresearch/SlowFast</a>
+                        
+                        
+                        
+                            
+                              
+                            •  <img src="/static/frameworks/pytorch.eb01730bff28.png">
+                              
+                            
+                        
+                    
+
+                    <p class="item-strip-abstract">Both convolutional and recurrent operations are building blocks that process one local neighborhood at a time.</p>
+
+                    <div class="sota">
+    
+        
+            <p>
+                <a href="/sota/instance-segmentation-on-coco-minival">
+                    <img style="height:20px;width:35px;position:relative;top:1px;"
+                         src="https://paperswithcode.com/media/sota-thumbs/instance-segmentation-on-coco-minival-small_c67915c3.png"/>
+                </a>
+                #3 best model for
+                <a href="/sota/instance-segmentation-on-coco-minival">
+                    Instance Segmentation
+                    on COCO minival
+                </a>
+                
+                    
+                
+            </p>
+        
+    
+</div>
+
+
+                <p>
+                    
+                    <a href="/task/instance-segmentation"><span class="badge badge-primary">INSTANCE SEGMENTATION</span></a>
+                    
+                    <a href="/task/keypoint-detection"><span class="badge badge-primary">KEYPOINT DETECTION</span></a>
+                    
+                    <a href="/task/object-detection"><span class="badge badge-primary">OBJECT DETECTION</span></a>
+                    
+                    <a href="/task/video-classification"><span class="badge badge-primary">VIDEO CLASSIFICATION</span></a>
+                    
+                </p>
+            </div>
+
+            <div class="col-lg-3 item-interact text-center">
+                <div class="entity-stars">
+                    
+                    <span class="badge badge-secondary"><ion-icon name="star"></ion-icon> 1,256</span>
+                    
+                </div>
+
+                
+                <div class="stars-accumulated text-center">
+                    1.32 stars / hour
+                </div>
+                
+
+                
+
+                <div class="entity" style="margin-bottom: 20px;">
+                    
+                    <a href="/paper/non-local-neural-networks" class="badge badge-light">
+                        <ion-icon name="document"></ion-icon> Paper
+                    </a>
+                    
+                    <br/>
+
+                    
+                        
+                        <a href="/paper/non-local-neural-networks#code" class="badge badge-dark">
+                            <ion-icon name="logo-github"></ion-icon> Code
+                        </a>
+                        
+                        <br/>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+        
+
+
+
+
+<div class="row infinite-item item">
+    <!-- 993502 -->
+    
+
+<div class="col-lg-3 item-image-col">
+    
+        
+            <a href="/paper/deep-learning-for-3d-point-clouds-a-survey">
+                <div class="item-image" style="background-image: url('/media/thumbnails/papergithubrepo/pgr-0000993502-7200a694.jpg');"> </div>
+            </a>
+        
+    
+</div>
+
+
+    <div class="col-lg-9 item-col">
+        <div class="row">
+            <div class="col-lg-9 item-content">
+                
+                    <h1><a href="/paper/deep-learning-for-3d-point-clouds-a-survey">Deep Learning for 3D Point Clouds: A Survey</a></h1>
+                
+
+                <p class="author-section" style="padding-top:2px">
+                    
+                    <span class="author-name-text">27 Dec 2019</span>
+                    
+
+                    
+                        
+                        • <a href="https://github.com/QingyongHu/SoTA-Point-Cloud" onclick="captureOutboundLink('https://github.com/QingyongHu/SoTA-Point-Cloud'); return true;" style="font-size:13px">QingyongHu/SoTA-Point-Cloud</a>
+                        
+                        
+                        
+                    
+
+                    <p class="item-strip-abstract">To stimulate future research, this paper presents a comprehensive review of recent progress in deep learning methods for point clouds.</p>
+
+                    <div class="sota">
+    
+</div>
+
+
+                <p>
+                    
+                    <a href="/task/3d-object-detection"><span class="badge badge-primary">3D OBJECT DETECTION</span></a>
+                    
+                    <a href="/task/autonomous-driving"><span class="badge badge-primary">AUTONOMOUS DRIVING</span></a>
+                    
+                </p>
+            </div>
+
+            <div class="col-lg-3 item-interact text-center">
+                <div class="entity-stars">
+                    
+                    <span class="badge badge-secondary"><ion-icon name="star"></ion-icon> 145</span>
+                    
+                </div>
+
+                
+                <div class="stars-accumulated text-center">
+                    0.46 stars / hour
+                </div>
+                
+
+                
+
+                <div class="entity" style="margin-bottom: 20px;">
+                    
+                    <a href="/paper/deep-learning-for-3d-point-clouds-a-survey" class="badge badge-light">
+                        <ion-icon name="document"></ion-icon> Paper
+                    </a>
+                    
+                    <br/>
+
+                    
+                        
+                        <a href="/paper/deep-learning-for-3d-point-clouds-a-survey#code" class="badge badge-dark">
+                            <ion-icon name="logo-github"></ion-icon> Code
+                        </a>
+                        
+                        <br/>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+  </div>
+
+  <div class="loading" style="display: none;">
+    <div class="loader-ellips infinite-scroll-request">
+      <span class="loader-ellips__dot"></span>
+      <span class="loader-ellips__dot"></span>
+      <span class="loader-ellips__dot"></span>
+      <span class="loader-ellips__dot"></span>
+    </div>
+  </div>
+
+  
+    <a class="infinite-more-link" href="?page=2"></a>
+  
+
+
+
+
+
+  </div>
+
+</div>
+
+<div class="footer">
+    Contact us on: <ion-icon name="mail" style="position:relative;top:2px"></ion-icon> <a href="/cdn-cgi/l/email-protection#650d0009090a25150415001716120c110d060a01004b060a08"><span class="__cf_email__" data-cfemail="dbb3beb7b7b49babbaabbea9a8acb2afb3b8b4bfbef5b8b4b6">[email&#160;protected]</span></a>. Papers With Code is a free resource supported by <a href="https://atlasml.io">Atlas ML</a>.
+    <div class="legal-links">
+        <a href="/site/terms">Terms</a>
+        <a href="/site/privacy">Privacy</a>
+        <a href="/site/cookies-policy">Cookies policy</a>
+    </div>
+</div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://unpkg.com/ionicons@4.1.2/dist/ionicons.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="/static/js/pwc.lib.9e6ea2346a06.js"></script>
+<script src="https://browser.sentry-cdn.com/4.6.4/bundle.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
+
+
+  <script>
+      var infinite = new Waypoint.Infinite({
+          element: $('.infinite-container')[0],
+          onBeforePageLoad: function () {
+              $('.loading').show();
+          },
+          onAfterPageLoad: function ($items) {
+              $('.loading').hide();
+          }
+      });
+  </script>
+
+
+
+
+<script>
+    $(function() {
+
+      $.fn.modal.Constructor.prototype._enforceFocus = function() {};  
+
+      $.widget( "custom.catcomplete", $.ui.autocomplete, {
+        _create: function() {
+          this._super();
+          this.widget().menu( "option", "items", "> :not(.ui-autocomplete-category)" );
+        },
+        _renderMenu: function( ul, items ) {
+          var that = this,
+            currentCategory = "";
+          $.each( items, function( index, item ) {
+            var li;
+            if ( item.category != currentCategory ) {
+              ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
+              currentCategory = item.category;
+            }
+            li = that._renderItemData( ul, item );
+            if (item.meta !== null) {
+              li.attr('data-qmeta', item.meta);
+            }  
+            if ( item.category ) {
+              li.attr( "aria-label", item.category + " : " + item.label );
+            }
+          });
+        }
+      });
+
+      $( "#id_global_search_input" ).catcomplete({
+          minLength: 2,
+          source: function( request, response ) {
+              var term = request.term;
+
+              $.get( "/api/search-autocomplete/", {"q": term}, function(data){
+                  let searchData = [];
+                  data.tasks.forEach((t) => {
+                    searchData.push({label: t, category: "Tasks", meta:null});
+                  });
+
+                  data.leaderboards.forEach((lb) => {
+                    searchData.push({label: lb.name, category: "Leaderboards", meta:lb.slug});
+                  });
+                  data.papers.forEach((p) => {
+                    searchData.push({label: p.title, category: "Papers", meta:null});
+                  });
+                  response(searchData);
+              });
+          },
+          select: function(event, ui) {
+              $("#id_global_search_input").val(ui.item.label);
+              if (typeof gtag !== 'undefined') {
+                gtag('event', 'SiteActions', {
+                  'event_category': 'Search',
+                  'event_label': ui.item.category,
+                });
+              }
+              
+              if (ui.item.meta === null) {
+                $('#q_meta').val('');
+                $('#q_meta').removeAttr('name');
+              } else {
+                if(!$('#q_meta').attr("name")) {
+                  $('#q_meta').attr('name', 'q_meta');
+                }
+                $('#q_meta').val(ui.item.meta);
+              }
+              $("#id_global_search_form").submit();
+          }
+      });
+
+        if ($(window).width() < 1200 && $(window).width() > 992 ) {
+            $("#id_global_search_input").attr("placeholder", "Search");
+        }
+
+        // Configure Sentry
+        let sentryDsn = "https://be66a46136d24f1a998234ca50a0456a@sentry.io/1413936".trim();
+        if (sentryDsn !== "") {
+            Sentry.init({dsn: sentryDsn});
+        }
+
+        // Setup csrf token for ajax requests
+        let getCookie = (name) => {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                       break;
+                    }
+                }
+            }
+            return cookieValue;
+        };
+        let csrftoken = getCookie('csrftoken');
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
+
